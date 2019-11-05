@@ -15,7 +15,7 @@
 	foreach ($RS as $key => $col) {
 		$drArr[$col['sfno']]=$col['sfsn'];
 	}
-	$dbCus = dbase_open('c:/visd/CO01M.dbf',0);
+	$dbCus = dbase_open('C:/VISD/CO01M.dbf',0);
 	if ($dbCus){
 		$conn->exec('truncate table customer');
 
@@ -35,7 +35,7 @@
 				$birthDT=$dt;  //民國年生日
 			}
 		  	
-  			$tel=$row['MTELH'];  //電話
+  			$tel=trim(mb_convert_encoding($row['MTELH'], "UTF-8", "BIG5"));  //電話
 			$id=$row['MPERSONID'];  //身份證字號
 
 			if (strlen(trim($row['MLCASEDATE']))!=0){
@@ -53,10 +53,15 @@
 			}
 			$dr=$row['MID'].$row['MIDS'];
 			$drsn=$drArr[$dr];
-			$mobile=$row['MREC'];  //手機
-			$zip=$row['MRM5'];     //zip
+			$drsn=($drsn=='')?1:$drsn;
+			$mobile=trim(mb_convert_encoding($row['MREC'], "UTF-8", "BIG5"));  //手機
+			$zip=trim(mb_convert_encoding($row['MRM5'], "UTF-8", "BIG5"));     //zip
 			$addr=trim(mb_convert_encoding($row['MADDR'], "UTF-8", "BIG5"));  //地址
 			$sex=substr($id,2,1)=="1"?1:0;
+
+			$sqlC="insert into checkexist(no,name)value('$cno','$name')";
+			$conn->exec($sqlC);
+
 			$sql="insert into customer (cusno,cusname,cusbirthday,custel,cusid,firstdate,lastdate,cusmob,cusaddr,cuszip,cussex,maindrno,lastdrno)
 					values('$cno','$name','$birthDT','$tel','$id','$firstDT','$lastDT','$mobile','$addr','$zip',$sex,$drsn,$drsn)";
 			$conn->exec($sql);
@@ -64,7 +69,7 @@
 		}
 	}
 
-	$dbReg=dbase_open('c:/visd/CO03L.dbf',0);
+	$dbReg=dbase_open('C:/visd/CO03L.dbf',0);
 	if ($dbReg){
 		$conn->exec('truncate table registration');
 		$record_numbers = dbase_numrecords($dbReg);
@@ -155,10 +160,12 @@
 	$sql="update registration set section='3' where reg_time>='18:00'";
 	$conn->exec($sql);
 
-	$sql="update registration r,customer c  set r.cussn=c.cussn where r.cusno=c.cusno";
+	$sql="update registration set nhi_status='009' where nhi_status='H10' and ic_type='AB' ";
+
+	$sql="update registration r,customer c set r.cussn=c.cussn where r.cusno=c.cusno";
 	$conn->exec($sql);
 
-	$dbTreat=dbase_open('c:/visd/CO02P.dbf',0);
+	$dbTreat=dbase_open('C:/visd/CO02P.dbf',0);
 	if ($dbTreat){
 		$conn->exec('truncate table treat_record');
 		$conn->exec('truncate table prescription');
@@ -217,7 +224,7 @@
 			and r.stdate=t.icuploadd";
 	$conn->exec($sql);
 
-	$dbDrug=dbase_open('c:/visd/CO09D.dbf',0);
+	$dbDrug=dbase_open('C:/visd/CO09D.dbf',0);
 	if ($dbDrug){
 		$conn->exec('truncate table drug');
 		$record_numbers = dbase_numrecords($dbDrug);
