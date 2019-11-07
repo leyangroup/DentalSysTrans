@@ -9,13 +9,17 @@
 
 	$today=ROCdate($_GET['dt']);
 	//醫師資料
-	$sql="select sfsn,sfno from staff where position='D' ";
+	$sql="select sfsn,sfno from staff  ";
 	$result=$conn->query($sql);
 	foreach ($result as $key => $value) {
 		$Dr[$value['sfno']]=$value['sfsn'];
 	}
 
+
 	echo $today."<br>";
+	var_dump($Dr);
+
+	echo "0002=".$Dr[0002];
 
 	$conn->exec("delete from registration where seqno='000'");
 	//預約資料
@@ -27,12 +31,11 @@
 		$dt=westdt($value['p_date']);
 		$time=trim($value['p_time']);
 		$len=$value['p_len'];
-		$adr=$Dr[$value['dr_no']];
-
+		$drno=trim($value['dr_no']);
+		$adr=$Dr[$drno];
 		$memo=trim(mb_convert_encoding($value['comms'],"UTF-8","BIG5"));
 		$memo=str_replace("\\", "＼", $memo);
 		$memo=str_replace("'", "\'", $memo);
-
 		$sql="insert into registration(ddate,seqno,cusno,sch_time,schlen,drno1,drno2,sch_note,schtel,schmobile) 
 				values('$dt','000','$patno','$time',$len,$adr,$adr,'$memo','0','0')";
 		$r++;
