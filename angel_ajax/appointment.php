@@ -64,6 +64,11 @@
 			  and r.seqno='000' 
 			  and c.cusmob!='' ";
 	$conn->exec($sql);
+
+	$sql="insert into delappom (regsn,ddate,cussn,cusno,drno1,userid,sch_time,schlen,schqty,sch_note,muid,schtel,chgtype)
+			SELECT regsn,ddate,cussn,cusno,drno1,1,sch_time,schlen,1,sch_note,1,schtel,'a' FROM `registration` where seqno='000'";
+	$conn->exec($sql);
+
 		
 	echo "資料轉換完成";
 

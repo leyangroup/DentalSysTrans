@@ -19,7 +19,7 @@
 		$dname=trim(mb_convert_encoding($value['drugn'],"UTF-8","BIG5"));
 		$nhicode=trim($value['tcode']);
 		$price=$value['tfee'];
-		$dose=($value['tdrug1']==' ')?'01':$value['tdrug1'];
+		$dose=($value['tdrug1']==' ')?'01':trim($value['tdrug1']);
 		$part=trim($value['tdrug2']);
 		$times=trim($value['tdrug3']);
 		$sql="insert into drug(drugno,name,dosage,nhicode,nhifee,dose,part,times)

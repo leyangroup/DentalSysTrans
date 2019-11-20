@@ -99,6 +99,9 @@
 			and t.ddate >='2017-01-01'";
 	$conn->exec($sql);
 
+	$sql="delete from treatment where trcode like '0127%' ";
+	$conn->exec($sql);
+
 	echo "處置 資料轉換完成";
 
 ?>

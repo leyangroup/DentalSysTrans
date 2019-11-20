@@ -77,7 +77,7 @@
 
 	$conn->exec("update treat_record set start_date=null where start_date=''");
 	$conn->exec("update treat_record set start_icseq=null where start_icseq=''");
-
+	$conn->exec("update treat_record set deldate='1911-01-01' where trcode='' ");
 	echo "<br><br>掛號 資料轉換完成!!";
 
 ?>
