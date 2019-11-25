@@ -37,7 +37,7 @@
 	$conn->exec($sql);
 	
 	 $sql="update treatment t,nhicode n 
-			set t.nhi_fee=n.fee,t.category=n.category,
+			set t.nhi_fee=n.fee,t.category=n.category,fee_unit=feeunit,
 			    t.tr_od=n.tr_od,t.tr_endo=n.tr_endo,t.tr_peri=n.tr_peri,
 			    t.tr_os=n.tr_os,t.tr_ospath=n.tr_ospath,t.tr_pedo=n.tr_pedo
 	 where t.nhicode=n.nhicode";
