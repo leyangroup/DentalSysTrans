@@ -93,7 +93,7 @@
 		
 		
 
-	}
+	
 	$sql="update customer set custel=cusmob where (custel='' or custel is null) and cusmob!='' and cusmob is not null";
 	$conn->exec($sql);
 
