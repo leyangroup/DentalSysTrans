@@ -3,7 +3,7 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	//院所基本資料
 	$sql = "SELECT * FROM clinic.dbf";
@@ -86,19 +86,13 @@
 						$birth=$y.'-'.substr(trim($value2),3,2).'-'.substr(trim($value2),-2);
 					}
 					break;
-				case '聯絡電話':
-					$tel=trim($value2);
-					break;
-				case '聯絡地址':
-					$addr=trim(mb_convert_encoding($value2,"UTF-8","BIG5"));
-					break;
-				// case 'gmail':
-				// 	$gmail=trim($v2);
+				
+				
 				}
 		}
 		$gmail=trim($value['gmail']);
-		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sftel,sfstartjob,sfendjob,sfaddr,position,gmailno)values
-					('$drno','$drname','$id','$birth','$sex','$tel','$fdt','$ldt','$addr','D','$gmail') ";
+		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfstartjob,sfendjob,position,gmailno)values
+					('$drno','$drname','$id','$birth','$sex','$fdt','$ldt','D','$gmail') ";
 		echo "新增醫師：".$sql."<br>";
 
 		$conn->exec($sql);

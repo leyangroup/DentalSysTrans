@@ -3,7 +3,7 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	$sql="select sfsn,sfno from staff ";
 	$RS=$conn->query($sql);
@@ -11,6 +11,7 @@
 		$drArr[$col['sfno']]=$col['sfsn'];
 	}
 
+	$conn->exec("delete from registration where seqno='000' ");
 	//預約
 	$trDT=$_GET['DT'];
 	$westy=substr($trDT,0,4)-1911;
@@ -38,32 +39,32 @@
 					$cusno=$v2;
 					break;
 				case '備註';
-					$v2=str_replace("'"," ",$v2);
+					$v2=str_replace("'","\'",$v2);
 					$memo=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
-				case '結案別':
-					$apstate='';
-					$delDT='';
-					$kind=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
-					if ($kind=='取消'){
-						$apstate='4';
-						$delDT='$trDT';
-					}elseif($kind=='爽約'){
-						$apstate='5';
-						$delDT='$trDT';
-					}
-					break;
+				// case '結案別':
+				// 	$apstate='';
+				// 	$delDT=NULL;
+				// 	$kind=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+				// 	if ($kind=='取消'){
+				// 		$apstate='4';
+				// 		$delDT='$trDT';
+				// 	}elseif($kind=='爽約'){
+				// 		$apstate='5';
+				// 		$delDT='$trDT';
+				// 	}
+				// 	break;
 				case '簡訊備註':
-					$v2=str_replace("'"," ",$v2);
+					$v2=str_replace("'","\'",$v2);
 					$smsnote=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 			}
 		}
-		if ($kind!='已到'){
-			$sql="insert into registration(seqno,ddate,cusno,sch_time,sch_note,schlen,apstate,drno1,drno2,noticemomo,roomsn,deldate)values
-					('000','$schDT','$cusno','$schtime','$memo',$schlen,'$apstate',$drsn,$drsn,'$smsnote',1,'$trDT')";
-			echo $cusno."-".$schDT.",";
-			//echo "$schDT-$cusno 。";
+		if ($kind!='已到' && $schDT>=$trDT){
+			$sql="insert into registration(seqno,ddate,cusno,sch_time,sch_note,schlen,drno1,drno2,noticemomo,roomsn)values
+					('000','$schDT','$cusno','$schtime','$memo',$schlen,$drsn,$drsn,'$smsnote',1)";
+			// echo $cusno."-".$schDT.",";
+			echo $sql."<br>";
 			$conn->exec($sql);
 		}
 	}

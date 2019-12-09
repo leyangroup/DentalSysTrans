@@ -3,7 +3,7 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	$sql="select discsn,discid from disc_list ";
 	$RS=$conn->query($sql);
