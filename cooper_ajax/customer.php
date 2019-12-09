@@ -89,7 +89,9 @@
 		values('$cusno','$cusname','$cussex','$cusbirthday','$cusid','$custel','$cusaddr','$cusmob','$fdt',$maindrsn,$maindrsn,'$cusmemo')";
 		echo $sql."<br>";
 		$conn->exec($sql);
-	}
+  
+  }
+
 	$sql="update customer set custel=cusmob where (custel='' or custel is null) and cusmob!='' and cusmob is not null";
 	$conn->exec($sql);
 
