@@ -3,12 +3,13 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	//處置
 	$conn->exec("truncate table treat_record");
 	$sql = "SELECT * FROM op_opasm";
 	$result=$db->query($sql);
+	$search = array('/','"');
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 		foreach ($row as $k2=> $v2) {
 			switch (mb_convert_encoding($k2,"UTF-8","BIG5")) {
@@ -79,8 +80,6 @@
 						$ans=$ans.$rv;
 					}
 					$fdi=$ans;
-					//echo $fdi."<br>";
-					//$fdi=$v2;
 					break;	
 				case '處置代號':
 					$trcode=trim($v2);
@@ -89,18 +88,20 @@
 					$sickno=trim($v2);
 					break;
 				case '處置病歷':
-					$v2=str_replace("'", " ", $v2);
+					$v2=str_replace("'", "\'", $v2);
 					$memo='TX.'.trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 				case '處置病歷s':
-					$v2=str_replace("'", " ", $v2);
+					$v2=str_replace("'", "\'", $v2);
+					$v2=str_replace('"', "\"", $v2);
+					$v2=str_replace('/', " ", $v2);
 					$cc=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 				case '健保數量1':
 					$qty=$v2;
 					break;
 				case '部位':
-					$part=trim($v2);
+					$part=str_replace("+","",trim($v2));
 					break;
 				case '健保單價1':
 					$price=$v2;
@@ -117,15 +118,19 @@
 			}
 		}
 		$pamt=$price*$qty;
+
 		$sql="insert into treat_record(regsn,uploadD,sickn,fdi,trcode,sickno,side,treat_memo,nums,punitfee,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,cc) values
 				(0,'$cusno','$cnt','$fdi','$trcode','$sickno','$part','$memo',$qty,$price,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
 		echo $cusno."-".$cnt." 。 ";
+		
 		$conn->exec($sql);
 	}
-	//資料關連 掛號表與處置
+	//資料關連 
+
+
 	echo "資料關連中……";
 	$sql="update registration r,treat_record t 
-			 set t.regsn=r.regsn,t.ddate=r.ddate,t.seqno=r.seqno,t.cussn=r.cussn
+			 set t.regsn=r.regsn,t.ddate=r.ddate,t.seqno=r.seqno,t.cussn=case when r.cussn is null then 0 else r.cussn end ,r.cc=t.cc
 		   where  r.cusno=t.uploadD
 		      and r.stdate=t.SICKN";
 	$conn->exec($sql);

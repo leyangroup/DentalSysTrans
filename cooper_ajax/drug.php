@@ -3,7 +3,7 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	//藥品檔
 	$conn->exec("truncate table drug");
@@ -35,7 +35,6 @@
 				case '給藥途徑':
 					$part=trim($v2);
 					break;
-
 				case '停用日期':
 					if (trim($v2)==''){
 						$isuse=0;

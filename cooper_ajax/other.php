@@ -3,7 +3,7 @@
     $conn=MariaDBConnect();
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
-	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=C:\cooper");
+	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	$DT=$_GET['DT'];
 	$year=substr($DT,0,4);
@@ -130,10 +130,11 @@
 	$sql="update registration r,treat_record t set r.cc=t.cc where r.regsn=t.regsn and t.cc is not null and t.cc!=''";
 	$conn->exec($sql);
 
-	echo "產生charge";
+	echo "產生charge<br>";
 	$sql="truncate table charge";
 	$conn->exec($sql);
-	
+	$FDT=$year.'-01-0100:00';
+	$LDT=$DT.'23:59';
 	$sql="insert into charge (ddate,chargetime,cussn,regpay,partpay,`add`,discsn,discreg,discpart,minus,balance ,is_oweic)
 			SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,case when r.discid is null then 0 else r.discid end ,
 			case when d.reg_disc is null then 0 else d.reg_disc end,
@@ -141,32 +142,42 @@
 			disc_pay,reg_pay+nhi_partpay-disc_pay,'0'
 			FROM registration r left join disc_list d
 			on r.discid=d.discsn
-			where concat(ddate,reg_time)between '2019-01-0100:00' and '2019-08-1412:59'
+			where concat(ddate,reg_time)between '$FDT' and '$LDT'
 			and seqno<>'000'
 			and is_oweic !='1'
 			order by ddate,seqno";
 	$conn->exec($sql);
-
+	
+	$FD=$year.'-01-01';
+	$LD=$DT;
 	$sql="update registration r,charge c
 			 set r.chargesn=c.sn
 		   where r.ddate=c.ddate
 			 and r.reg_time=c.chargetime
 			 and r.cussn=c.cussn
 			 and r.chargesn=0
-			 and r.ddate between '2019-01-01' and '2019-08-14' ";
+			 and r.ddate between '$FD' and '$LD' ";
 	$conn->exec($sql);
 
 	//十年以上診所會有00127C的初診診察，要把處置改成01271
+	echo '將00127改成01271<br>';
 	$sql="update registration r,treat_record t 
 			 set r.trcode=concat(left(t.trcode,5),'C')
 		   where r.trcode='00127C'
 			 and r.regsn=t.regsn
-			 and t.trcode like '0127%';
+			 and t.trcode like '0127%'";
 	$conn->exec($sql);
 
+	//填入傷病icd10
+	echo '填入傷病icd10<br>';
+	$sql="update treatment m,sickmap s set m.icd10cm=s.icd10 where m.sickno=s.icd9";
+	$conn->exec($sql);
 
+	//填pcs
+	echo '填pcs<br>';
+	$sql="update treatment m, treatmappcs p set m.icd10PCS=p.pcs where m.nhicode=p.nhicode";
+	$conn->exec($sql);
 	
 	echo "<h1> 資料轉換完成";
-
 
 ?>
