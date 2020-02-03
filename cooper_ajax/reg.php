@@ -65,9 +65,13 @@
 						}
 						
 					}
+					$secsign=$icseq;
 					break;
 				case '轉診院所碼':
 					$thosp=$v2;
+					if (strlen(trim($v2))==0){
+						$thosp=NULL;
+					}
 					break;
 				case '是否轉出':
 					if (!$v2){
@@ -207,10 +211,10 @@
 		$sql="insert into registration(ddate,seqno,stdate,cusno,drno1,drno2,reg_time,discid,section,isnp,
 			trcode,nhi_status,category,rx_day,rx_type,is_out,hosp_from,ic_seqno,ic_type,
 			ic_datetime,reg_pay,nhi_partpay,disc_pay,nhi_tamt,nhi_damt,drugsv,trpay,
-			amount,giaamt,drug_partpay,memo,roomsn,end_time,card_ID,case_history,is_oweic,icuploadd)
+			amount,giaamt,drug_partpay,memo,roomsn,end_time,card_ID,case_history,is_oweic,icuploadd,sec_sign)
 			values('$dt','$seqno','$cnt','$cusno',$drsn,$drsn,'$regtime',$disc,'$section',$isnp,'$trcode',
 					'$nhistatus','$category',$rxday,'$rxtype',$isout,'$thosp','$icseq','$ic_type',
-					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt')";
+					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt','$secsign')";
 		echo $dt.'.'.$cusno.'、';
 		// if ($dt>='2008-01-01' && $dt<='2008-01-31'){
 		// 	echo $sql."<br>";

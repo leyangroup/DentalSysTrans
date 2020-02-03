@@ -62,6 +62,11 @@
 				<td><button type='button' id="COOPER_other">8.支付標準 與其它 資料轉換</button></td>
 				<td><input type='text' id='other_on' style="color:blue" readonly value='請按鈕' size=30></td>
 			</tr>
+
+			<tr>
+				<td><button type='button' id="COOPER_disc">補.優待身份 資料轉換</button></td>
+				<td><input type='text' id='disc_on' style="color:blue" readonly value='請按鈕' size=30></td>
+			</tr>
 		</table>
 	</form>
 </body>
@@ -123,17 +128,12 @@
  			$("#other_on").val('執行'+d);  
  		});
 
- 		$("#BestChoice_OD").on("click",function(){
- 			window.open("bc_OD.php","補 雙鄰接面處置轉入");
+ 		$("#COOPER_disc").on("click",function(){
+ 			window.open("cooper_ajax/cus_disc.php?path="+$("#path").val(),"補優待身份");
+ 			var d = new Date();
+ 			$("#disc_on").val('執行'+d);  
  		});
-
- 		$("#BestChoice_AC").on("click",function(){
- 			window.open("bc_AC.php","補 預防保健資料轉入");
- 		});
-
- 		$("#BestChoice_cus").on("click",function(){
- 			window.open("bc_CUS.php","補 患者");
- 		});
+ 		
  	});
 
 </script>
