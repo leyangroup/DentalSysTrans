@@ -52,6 +52,9 @@
 		$conn->exec($sql);
 	}
 	echo "資料處理<br>";
+	$sql="update registration set cussn=0 where cussn is null";
+	$conn->exec($sql);
+
 	$sql="update registration r,treat_record t 
 			 set t.regsn=r.regsn,t.cussn=r.cussn
 		   where r.ddate=t.ddate
