@@ -47,6 +47,9 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="Angel" >梵谷 Angel</button></td>
 				</tr>
+				<tr>
+					<td><button class="btn btn-success" type='button' id="dentall" >牙醫通 Dentall</button></td>
+				</tr>
 			</table>
 		</div>
 	</form>
@@ -70,6 +73,10 @@
 
  		$("#Angel").on("click",function(){
  			document.location.href="index_angel.php?DT="+$("#DT").val(); 
+ 		});
+
+ 		$("#dentall").on("click",function(){
+ 			document.location.href="index_dentall.php?DT="+$("#DT").val(); 
  		});
  	});
 
