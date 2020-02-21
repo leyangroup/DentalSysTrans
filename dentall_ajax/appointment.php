@@ -21,7 +21,7 @@
 
 		var_dump($line);
 		$ddate=$line['appdt'];
-		$schtime=$line['hh'].':'.$line['mm'];
+		$schtime=$line['hh'].':'.substr('0'.$line['mm'],0,2);
 		$note=$line['note'];
 		$schlen=$line['required_treatment_time'];
 		$cussn=$line['patient_id'];
@@ -32,7 +32,7 @@
 	    echo "$ddate-$schtime".$sql."<br>";
 	    $conn->exec($sql);
 	}
-	$conn->exec("update registration r,customer c set r.cusno=c.cusno WHERE seqno='000' and r.cussn=c.cussn");
+	$conn->exec("update registration r,customer c set r.cusno=c.cusno,r.schtel=c.custel,r.schmobile=c.cusmob WHERE seqno='000' and r.cussn=c.cussn");
 
 	// 释放结果集
 	pg_free_result($result);

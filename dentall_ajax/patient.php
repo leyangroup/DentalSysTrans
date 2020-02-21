@@ -72,6 +72,19 @@
 	    $conn->exec($sql);
 	}
 
+	//處理地址
+	echo "處理地址<br>";
+	$sql="update customer c,zip z set cuszip=zip,cusaddr=replace(cusaddr,concat(z.county,z.city),'') WHERE c.cusaddr like concat(z.county,z.city,'%')";
+	$conn->exec($sql);
+
+	echo "處理初診日";
+	$sql="update customer c set firstdate=(select min(ddate) from registration where cussn=c.cussn and ic_type is not null and ic_type !='') "
+	$conn->exec($sql);
+
+	echo "處理最後診日";
+	$sql="update customer c set lastdate=(select max(ddate) from registration where cussn=c.cussn and ic_type is not null and ic_type !='')";
+	$conn->exec($sql);
+
 	// 释放结果集
 	pg_free_result($result);
 

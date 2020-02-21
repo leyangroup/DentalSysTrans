@@ -1,32 +1,11 @@
 <?php
 	include "include/db.php";
-
-
 	$dt=getToday();
 	function getToday(){
 		date_default_timezone_set('Asia/Taipei');
 		$d=new DateTime();
 		return $d->format('Y-m-d');
 	}
-
-	$pgconn=postgreConnect();
-	$sql="select * from patient";
-	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
-	// echo "<table>";
-	// while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
-	//     echo "<tr>";
-	//     foreach ($line as $col_value) {
-	//         echo "<td>$col_value</td>";
-	//     }
-	//     echo "</tr>";
-	// }
-	// echo "</table>";
-
-	// // 释放结果集
-	// pg_free_result($result);
-
-	// // 关闭连接
-	// pg_close($dbconn);
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +64,7 @@
 			<div><label></label></div>
 
 			<div>
-				<button type='button' class="btn btn-info" id="drug">6.藥品 資料轉換</button>
+				<button type='button' class="btn btn-info" id="drug">6.藥品、過敏藥、病史 資料轉換</button>
 				<input type='text' id='drug_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
@@ -97,10 +76,15 @@
 			
 			<div><label></label></div>
 			<div>
-				<button type='button' class="btn btn-info" id="tm">8.支付標準 資料轉換</button>
+				<button type='button' class="btn btn-info" id="tm">8.支付標準 與 資料整理</button>
 				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="oe">自費轉出</button>
+				<input type='text' id='oe_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
 			
 		</table>
 	</form>
@@ -155,6 +139,18 @@
  			var d = new Date();
  			window.open("dentall_ajax/appointment.php","預約 資料轉換");
  			$("#app_on").val('執行'+d); 
+ 		});
+
+ 		$("#tm").on("click",function(){
+ 			var d = new Date();
+ 			window.open("dentall_ajax/treatment.php","處置 資料轉換");
+ 			$("#tm_on").val('執行'+d); 
+ 		});
+
+ 		$("#oe").on("click",function(){
+ 			var d = new Date();
+ 			window.open("dentall_ajax/oe.php","處置 資料轉換");
+ 			$("#oe_on").val('執行'+d); 
  		});
  	});
 
