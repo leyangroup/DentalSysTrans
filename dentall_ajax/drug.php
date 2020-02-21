@@ -37,7 +37,37 @@
 	    echo $nhicode.'-'.$name."<br>";
 	    $conn->exec($sql);
 	}
-	
+	$conn->exec('truncate table allergic');
+	$conn->exec('truncate table systemdisease');	
+	$conn->exec('truncate table paallergic');
+	$conn->exec('truncate table pasystemdi');
+
+	$sql="select * from tag ";
+	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
+	while ($rs = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+		$id=$rs['id'];
+		$type=$rs['jhi_type'];
+		$name=$rs['name'];
+		if($type=='ALLERGY'){
+			$conn->exec("insert into allergic(asn,ano,aname)values($id,'$id','$name')");
+		}else{
+			$conn->exec("insert into systemdisease(asn,ano,aname)values($id,'$id','$name')");
+		}
+	}
+
+	$sql="select jhi_type,tags_id,patients_id from tag t,patient_tag p where t.id=p.tags_id";
+	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
+	while ($rs = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+		$type=$rs['jhi_type'];
+		$tag=$rs['tags_id'];
+		$pt=$rs['patients_id'];
+		if ($type=='ALLERGY'){
+			$conn->exec("insert into paallergic(cussn,asn)values($pt,$tag)");
+		}else{
+			$conn->exec("insert into pasystemdi(cussn,sdsn)values($pt,$tag)");
+		}
+	}
+
 
 	// 释放结果集
 	pg_free_result($result);

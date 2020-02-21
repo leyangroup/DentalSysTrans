@@ -29,14 +29,7 @@ function postgreConnect(){
 		if (!$dbconn) 
 		    echo "连接失败！！！！！/r/n";
 		else 
-		    echo "连接成功！！！！！/r/n";
-		    
-
-		// $host='127.0.0.1';
-		// $db='test';
-		// $conn=new PDO("pgsql:host=$host;port=54321;dbname=$db;",array(PDO::ATTR_PERSISTENT => true));
-  //       $conn->query('set names utf8;');
-        return $dbconn;
+		return $dbconn;
     } catch (PDOException $e) {
         print "Couldn't connect to the postgreSQL tabase:".$e->getMessage();
     }

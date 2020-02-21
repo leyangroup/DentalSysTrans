@@ -7,61 +7,71 @@
     ini_set("memory_limit", "1024M"); 
 	$pgconn=postgreConnect();
 	$sql="select a.id as nhi_disposal_id,a.disposal_id,a73 as trcode,a74 as fdi,a75 as side,quantity,p.total,nhi_description,icd10,icd9
-from nhi_extend_disposal as a,nhi_extend_treatment_procedure as t,
-(select * from treatment_procedure m 
-       left join (select i.id as icd10id, i.code as icd10,j.code as icd9 from nhi_icd_10_cm i , nhi_icd_9_cm j  where  nhi_icd9cm_id=j.id
-				 ) n 
-	  on cast(m.nhi_icd_10_cm as int) = n.icd10id )  as p  
-where a.id=t.nhi_extend_disposal_id
-and t.treatment_procedure_id=p.id
-order by 1";
+			from nhi_extend_disposal as a,
+				nhi_extend_treatment_procedure as t,
+				(select * from treatment_procedure m 
+       				left join (select i.id as icd10id, i.code as icd10,j.code as icd9 from nhi_icd_10_cm i , nhi_icd_9_cm j  where  nhi_icd9cm_id=j.id
+				              ) n on cast(m.nhi_icd_10_cm as int) = n.icd10id 
+				 )  as p  
+			where a.id=t.nhi_extend_disposal_id
+			  and t.treatment_procedure_id=p.id
+			order by 1";
 
+	// $sql="select * 
+	//         from (
+	//         		select r.id as rid,p.disposal_id, p.id as treatment_procedure_id,p.quantity,p.total,p.nhi_description,p.nhi_procedure_id,
+	// 						(select code from nhi_icd_10_cm where id=cast(p.nhi_icd_10_cm as int)) as icd10,
+	// 						(select code from nhi_icd_9_cm where id=n.nhi_icd9cm_id) icd9,n.code,n.name,n.point,o.position
+
+	// 						from registration r,disposal d,treatment_procedure p,nhi_procedure n,tooth o
+	// 						where r.id=d.registration_id
+	// 						and d.id=p.disposal_id
+	// 						and p.nhi_procedure_id=n.id
+	// 						and p.id=o.treatment_procedure_id
+	// 			) aa left join nhi_extend_treatment_procedure bb 
+	// 			on aa.treatment_procedure_id=bb.treatment_procedure_id
+	// 			order by rid";
 	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
-	while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
-	    foreach ($line as $key => $value) {
-	    	switch ($key) {
-	    		case 'nhi_disposal_id':
-	    			$nhi_disposal_id=$value;
-	    			break;
-	    		case 'trcode':
-	    			$trcode=$value;
-	    			break;
-	    		case 'fdi':
-	    			$fdi=$value;
-	    			break;
-	    		case 'side':
-	    			$side=$value;
-	    			break;
-	    		case 'quantity':
-	    			$nums=$value;
-	    			break;
-	    		case 'total':
-	    			$pamt=$value;
-	    			break;
-	    		case 'nhi_description':
-	    			$tx=$value;
-					$tx=str_replace("\\", "＼", $tx);
-					$tx=str_replace("'", "\'", $tx);
-	    			break;
-	    		case 'icd10':
-	    			$icd10=$value;
-	    			break;
-	    		case 'icd9':
-	    			$icd9=$value;
-	    			break;
-	    	}
-	    }
+	while ($rs = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+	    $disposal_id=$rs['disposal_id'];
+	    $trcode=$rs['trcode'];
+	    //$name=$rs['name'];
+	    //$point=$rs['point'];
+	    $fdi=$rs['fdi'];
+	    $side=$rs['a75'];
+	    $nums=$rs['quantity'];
+	    $pamt=$rs['total'];
+	    $tx=$rs['nhi_description'];
+	    $tx=str_replace("\\", "＼", $tx);
+		$tx=str_replace("'", "\'", $tx);
+		$icd10=$rs['icd10'];		
+		$icd9=$rs['icd9'];
+
+	    // $sql="insert into treat_record (regsn,fdi,trcode,treatname,side,nums,add_percent,punitfee,pamt,treat_memo,sickno,icd10,drno) value
+	    // 		(0,'$fdi','$trcode','$name','$side',$nums,1,$point,$pamt,'$tx','$icd9','$icd10',$disposal_id)";
 	    $sql="insert into treat_record (regsn,fdi,trcode,side,nums,add_percent,pamt,treat_memo,sickno,icd10,drno) value
-	    		(0,'$fdi','$trcode','$side',$nums,1,$pamt,'$tx','$icd9','$icd10',$nhi_disposal_id)";
-	    echo "$nhi_disposal_id-$fdi-$trcode".$sql."<br>";
+	    		(0,'$fdi','$trcode','$side',$nums,1,$pamt,'$tx','$icd9','$icd10',$disposal_id)";
+
+	    echo "$disposal_id-$fdi-$trcode<br>";
 	    $conn->exec($sql);
 	}
-	
-	$sql="update registration r, treat_record t 
-			 set t.cussn=r.cussn,t.ddate=r.ddate,t.seqno=r.seqno,t.regsn=r.regsn
-		   WHERE r.assistno=t.drno";
-	$conn->exec($sql);
+	//掛號與處置串接
+	$conn->exec("update registration r, treat_record t set t.cussn=r.cussn,t.ddate=r.ddate,t.seqno=r.seqno,t.regsn=r.regsn WHERE r.gamt=t.drno");
 
+	//填上療程卡號
+	$conn->exec("update registration r,treat_record t set t.start_icseq=substr(ic_seqno,-4)where ic_type='AB' and r.regsn=t.regsn");
+
+	//填上療程開始日
+	$conn->exec("update registration r,treat_record t set t.start_date=r.ddate where ic_type='02' and r.cussn=t.cussn and substr(r.ic_seqno,-4)=t.start_icseq");
+
+	//處理01271
+	$conn->exec("update registration r,treat_record t set r.check_finding=t.treat_memo,t.deldate='1911-01-01' where r.regsn=t.regsn and t.trcode in ('01271C','01272C','01273C')");
+
+	$conn->exec("update registration r,prescription p set r.trcode='00121C' where r.regsn=p.regsn and r.trcode='00122C'");
+	$conn->exec("update registration r,prescription p set r.trcode='00129C' where r.regsn=p.regsn and r.trcode='00130C'");
+
+	//處理數量
+	$conn->exec("update treat_record t,treatment m set t.nums=round(length(fdi)/2) where t.trcode=m.trcode and m.fee_unit=0 and nums!=round(length(fdi)/2)");
 
 	// 释放结果集
 	pg_free_result($result);
