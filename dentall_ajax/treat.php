@@ -6,16 +6,16 @@
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
 	$pgconn=postgreConnect();
-	$sql="select a.id as nhi_disposal_id,a.disposal_id,a73 as trcode,a74 as fdi,a75 as side,quantity,p.total,nhi_description,icd10,icd9
-			from nhi_extend_disposal as a,
-				nhi_extend_treatment_procedure as t,
-				(select * from treatment_procedure m 
-       				left join (select i.id as icd10id, i.code as icd10,j.code as icd9 from nhi_icd_10_cm i , nhi_icd_9_cm j  where  nhi_icd9cm_id=j.id
-				              ) n on cast(m.nhi_icd_10_cm as int) = n.icd10id 
-				 )  as p  
-			where a.id=t.nhi_extend_disposal_id
-			  and t.treatment_procedure_id=p.id
-			order by 1";
+	// $sql="select a.id as nhi_disposal_id,a.disposal_id,a73 as trcode,a74 as fdi,a75 as side,quantity,p.total,nhi_description,icd10,icd9
+	// 		from nhi_extend_disposal as a,
+	// 			nhi_extend_treatment_procedure as t,
+	// 			(select * from treatment_procedure m 
+ //       				left join (select i.id as icd10id, i.code as icd10,j.code as icd9 from nhi_icd_10_cm i , nhi_icd_9_cm j  where  nhi_icd9cm_id=j.id
+	// 			              ) n on cast(m.nhi_icd_10_cm as int) = n.icd10id 
+	// 			 )  as p  
+	// 		where a.id=t.nhi_extend_disposal_id
+	// 		  and t.treatment_procedure_id=p.id
+	// 		order by 1";
 
 	// $sql="select * 
 	//         from (
@@ -31,6 +31,11 @@
 	// 			) aa left join nhi_extend_treatment_procedure bb 
 	// 			on aa.treatment_procedure_id=bb.treatment_procedure_id
 	// 			order by rid";
+	$sql="select a.quantity,a.total,a.nhi_description,a.disposal_id,doctor_user_id,(select code from nhi_icd_10_cm where id=cast(a.nhi_icd_10_cm as int)) as icd10,a71,a72,a73 as trcode,a74 as fdi,a75,a76,a77,a78,nhi_extend_disposal_id,c.*
+from treatment_procedure a , nhi_extend_treatment_procedure b,nhi_extend_disposal c
+where a.id=b.treatment_procedure_id
+and a.disposal_id=c.disposal_id
+order by a71 desc";
 	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
 	while ($rs = pg_fetch_array($result, null, PGSQL_ASSOC)) {
 	    $disposal_id=$rs['disposal_id'];
@@ -45,12 +50,13 @@
 	    $tx=str_replace("\\", "＼", $tx);
 		$tx=str_replace("'", "\'", $tx);
 		$icd10=$rs['icd10'];		
-		$icd9=$rs['icd9'];
+		//$icd9=$rs['icd9'];
+		$fdi2=$rs['fdi'];  //牙位會超過，先存這裡
 
 	    // $sql="insert into treat_record (regsn,fdi,trcode,treatname,side,nums,add_percent,punitfee,pamt,treat_memo,sickno,icd10,drno) value
 	    // 		(0,'$fdi','$trcode','$name','$side',$nums,1,$point,$pamt,'$tx','$icd9','$icd10',$disposal_id)";
-	    $sql="insert into treat_record (regsn,fdi,trcode,side,nums,add_percent,pamt,treat_memo,sickno,icd10,drno) value
-	    		(0,'$fdi','$trcode','$side',$nums,1,$pamt,'$tx','$icd9','$icd10',$disposal_id)";
+	    $sql="insert into treat_record (regsn,fdi,trcode,side,nums,add_percent,pamt,treat_memo,sickno,icd10,drno,cc) value
+	    		(0,'$fdi','$trcode','$side',$nums,1,$pamt,'$tx','$icd9','$icd10',$disposal_id,'$fdi')";
 
 	    echo "$disposal_id-$fdi-$trcode<br>";
 	    $conn->exec($sql);

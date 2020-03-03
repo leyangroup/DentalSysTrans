@@ -78,7 +78,7 @@
 	$conn->exec($sql);
 
 	echo "處理初診日";
-	$sql="update customer c set firstdate=(select min(ddate) from registration where cussn=c.cussn and ic_type is not null and ic_type !='') "
+	$sql="update customer c set firstdate=(select min(ddate) from registration where cussn=c.cussn and ic_type is not null and ic_type !='') ";
 	$conn->exec($sql);
 
 	echo "處理最後診日";
