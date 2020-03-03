@@ -37,10 +37,13 @@
 	    echo $nhicode.'-'.$name."<br>";
 	    $conn->exec($sql);
 	}
+	echo "處理過敏藥物與病史<br>";
 	$conn->exec('truncate table allergic');
 	$conn->exec('truncate table systemdisease');	
 	$conn->exec('truncate table paallergic');
-	$conn->exec('truncate table pasystemdi');
+	$conn->exec('truncate table pasystemdi');	
+	$conn->exec('truncate table sickmap');
+
 
 	$sql="select * from tag ";
 	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
@@ -67,6 +70,17 @@
 			$conn->exec("insert into pasystemdi(cussn,sdsn)values($pt,$tag)");
 		}
 	}
+	echo "處理ICD10<br>";
+
+	$sql="select a.code icd10,b.code icd9 from nhi_icd_10_cm a ,nhi_icd_9_cm b where a.nhi_icd9cm_id=b.id";
+	$result = pg_query($sql) or die('Query failed: ' . pg_last_error());
+	while ($rs = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+		$icd9=$rs['icd9'];
+		$icd10=$rs['icd10'];
+		$conn->exec("insert into sickmap(icd9,icd10)values('$icd9','$icd10')");
+	}
+
+	$conn->exec("update treat_record t, sickmap s set t.sickno=s.icd9 WHERE t.icd10=s.icd10");
 
 
 	// 释放结果集
