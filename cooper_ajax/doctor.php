@@ -87,12 +87,18 @@
 					}
 					break;
 				
-				
+				case '指導醫師':
+					if (trim($value2)==''){
+						$giadr='';
+					}else{
+						$giadr=trim($value2);
+					}
+					break;
 				}
 		}
 		$gmail=trim($value['gmail']);
-		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfstartjob,sfendjob,position,gmailno)values
-					('$drno','$drname','$id','$birth','$sex','$fdt','$ldt','D','$gmail') ";
+		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfstartjob,sfendjob,position,gmailno,sfsname,drkind)values
+					('$drno','$drname','$id','$birth','$sex','$fdt','$ldt','D','$gmail','$giadr','0') ";
 		echo "新增醫師：".$sql."<br>";
 
 		$conn->exec($sql);

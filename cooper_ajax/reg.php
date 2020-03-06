@@ -17,6 +17,22 @@
 		$drArr[$col['sfno']]=$col['sfsn'];
 	}
 
+	$sql="SELECT a.sfsn as drsn1,a.sfno drno,a.sfname,a.sfsname,b.sfsn as drsn2
+			FROM staff a left join staff b  
+			  on a.sfsname=b.sfno  
+			order by a.sfsn";
+	$RS=$conn->query($sql);
+	$mainDr=[];
+	$giaDr=[];
+	foreach ($RS as $key => $col) {
+		$mainDr[$col['drno']]=$col['drsn1'];
+		if ($col['sfsname']==''){
+			$giaDr[$col['drno']]=$col['drsn1'];
+		}else{
+			$giaDr[$col['drno']]=$col['drsn2'];
+		}
+	}
+
 	//掛號
 	$conn->exec("truncate table registration");
 	// $sql = "SELECT o.*,c.就醫類別 FROM operate o left join iccard c on  o.日期時間=c.日期時間 and o.病歷編號=c.病歷編號";
@@ -88,9 +104,12 @@
 					if ($v2=='') $rxday=0;
 					break;
 				case '醫師代號':
-					$drsn=$drArr[$v2];
-					if ($drsn==null || $drsn==''){
-						$drsn=0;
+					$drsn1=$mainDr[$v2];
+					$drsn2=$giaDr[$v2];
+					//$drsn=$drArr[$v2];
+					if ($drsn1==null || $drs1n==''){
+						$drsn1=0;
+						$drsn2=0;
 					}
 					break;
 				case '健保診察碼':
