@@ -17,16 +17,15 @@
 		$drArr[$col['sfno']]=$col['sfsn'];
 	}
 
-	$sql="SELECT a.sfsn as drsn1,a.sfno drno,a.sfname,a.sfsname,b.sfsn as drsn2
+	$sql="SELECT a.sfsn as drsn1,a.sfno drno,a.sfname,a.sfsname giano,b.sfsn as drsn2
 			FROM staff a left join staff b  
 			  on a.sfsname=b.sfno  
 			order by a.sfsn";
 	$RS=$conn->query($sql);
-	$mainDr=[];
-	$giaDr=[];
+	
 	foreach ($RS as $key => $col) {
 		$mainDr[$col['drno']]=$col['drsn1'];
-		if ($col['sfsname']==''){
+		if ($col['giano']==' ' || $col['giano']==NULL){
 			$giaDr[$col['drno']]=$col['drsn1'];
 		}else{
 			$giaDr[$col['drno']]=$col['drsn2'];
@@ -104,10 +103,11 @@
 					if ($v2=='') $rxday=0;
 					break;
 				case '醫師代號':
-					$drsn1=$mainDr[$v2];
-					$drsn2=$giaDr[$v2];
+				 	
+					$drsn1=$mainDr[trim($v2)];
+					$drsn2=$giaDr[trim($v2)];
 					//$drsn=$drArr[$v2];
-					if ($drsn1==null || $drs1n==''){
+					if ($drsn1==null || $drsn1==''){
 						$drsn1=0;
 						$drsn2=0;
 					}
@@ -231,12 +231,12 @@
 			trcode,nhi_status,category,rx_day,rx_type,is_out,hosp_from,ic_seqno,ic_type,
 			ic_datetime,reg_pay,nhi_partpay,disc_pay,nhi_tamt,nhi_damt,drugsv,trpay,
 			amount,giaamt,drug_partpay,memo,roomsn,end_time,card_ID,case_history,is_oweic,icuploadd,sec_sign)
-			values('$dt','$seqno','$cnt','$cusno',$drsn,$drsn,'$regtime',$disc,'$section',$isnp,'$trcode',
+			values('$dt','$seqno','$cnt','$cusno',$drsn1,$drsn2,'$regtime',$disc,'$section',$isnp,'$trcode',
 					'$nhistatus','$category',$rxday,'$rxtype',$isout,'$thosp','$icseq','$ic_type',
 					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt','$secsign')";
 		echo $dt.'.'.$cusno.'、';
 		// if ($dt>='2008-01-01' && $dt<='2008-01-31'){
-		// 	echo $sql."<br>";
+			// echo $sql."<br>";
 		// }
 		$conn->exec($sql);
 	}
