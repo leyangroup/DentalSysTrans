@@ -59,9 +59,8 @@
 <script type="text/javascript" src="include/jquery.min.js"></script>
 <script type="text/javascript">
  	$(document).ready(function(){
- 		$("#bestChoice").on("click",function(){
- 			alert("run");
- 			document.location.href="Transfer.php?DT="+$("#DT").val();    
+ 		$("#BestChoice").on("click",function(){
+ 			document.location.href="index_bestchoice.php?DT="+$("#DT").val();    
  		});
  		$("#VISD").on("click",function(){
  			document.location.href="index_visd.php";   

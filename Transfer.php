@@ -2,7 +2,7 @@
     include_once "include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
-    $serverName="192.168.1.20\bestchoice";
+    $serverName="192.168.11.10\bestchoice";
     $connectionInfo=array("Database"=>"Doctor","UID"=>'bestchoice',"PWD"=>"0937093374","CharacterSet"=>"UTF-8");
     $msConn=sqlsrv_connect($serverName,$connectionInfo);
     if ($msConn===false){
