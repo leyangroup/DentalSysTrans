@@ -14,9 +14,6 @@
     
 	//院所基本資料
     echo "<br>轉入院所資料 basicset<br>";
-        $sql="truncate table leconfig.zhi_basicset";
-        $mariaConn->exec($sql);
-    
         $sql="select * from Clinic ";
         $users=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
         while ($row=sqlsrv_fetch_array($users)){
@@ -27,10 +24,9 @@
             $addr=$row['Addr1'];
             $tel=$row['Tel1'];
             $fax=$row['Fax'];
-            $insertSQL="insert into leconfig.zhi_basicset(bsname,bstel,bsfax,bsaddr,owner,zip,nhicode) values
-                    ('$clinicname','$tel','$fax','$addr','$owner','$zip','$clinicno')";
-					echo $insertSQL;
-            $mariaConn->exec($insertSQL);
+            $updateSQL="update basicset set bsname='$clinicname',bstel='$tel',bsfax='$fax',bsaddr='$addr',owner='$owner',zip='$zip',nhicode='$clinicno' ";
+            echo $updateSQL;
+            $mariaConn->exec($updateSQL);
         }
     
     echo "<br>轉入使用者資料 staff<br>"; 
@@ -56,6 +52,6 @@
             $staff[$value['sfno']]=$value['sfsn'];
         }
     sqlsrv_close($msConn);
-    echo "<h1>轉入完畢";
+    echo "<h1>基本資料 轉入完畢</h1>";
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-	include_once "include/db.php";
+	include_once "../include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
     $ip=$_GET['IP'];
@@ -11,8 +11,14 @@
     }
     $mariaConn=MariaDBConnect();
     $DT=$_GET['DT'];
-    
+
     echo "<br>轉入患者  customer <br>";
+        $staff=[];
+        $sql="select sfsn,sfno from staff order by sfsn";
+        $result=$mariaConn->query($sql);
+        foreach ($result as $key => $value) {
+            $staff[$value['sfno']]=$value['sfsn'];
+        }
         $sql="truncate table customer ";
         $mariaConn->exec($sql);
 
@@ -96,7 +102,10 @@
             $insertSQL="INSERT into customer (cusno,cusname,cusid,cussex,cusbirthday,custel,cusmob,cusemail,cuszip,cusaddr,cusjob,cusintro,cuslv,firstdate,lastdate,maindrno,lastdrno,barrier,cusmemo)
             values('$cusno','$cusname','$id','$sex','$birth','$tel','$mobile','$email','$zip','$addr','$job',
             '$intro','$lv','$firstdate','$lastdate','$fdr','$ldr','$sp','$memo')";
+            // echo $insertSQL;
+            echo "$cusno-$cusname";
             $mariaConn->exec($insertSQL);
+
         }
     sqlsrv_close($msConn);
     echo "<h3>患者資料轉完 </h3>";

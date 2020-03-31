@@ -1,5 +1,5 @@
 <?php
-    include_once "include/db.php";
+    include_once "../include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
     $ip=$_GET['IP'];
