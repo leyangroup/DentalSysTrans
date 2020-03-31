@@ -26,6 +26,12 @@
 			<div><label></label></div>
 			<h4 style="color:blue">請依序按鈕執行</h4>
 			<div>
+				<button type='button' class="btn btn-info" id="index">建立索引 只要run一次就可以</button>
+				<input type='text' id='index_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+
+			<div>
 				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師 資料轉換</button>
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
@@ -68,10 +74,21 @@
 			
 			<div><label></label></div>
 			<div>
-				<button type='button' class="btn btn-info" id="tm">8.支付標準、其它支出項目 資料轉換</button>
+				<button type='button' class="btn btn-info" id="tm">8.支付標準 資料轉換</button>
 				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="final">9.資料整合</button>
+				<input type='text' id='final_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="drugdeal">10.森源藥品處理</button>
+				<input type='text' id='drugdeal_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
 		</table>
 	</form>
 </body>
@@ -80,11 +97,18 @@
 <script type="text/javascript" src="include/jquery.min.js"></script>
 <script type="text/javascript">
  	$(document).ready(function(){
+ 		$("#index").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/create_index.php?IP="+$("#IP").val(),"診所基本資料轉換");
+ 			$("#index_on").val('執行'+d); 
+ 		});
+
  		$("#Dr").on("click",function(){
  			var d = new Date();
  			window.open("bestchoice_ajax/basic.php?IP="+$("#IP").val(),"診所基本資料轉換");
  			$("#dr_on").val('執行'+d); 
  		});
+
  		$("#patient").on("click",function(){
  			var d = new Date();
  			window.open("bestchoice_ajax/patient.php?IP="+$("#IP").val(),"患者基本資料");
@@ -127,7 +151,17 @@
  			$("#tm_on").val('執行'+d); 
  		});
  		
- 		
+ 		$("#final").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/final.php?IP="+$("#IP").val(),"資料整合");
+ 			$("#final_on").val('執行'+d); 
+ 		});
+
+ 		$("#drugdeal").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/drugdeal.php?IP="+$("#IP").val(),"資料整合");
+ 			$("#drugdeal_on").val('執行'+d); 
+ 		});
  	});
 
 </script>
