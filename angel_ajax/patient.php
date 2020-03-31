@@ -47,9 +47,10 @@
 		$memo=trim(mb_convert_encoding($value['patmemo'],"UTF-8","BIG5"));
 		$memo=str_replace("\\", "＼", $memo);
 		$cusmemo=str_replace("'", "\'", $memo);
-		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo)
+		$soproid=$value['soproid'];
+		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id)
 		 		values('$cusno','$cusname','$shortCode','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
-		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo')";
+		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo',$soproid)";
 		echo "$r.$cusname($cusno)";
 		 		// echo $sql;
 		echo "<br>";
