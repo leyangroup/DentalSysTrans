@@ -27,9 +27,9 @@
 	$r=0;
 	foreach ($result as $key => $value) {
 		$r++;
-
 		$cusno=trim(mb_convert_encoding($value['pat_no'],"UTF-8","BIG5"));
 		$name=trim(mb_convert_encoding($value['pat_name'],"UTF-8","BIG5"));
+		$shortCode=trim(mb_convert_encoding($value['shcode'],"UTF-8","BIG5"));
 		$cusname=str_replace("'", "\'", $name);
 		$cusbirth=WestDT($value['birth']);
 		$firstDT=WestDT($value['fdate']);
@@ -47,10 +47,11 @@
 		$memo=trim(mb_convert_encoding($value['patmemo'],"UTF-8","BIG5"));
 		$memo=str_replace("\\", "＼", $memo);
 		$cusmemo=str_replace("'", "\'", $memo);
-		$sql="insert into customer (cusno,cusname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo)
-		 		values('$cusno','$cusname','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
+		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo)
+		 		values('$cusno','$cusname','$shortCode','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
 		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo')";
 		echo "$r.$cusname($cusno)";
+		 		// echo $sql;
 		echo "<br>";
 		$conn->exec($sql);
 	}
