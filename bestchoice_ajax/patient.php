@@ -99,6 +99,9 @@
             if ($row['ONote']!=''){
                 $memo=$memo.str_replace("'", "’", $row['ONote'])."char(13)";
             }
+            if ($row['Matter']!=''){
+                $memo=$memo.str_replace("'", "’", $row['ONote'])."char(13)";
+            }
             $insertSQL="INSERT into customer (cusno,cusname,cusid,cussex,cusbirthday,custel,cusmob,cusemail,cuszip,cusaddr,cusjob,cusintro,cuslv,firstdate,lastdate,maindrno,lastdrno,barrier,cusmemo)
             values('$cusno','$cusname','$id','$sex','$birth','$tel','$mobile','$email','$zip','$addr','$job',
             '$intro','$lv','$firstdate','$lastdate','$fdr','$ldr','$sp','$memo')";

@@ -22,14 +22,14 @@
         }
         $sql="delete from registration where seqno='000'";
         $mariaConn->exec($sql);
-
+        $StartDT=$DT." 00:00:00";
         $sql="SELECT OrderNo,PatNo,patName,DoctorNo,
                      convert(char(16),StartDate,120)StartDate,
                      convert(char(16),EndDate,120)EndDate,
                      convert(char(10),StartDate,120)sd,
                      convert(char(10),EndDate,120)ed,Notes 
                 from [Order]
-               where StartDate>='$DT'
+               where StartDate>='$StartDT'
                  and Enable='1' ";
                echo $sql;
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
@@ -51,10 +51,10 @@
         $mariaConn->exec($sql);
         
         //增加newpatient 
-        $sql="insert into newpatient (name,regsn,drno)  
-              select cusno,regsn,drno1 
+        $sql="insert into newpatient (name,regsn,drno,creator)  
+              select cusno,regsn,drno1,0
                 from registration 
-               where cussn=-1 and deldate is null";
+               where cussn=-1";
         $mariaConn->exec($sql);
         
         //配對  
