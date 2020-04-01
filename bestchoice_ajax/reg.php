@@ -49,7 +49,7 @@
             $icseq=substr($regno,0,3).$row['CardNo'];
             $nhistatus=substr($row['BurdenNo'],0,3);
             $partpay=$row['BurdenAmt'];
-            $ictype=$row['st'];
+            $ictype=substr($row['st'],0,2);
             $barid=$row['Sp16'];
             $hospfrom=$row['ClinicFrom'];
             $isout=($row['isOut']=='')?0:$row['isOut'];

@@ -86,7 +86,12 @@
 
 			<div><label></label></div>
 			<div>
-				<button type='button' class="btn btn-info" id="drugdeal">10.森源藥品處理</button>
+				<button type='button' class="btn btn-info" id="final2">10.療程日期與開始日填入</button>
+				<input type='text' id='final2_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="drugdeal">『森源』 藥品處理</button>
 				<input type='text' id='drugdeal_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 		</table>
@@ -155,6 +160,12 @@
  			var d = new Date();
  			window.open("bestchoice_ajax/final.php?IP="+$("#IP").val(),"資料整合");
  			$("#final_on").val('執行'+d); 
+ 		});
+
+ 		$("#final2").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/final2.php?IP="+$("#IP").val(),"療程日期與開始日填入");
+ 			$("#final2_on").val('執行'+d); 
  		});
 
  		$("#drugdeal").on("click",function(){

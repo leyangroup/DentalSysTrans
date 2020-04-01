@@ -159,13 +159,7 @@
     $sql="update customer c,tmpfamily f set c.family_group_id=f.sn where cusaddr=addr";
     $mariaConn->exec($sql); 
 
-    森源藥品處理
-delete from drug where drugno in ('43','44','11','45','A03','29','A01','32','31','37','39','40','10','42','05','06','A02','36','24','33','34');
-
-update prescription p,drug d 
-set p.drugno=d.drugno
-where p.nhidrugno=d.nhicode
-and p.drugno!=d.drugno;
+    
 
 
     echo "<h1>資料整理 完成</h1>";
