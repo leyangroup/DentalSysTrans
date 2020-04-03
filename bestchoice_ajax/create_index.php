@@ -15,9 +15,11 @@
     echo "建立索引";
     $sql="ALTER TABLE `treat_record` ADD INDEX( `icuploadD`, `uploadD`)";
     $mariaConn->exec($sql);  
+    $mariaConn->exec("ALTER TABLE `treat_record` ADD INDEX(`uploadD`)");
 
     $sql="ALTER TABLE `registration` ADD INDEX( `icuploadD`, `uploadD`)";
     $mariaConn->exec($sql);  
+    $mariaConn->exec("ALTER TABLE `registration` ADD INDEX(`uploadD`)");
 
     $sql="ALTER TABLE `prescription` ADD INDEX( `uploadD`, `icuploadd`)";
     $mariaConn->exec($sql);  
