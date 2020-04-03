@@ -23,11 +23,16 @@
             $staff[$value['sfno']]=$value['sfsn'];
         }
 
+        $result=$mariaConn->query("select * from disc_list");
+        foreach ($result as $key => $value) {
+            $disc[$value['discid']]=$value['discsn'];
+        }
+
         $sql="SELECT m.TreatNo ,aa.RegNo RNO,aa.PatNo PNO,convert(char(10),RegDate,120)regdate,
                     RegTime,CardNo,BurdenNo,BurdenAmt,[status] as st,Sp16,ClinicFrom,isOut,ApplyDoctor,
                     Totcat as cate,LookCode,LookAmt,DrugSerNo,DrugSerAmt,
                     DrugSubAmt,DealSubAmt,DrugTotalAmt,DealTotalAmt,
-                    totalAmt,ApplyAmt,convert(varchar(1000),aa.MainDesc) as cc 
+                    totalAmt,ApplyAmt,convert(varchar(1000),aa.MainDesc) as cc ,RegAmt,RebateReason,Rebate
               from (select r.*,t.TreatNo
                       from register r left join TreatRegister t
                       on r.RegNo=t.RegNo
@@ -65,13 +70,20 @@
             $tamt=isset($row['DealSubAmt'])?$row['DealSubAmt']:0;
             $amount=isset($row['DealTotalAmt'])?$row['DealTotalAmt']:0;
             $giaamt=$amount-$partpay;
+            $reg_pay=$row['RegAmt'];
+            if ($row['RebateReason']!=''){
+                $discid=$disc[$row['RebateReason']];
+            }else{
+                $discid=0;
+            }
+            $disc_pay=$row['Rebate'];
             $cc=isset($row['cc'])?$row['cc']:'';
             $cc=str_replace("'", "’", $cc);
             $insertSQL="INSERT into registration (ddate,seqno,cusno,reg_time,drno1,drno2,ic_seqno,ic_type,category,
                         trcode,trpay,rx_type,rx_code,drugsv,nhi_status,nhi_partpay,barid,hosp_from,is_out,
-                        nhi_damt,nhi_tamt,amount,giaamt,cc,icuploadd,uploadd,case_history)
-                        values('$ddate','$seqno','$cusno','$regtime','$dr','$dr','$icseq','$ictype','$cate','$trcode',$trpay,'$rxtype','$rxcode',$drugsv,'$nhistatus',$partpay,'$barid','$hospfrom',$isout,$damt,$tamt,$amount,$giaamt,'$cc','$regno','$treatno','4')";
-            // echo "<br>".$insertSQL;
+                        nhi_damt,nhi_tamt,amount,giaamt,cc,icuploadd,uploadd,case_history,reg_pay,disc_pay,discid)
+                        values('$ddate','$seqno','$cusno','$regtime','$dr','$dr','$icseq','$ictype','$cate','$trcode',$trpay,'$rxtype','$rxcode',$drugsv,'$nhistatus',$partpay,'$barid','$hospfrom',$isout,$damt,$tamt,$amount,$giaamt,'$cc','$regno','$treatno','4',$reg_pay,$disc_pay,$discid)";
+            echo "<br>".$insertSQL;
             echo $ddate."-".$seqno.", ";
             $mariaConn->exec($insertSQL);
         }

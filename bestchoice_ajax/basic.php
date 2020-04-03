@@ -45,13 +45,24 @@
             values('$userno','$username','$userid','$position')";
             $mariaConn->exec($insertSQL);
         }
-        $staff=[];
-        $sql="select sfsn,sfno from staff order by sfsn";
-        $result=$mariaConn->query($sql);
-        foreach ($result as $key => $value) {
-            $staff[$value['sfno']]=$value['sfsn'];
+        
+
+    echo "<br>轉入優待身份 code";
+        $mariaConn->exec("truncate table disc_list");
+
+        $sql="select * from Code where CodeID='019' and No!='0'";
+        echo $sql."<br>";
+        $disc=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
+        while ($row=sqlsrv_fetch_array($disc)){
+            $discno=$row['Value1'];
+            $discname=$row['Value2'];
+            $discreg=$row['Value3'];
+            $discpartpay=$row['Value4'];
+            $insertSQL="insert into disc_list(discid,disc_name,reg_disc,partpay_disc)values('$discno','$discname',$discreg,$discpartpay)";
+            echo "$insertSQL<br>";
+            $mariaConn->exec($insertSQL);
         }
-    sqlsrv_close($msConn);
     echo "<h1>基本資料 轉入完畢</h1>";
 
+    sqlsrv_close($msConn);
 ?>

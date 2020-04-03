@@ -20,14 +20,15 @@
           and t.uploadd!=''
           and t.ddate!=r.ddate
           and r.ic_type!='AB'";
+    echo $sql."<br>";
     $mariaConn->exec($sql); 
 
     $sql="update treat_record t,abstart a 
              set t.start_date=a.startdt,start_icseq=icseqno
            where t.treatsn=a.tsn";
+    echo $sql."<br>";
     $mariaConn->exec($sql); 
+    echo "<h1>AB療程 資料整理 完成</h1>";
 
     
-    sqlsrv_close($msConn);
-    echo "<h1>資料整理 完成</h1>";
 ?>

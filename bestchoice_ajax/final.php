@@ -71,27 +71,6 @@
     $sql="update treat_record set deldate='1911-01-01' where trcode like '0127%'";
     $mariaConn->exec($sql); 
 
-
- //填入療程卡號與療程開始日
-    // echo "<br> 8.插入 療程開始日";
-    // $mariaConn->exec("drop table if exists abstart"); 
-    // $mariaConn->exec("create table abstart(tsn int,tregsn int,rregsn int,icseqno varchar(4),startdt varchar(10))"); 
-    // $mariaConn->exec("ALTER TABLE `abstart` ADD INDEX( `tsn`)"
-
-    // $sql="insert into abstart(tsn,tregsn,rregsn,icseqno,startdt)
-    //     select t.treatsn,t.regsn,r.regsn,substr(r.ic_seqno,-4),r.ddate
-    //      from treat_record t ,registration r
-    //     where t.uploadd=r.uploadd
-    //       and t.uploadd!=''
-    //       and t.ddate!=r.ddate
-    //       and r.ic_type!='AB'";
-    // $mariaConn->exec($sql); 
-
-    // $sql="update treat_record t,abstart a 
-    //          set t.start_date=a.startdt,start_icseq=icseqno
-    //        where t.treatsn=a.tsn";
-    // $mariaConn->exec($sql); 
-
     echo "<br> 9.修正轉入的treatment的一些屬性";
     $sql="update treatment t,nhicode n 
             set t.is_oper=n.is_oper,t.is_endo=n.is_endo,t.is_oral=n.is_oral,t.is_peri=n.is_peri,t.is_xray=n.is_xray,t.is_pedo=n.is_pedo,
@@ -153,14 +132,12 @@
     $sql="insert into tmpfamily(addr) select cusaddr from customer where cusaddr !='' group by cusaddr having count(*)>=2";
     $mariaConn->exec($sql); 
 
-    $sql="insert into family_groups(id) select sn from tmpfamily";
+    $sql="insert into family_groups(id,created_at,updated_at) select sn,now(),now() from tmpfamily";
     $mariaConn->exec($sql); 
 
     $sql="update customer c,tmpfamily f set c.family_group_id=f.sn where cusaddr=addr";
     $mariaConn->exec($sql); 
 
-    
-
-
+   
     echo "<h1>資料整理 完成</h1>";
 ?>
