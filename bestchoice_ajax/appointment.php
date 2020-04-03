@@ -10,7 +10,7 @@
         die(print_r(sqlsrv_errors(),true));
     }
     $mariaConn=MariaDBConnect();
-    $DT=$_GET['DT'];
+    $DT=$_GET['dt'];
 
     //轉換完後要帶入患者電話與手機
     echo "轉入預約資料 order<br>";
@@ -34,15 +34,17 @@
                echo $sql;
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
         while ($row=sqlsrv_fetch_array($result)) {
-            $cusno=$row['PatNo'];
-            $dr=$staff[$row['DoctorNo']];
-            $dt=substr($row['sd'],0,10);
-            $schtime=substr($row['StartDate'],-5);
-            $min=(strtotime($row['EndDate'])-strtotime($row['StartDate']))/60;
-            $note=str_replace("'","’",$row['Notes']);
-            $insertSQL="insert into registration(ddate,seqno,cusno,sch_time,schlen,sch_note,drno1,drno2)
-                        values('$dt','000','$cusno','$schtime',$min,'$note',$dr,$dr)";
-            echo $cusno,'--'.$dt." ";
+            if (substr($row['sd'],0,10)>$DT){
+                $cusno=$row['PatNo'];
+                $dr=$staff[$row['DoctorNo']];
+                $appdt=substr($row['sd'],0,10);
+                $schtime=substr($row['StartDate'],-5);
+                $min=(strtotime($row['EndDate'])-strtotime($row['StartDate']))/60;
+                $note=str_replace("'","’",$row['Notes']);
+                $insertSQL="insert into registration(ddate,seqno,cusno,sch_time,schlen,sch_note,drno1,drno2)
+                            values('$appdt','000','$cusno','$schtime',$min,'$note',$dr,$dr)";
+                echo $cusno,'--'.$appdt." ";
+            }
             $mariaConn->exec($insertSQL);            
         } 
 

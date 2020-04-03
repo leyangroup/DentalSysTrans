@@ -90,6 +90,14 @@
 				<input type='text' id='final2_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
+
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="charge">11.charge</button>
+				<input type='text' id='charge_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<div><label></label></div>
 			<div>
 				<button type='button' class="btn btn-info" id="drugdeal">『森源』 藥品處理</button>
 				<input type='text' id='drugdeal_on' style="color:blue" readonly value='請按鈕' size=50>
@@ -172,6 +180,12 @@
  			var d = new Date();
  			window.open("bestchoice_ajax/drugdeal.php?IP="+$("#IP").val(),"資料整合");
  			$("#drugdeal_on").val('執行'+d); 
+ 		});
+
+ 		$("#charge").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/createCharge.php?IP="+$("#IP").val()+"&dt="+$("#DT").val(),"charge");
+ 			$("#charge_on").val('執行'+d); 
  		});
  	});
 
