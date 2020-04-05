@@ -88,6 +88,8 @@
             $mariaConn->exec($insertSQL);
         }
 
+        $mariaConn->exec("update registration set amount=trpay+nhi_tamt+nhi_damt+drugsv,giaamt=trpay+nhi_tamt+nhi_damt+drugsv-nhi_partpay-drug_partpay");
+
     sqlsrv_close($msConn);
     echo "<h1>轉入掛號 完成</h1>";
 

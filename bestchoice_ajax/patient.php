@@ -12,6 +12,9 @@
     $mariaConn=MariaDBConnect();
     $DT=$_GET['DT'];
 
+    $result=$mariaConn->query("select bsname from basicset limit 1")->fetch();
+    $bsname=$result['bsname'];
+
     echo "<br>轉入患者  customer <br>";
         $staff=[];
         $sql="select sfsn,sfno from staff order by sfsn";
@@ -30,7 +33,11 @@
     //display
         while ($row=sqlsrv_fetch_array($result)) {
             $cusno=$row['PatNo'];
-            $cusname=$row['PatName'];
+            if ($cusno=='1001402' && $bsname='森源牙醫診所'){
+                $cusname='江?賱';
+            }else{
+                $cusname=$row['PatName'];
+            }
             $id=$row['ID'];
             if ($row['Sex']=='女'){
                 $sex=0;
@@ -57,26 +64,29 @@
             }else{
                 $lastdate=$row['LD'];
             }
-            
+            $fdr=0;
+            $ldr=0;
             if ($row['FirstDoc']==null || $row['FirstDoc']==''){
-                if ($row['Doctor']==NULL){
+                if ($row['Doctor']==NULL || $row['Doctor']==''){
                     $fdr=0;
                 }else{
-                    $fdr=$staff[$row['Doctor']];;
+                    $fdr=(empty($staff[$row['Doctor']]))?0:$staff[$row['Doctor']];
                 }
             }else{
-                $fdr=$staff[$row['FirstDoc']];
+                $fdr=(empty($staff[$row['FirstDoc']]))?0:$staff[$row['FirstDoc']];
             }
+            if ($fdr==null) $fdr=0;
+
             if ($row['LastDoc']==null || $row['LastDoc']==''){
-                if ($row['Doctor']==NULL){
+                if ($row['Doctor']==NULL || $row['Doctor']==''){
                     $ldr=0;
                 }else{
-                    $ldr=$staff[$row['Doctor']];;
+                    $ldr=(empty($staff[$row['Doctor']]))?0:$staff[$row['Doctor']];
                 }
             }else{
-                $ldr=$staff[$row['LastDoc']];
+                $ldr=(empty($staff[$row['LastDoc']]))?0:$staff[$row['LastDoc']];
             }
-            
+
             $sp=$row['sp'];
         
             echo "患者：".$row['PatNo']."--".$row['PatName'].' ';
@@ -110,7 +120,7 @@
             }
             $insertSQL="INSERT into customer (cusno,cusname,cusid,cussex,cusbirthday,custel,cusmob,cusemail,cuszip,cusaddr,cusjob,cusintro,cuslv,firstdate,lastdate,maindrno,lastdrno,barrier,cusmemo,is_disc,disc_code)
             values('$cusno','$cusname','$id','$sex','$birth','$tel','$mobile','$email','$zip','$addr','$job',
-            '$intro','$lv','$firstdate','$lastdate','$fdr','$ldr','$sp','$memo',$isdisc,'$disc_code')";
+            '$intro','$lv','$firstdate','$lastdate',$fdr,$ldr,'$sp','$memo',$isdisc,'$disc_code')";
             echo $insertSQL;
             //echo "$cusno-$cusname";
             $mariaConn->exec($insertSQL);
