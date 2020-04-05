@@ -35,7 +35,7 @@
 
     echo "<br>5.預約患者的電話轉入";
     $sql="update registration r,customer c
-             set r.schtel=c.custel,r.schmobile=c.cusmbo
+             set r.schtel=c.custel,r.schmobile=c.cusmob
            where r.cussn=c.cussn
              and r.seqno='000'";
     $mariaConn->exec($sql);  
@@ -138,6 +138,7 @@
     $sql="update customer c,tmpfamily f set c.family_group_id=f.sn where cusaddr=addr";
     $mariaConn->exec($sql); 
 
+    $mariaConn->exec("update treatment set nhicode='RCT00' where nhicode='RCT' ");
    
     echo "<h1>資料整理 完成</h1>";
 ?>
