@@ -81,8 +81,8 @@
             $cc=str_replace("'", "’", $cc);
             $insertSQL="INSERT into registration (ddate,seqno,cusno,reg_time,drno1,drno2,ic_seqno,ic_type,category,
                         trcode,trpay,rx_type,rx_code,drugsv,nhi_status,nhi_partpay,barid,hosp_from,is_out,
-                        nhi_damt,nhi_tamt,amount,giaamt,cc,icuploadd,uploadd,case_history,reg_pay,disc_pay,discid)
-                        values('$ddate','$seqno','$cusno','$regtime','$dr','$dr','$icseq','$ictype','$cate','$trcode',$trpay,'$rxtype','$rxcode',$drugsv,'$nhistatus',$partpay,'$barid','$hospfrom',$isout,$damt,$tamt,$amount,$giaamt,'$cc','$regno','$treatno','4',$reg_pay,$disc_pay,$discid)";
+                        nhi_damt,nhi_tamt,amount,giaamt,cc,icuploadd,uploadd,case_history,reg_pay,disc_pay,discid,roomsn)
+                        values('$ddate','$seqno','$cusno','$regtime','$dr','$dr','$icseq','$ictype','$cate','$trcode',$trpay,'$rxtype','$rxcode',$drugsv,'$nhistatus',$partpay,'$barid','$hospfrom',$isout,$damt,$tamt,$amount,$giaamt,'$cc','$regno','$treatno','4',$reg_pay,$disc_pay,$discid,1)";
             echo "<br>".$insertSQL;
             echo $ddate."-".$seqno.", ";
             $mariaConn->exec($insertSQL);

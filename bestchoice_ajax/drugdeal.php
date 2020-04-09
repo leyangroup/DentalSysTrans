@@ -1,4 +1,4 @@
-<?php
+ebi<?php
     include_once "../include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
