@@ -13,14 +13,14 @@
     $DT=$_GET['dt'];
 
     //轉換完後要帶入患者電話與手機
-    echo "轉入預約資料 order<br>";
+    echo "補轉入當天預約資料 order<br>";
         $staff=[];
         $sql="select sfsn,sfno from staff order by sfsn";
         $result=$mariaConn->query($sql);
         foreach ($result as $key => $value) {
             $staff[$value['sfno']]=$value['sfsn'];
         }
-        $sql="delete from registration where seqno='000' ";
+        $sql="delete from registration where seqno='000'";
         $mariaConn->exec($sql);
         $StartDT=$DT." 00:00:00";
         $sql="SELECT OrderNo,PatNo,patName,DoctorNo,
@@ -29,12 +29,12 @@
                      convert(char(10),StartDate,120)sd,
                      convert(char(10),EndDate,120)ed,Notes 
                 from [Order]
-               where StartDate>='$StartDT'
+               where StartDate='$StartDT'
                  and Enable='1' ";
                echo $sql;
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
         while ($row=sqlsrv_fetch_array($result)) {
-            if (substr($row['sd'],0,10)>=$DT){
+            if (substr($row['sd'],0,10)>$DT){
                 $cusno=$row['PatNo'];
                 $dr=$staff[$row['DoctorNo']];
                 $appdt=substr($row['sd'],0,10);

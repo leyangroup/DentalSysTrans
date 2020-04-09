@@ -187,6 +187,8 @@
  			window.open("bestchoice_ajax/createCharge.php?IP="+$("#IP").val()+"&dt="+$("#DT").val(),"charge");
  			$("#charge_on").val('執行'+d); 
  		});
+
+ 		
  	});
 
 </script>
