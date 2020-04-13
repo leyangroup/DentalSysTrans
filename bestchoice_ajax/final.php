@@ -63,12 +63,12 @@
     echo '<br>7.整理 check & finding';
     $sql="update registration r,treat_record t  
              set r.check_finding=t.treat_memo
-           where r.trcode='01271C' 
+           where r.trcode=t.trcode
              and r.regsn=t.regsn
-             and t.trcode='01271'";
+             and t.trcode in ('01271C','01272C','01273','00315C','00316C','00317C')";
     $mariaConn->exec($sql); 
 
-    $sql="update treat_record set deldate='1911-01-01' where trcode like '0127%'";
+    $sql="update treat_record set deldate='1911-01-01' where trcode in  ('01271C','01272C','01273C','00315C','00316C','00317C')";
     $mariaConn->exec($sql); 
 
     echo "<br> 9.修正轉入的treatment的一些屬性";
@@ -106,7 +106,7 @@
     $sql="update treatment t,examfee e set e.memo=t.memo WHERE nhicode=code";
     $mariaConn->exec($sql); 
 
-    $sql="delete from treatment where nhicode in ('01271C','01272C','01273C')";
+    $sql="delete from treatment where nhicode in ('01271C','01272C','01273C','00315C','00316C','00317C')";
     $mariaConn->exec($sql); 
     
     $sql="update customer set cusmob=custel where cusmob='' ";

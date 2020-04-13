@@ -108,7 +108,7 @@
 
  		$("#reg").on("click",function(){
  			var d = new Date();
- 			window.open("angel_ajax/reg.php?path="+$("#path").val(),"掛號資料");
+ 			window.open("angel_ajax/reg.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"掛號資料");
  			$("#reg_on").val('執行'+d); 
  		});
 
