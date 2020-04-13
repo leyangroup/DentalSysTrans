@@ -6,6 +6,9 @@
     set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
 	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
+
+	$today=$_GET['dt'];
+	$yy=substr($today,0,4);
 	$dr2=[];
 	$dr1=[];
 	$sql="select a.sfsn,a.sfno,a.sfid,a.sfemail,b.*
@@ -24,13 +27,6 @@
 	foreach ($result as $key => $value) {
 		$dr2[$value['sfno']]=$value['sn'];
 	}
-
-	var_dump($dr1);
-	echo "<br>";
-
-    var_dump($dr2);
-	echo "<br>";
-	
 	
 	//取得健保身份
 	$sql="select * from totabk.dbf";
@@ -75,13 +71,18 @@
 		}else{
 			$section='3';
 		}
+		if (strlen($ic_seqno)==7){
+			$case_history='4';
+		}else{
+			$case_history='3';
+		}
 		$memo=trim(mb_convert_encoding($value['path_memo'],"UTF-8","BIG5")).'  '.trim(mb_convert_encoding($value['zhu_yan'],"UTF-8","BIG5"));
 		$memo=str_replace("\\", "＼", $memo);
 		$memo=str_replace("'", "\'", $memo);
 		$sql="insert into registration(ddate,seqno,cusno,reg_time,end_time,drno1,drno2,sickn,sickn2,sickn3,category,ic_type,ic_datetime,ic_seqno,
-					nhi_status,nhi_partpay,rx_type,isnp,reg_pay,nhi_tamt,nhi_damt,memo,rx_day,section,icuploadd)
+					nhi_status,nhi_partpay,rx_type,isnp,reg_pay,nhi_tamt,nhi_damt,memo,rx_day,section,icuploadd,case_history)
 			  values('$DT','$seqno','$patno','$regtime','$endtime',$drno1,$drno2,'$sickn','$sickn2','$sickn3','$category','$ic_type','$icdt','$ic_seqno',
-			  		'$nhi_status',$nhi_partpay,'$rx_type',$isnp,$regpay,$tamt,$damt,'$memo',$rxday,'$section','1911-01-01')";
+			  		'$nhi_status',$nhi_partpay,'$rx_type',$isnp,$regpay,$tamt,$damt,'$memo',$rxday,'$section','1911-01-01','4')";
 		//echo $sql." <br>";
 		echo "$DT.$seqno";
 		$conn->exec($sql);
@@ -139,6 +140,34 @@
 
 	$sql="update registration set nhi_partpay=50,amount=trpay+nhi_tamt+nhi_damt,giaamt=trpay+nhi_tamt+nhi_damt-50-drug_partpay
 		   where ic_type='02' and nhi_status='H10' ";
+	$conn->exec($sql);
+
+	echo "<br>產生charge";
+	
+	//產生charge
+	$conn->exec("truncate table charge");
+	
+	$sql="insert into charge (ddate,chargetime,cussn,regpay,partpay,`add`,discsn,discreg,discpart,minus,balance ,is_oweic)
+		  SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,case when r.discid is null then 0 else r.discid end ,
+		         case when d.reg_disc is null then 0 else d.reg_disc end,
+		         case when d.partpay_disc is null then 0 else d.partpay_disc end,
+		         disc_pay,reg_pay+nhi_partpay-disc_pay,'0'
+		    FROM registration r left join disc_list d on r.discid=d.discsn
+		   where ddate like '$yy%'
+			 and seqno<>'000'
+			 and is_oweic !='1'
+		   order by ddate,seqno";
+		   echo $sql;
+	$conn->exec($sql);
+
+	$sql="update registration r,charge c
+			 set r.chargesn=c.sn
+		   where r.ddate=c.ddate
+			 and r.reg_time=c.chargetime
+			 and r.cussn=c.cussn
+			 and r.chargesn=0
+			 and r.ddate like '$yy%'";
+			 echo $sql;
 	$conn->exec($sql);
 
 	echo "<br><br>掛號 資料轉換完成!!";

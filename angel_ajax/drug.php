@@ -76,7 +76,7 @@
 	foreach ($result as $key => $value) {
 		$no=trim($value['tdrug3']);
 		$name=trim(mb_convert_encoding($value['tname3'],"UTF-8","BIG5"));
-		$qty=($value['tamt3']=='')?1:$value['tamt3'];
+		$qty=($value['tamt3']==' ')?1:$value['tamt3'];
 		$sql="insert into drug_times(timesno,name,qty) values('$no','$name',$qty)";		
 		echo $sql."<br>";
 
@@ -85,6 +85,36 @@
 
 	$conn->exec("truncate table drugcom");
 	$conn->exec("truncate table drugcomdetails");
+
+
+	//組合用藥
+	$sql='select * from Xcodek.dbf';
+	$result=$db->query($sql);
+	foreach ($result as $key => $value) {
+		$comno=$value['xxcode'];
+		$name=$value['xxname'];
+		$rxday=$value['rxday'];
+		$sql="insert into drugcom(comno,name,day) values('$comno','$name',$rxday)";
+		echo $sql."<br>";
+		$conn->exec($sql);
+	}
+
+	$sql='select * from Xlistk.dbf';
+	$result=$db->query($sql);
+	foreach ($result as $key => $value) {
+		$comno=trim($value['xxcode']);
+		$drugno=trim($value['pcode']);
+		$fee=$value['fee'];
+		$drugfee=$value['drugfee'];
+		$ptype=$value['ptype'];
+		$sql="insert into drugcomdetails(comDno,drugno,fee,drugfee,type,dose,times,day) values('$comno','$drugno',$fee,$drugfee,'$ptype','01',
+		'TID',0)";
+		echo $sql."<br>";
+		$conn->exec($sql);
+	}
+
+	$sql="update drugcom a,drugcomdetails b set b.day=a.day where a.comno=b.comDno";
+	$conn->exec($sql);
 
 	echo "<br><br>藥品 資料轉換完成!!";
 

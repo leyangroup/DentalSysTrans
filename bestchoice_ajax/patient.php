@@ -33,11 +33,11 @@
     //display
         while ($row=sqlsrv_fetch_array($result)) {
             $cusno=$row['PatNo'];
-            if ($cusno=='1001402' && $bsname='森源牙醫診所'){
-                $cusname='江?賱';
-            }else{
+            // if ($cusno=='1001402' && $bsname='森源牙醫診所'){
+            //     $cusname='江?賱';
+            // }else{
                 $cusname=$row['PatName'];
-            }
+            // }
             $id=$row['ID'];
             if ($row['Sex']=='女'){
                 $sex=0;

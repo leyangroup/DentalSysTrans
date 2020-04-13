@@ -57,9 +57,11 @@
 		$conn->exec($sql);
 	}
 	
+	$sql="update customer c,zip z  
+			 set cuszip=z.zip,cusaddr=replace(cusaddr,concat(county,city),'')
+		   where c.cusaddr like concat(county,city,'%')	 ";
+	$conn->exec($sql);
 	
-	
-
 	echo "<h1>患者基本資料 轉換完成</h1>";
 
 ?>

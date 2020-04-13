@@ -14,8 +14,6 @@
 	foreach ($result as $key => $value) {
 		$Dr[$value['sfno']]=$value['sfsn'];
 	}
-
-
 	echo $today."<br>";
 	var_dump($Dr);
 
@@ -24,6 +22,7 @@
 	$conn->exec("delete from registration where seqno='000'");
 	//預約資料
 	$sql = "SELECT * FROM schk.dbf where p_date>='$today'";
+	echo $sql;
 	$result=$db->query($sql);
 	$r=0;
 	foreach ($result as $key => $value) {
@@ -65,6 +64,7 @@
 			  and c.cusmob!='' ";
 	$conn->exec($sql);
 
+	$conn->exec("truncate table delappom");
 	$sql="insert into delappom (regsn,ddate,cussn,cusno,drno1,userid,sch_time,schlen,schqty,sch_note,muid,schtel,chgtype)
 			SELECT regsn,ddate,cussn,cusno,drno1,1,sch_time,schlen,1,sch_note,1,schtel,'a' FROM `registration` where seqno='000'";
 	$conn->exec($sql);
