@@ -13,16 +13,15 @@
     $DT=$_GET['DT'];
     
     echo "建立索引";
-    $sql="ALTER TABLE `treat_record` ADD INDEX( `icuploadD`, `uploadD`)";
-    $mariaConn->exec($sql);  
+    $mariaConn->exec("ALTER TABLE `treat_record` ADD INDEX( `icuploadD`, `uploadD`)");  
+
     $mariaConn->exec("ALTER TABLE `treat_record` ADD INDEX(`uploadD`)");
 
-    $sql="ALTER TABLE `registration` ADD INDEX( `icuploadD`, `uploadD`)";
-    $mariaConn->exec($sql);  
+    $mariaConn->exec(ALTER TABLE `registration` ADD INDEX( `icuploadD`, `uploadD`));  
+
     $mariaConn->exec("ALTER TABLE `registration` ADD INDEX(`uploadD`)");
 
-    $sql="ALTER TABLE `prescription` ADD INDEX( `uploadD`, `icuploadd`)";
-    $mariaConn->exec($sql);  
+    $mariaConn->exec(ALTER TABLE `prescription` ADD INDEX( `uploadD`, `icuploadd`));  
 
     $mariaConn->exec("ALTER TABLE `customer` ADD INDEX(`cusno`)"); 
 
@@ -31,6 +30,8 @@
     $mariaConn->exec("ALTER TABLE `prescription` ADD INDEX(`times`)");
 
     $mariaConn->exec("ALTER TABLE `nhicode` ADD INDEX(`nhicode`)");
+
+    $mariaConn->exec("ALTER TABLE `treat_record` CHANGE `side` `side` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '牙面'");
 
     echo "<h1>索引建立完畢</h1>";
 ?>

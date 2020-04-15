@@ -102,6 +102,12 @@
 				<button type='button' class="btn btn-info" id="drugdeal">『森源』 藥品處理</button>
 				<input type='text' id='drugdeal_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
+
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="tr89014">『森源』 89014,89015 處理</button>
+				<input type='text' id='tr89014_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
 		</table>
 	</form>
 </body>
@@ -188,7 +194,11 @@
  			$("#charge_on").val('執行'+d); 
  		});
 
- 		
+ 		$("#tr89014").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/treat_89014_15.php?IP="+$("#IP").val(),"charge");
+ 			$("#tr89014_on").val('執行'+d); 
+ 		});
  	});
 
 </script>
