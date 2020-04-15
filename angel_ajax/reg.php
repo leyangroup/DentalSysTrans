@@ -76,14 +76,28 @@
 		}else{
 			$case_history='3';
 		}
+		$isoweic='0';
+		
+		switch (trim($value['inseq'])) {
+			case '??':
+				$isoweic='1';
+				$casehistory='3';
+				break;
+			case 'IC':
+				$isoweic='0';
+				$casehistory='4';
+				break;
+		}
+		
 		$memo=trim(mb_convert_encoding($value['path_memo'],"UTF-8","BIG5")).'  '.trim(mb_convert_encoding($value['zhu_yan'],"UTF-8","BIG5"));
 		$memo=str_replace("\\", "＼", $memo);
-		$memo=str_replace("'", "\'", $memo);
+		$memo=trim(str_replace("'", "\'", $memo));
 		$sql="insert into registration(ddate,seqno,cusno,reg_time,end_time,drno1,drno2,sickn,sickn2,sickn3,category,ic_type,ic_datetime,ic_seqno,
-					nhi_status,nhi_partpay,rx_type,isnp,reg_pay,nhi_tamt,nhi_damt,memo,rx_day,section,icuploadd,case_history)
+					nhi_status,nhi_partpay,rx_type,isnp,reg_pay,nhi_tamt,nhi_damt,memo,rx_day,section,icuploadd,case_history,is_oweic)
 			  values('$DT','$seqno','$patno','$regtime','$endtime',$drno1,$drno2,'$sickn','$sickn2','$sickn3','$category','$ic_type','$icdt','$ic_seqno',
-			  		'$nhi_status',$nhi_partpay,'$rx_type',$isnp,$regpay,$tamt,$damt,'$memo',$rxday,'$section','1911-01-01','4')";
-		//echo $sql." <br>";
+			  		'$nhi_status',$nhi_partpay,'$rx_type',$isnp,$regpay,$tamt,$damt,'$memo',$rxday,'$section','1911-01-01','$casehistory','$isoweic')";
+		
+		// echo $sql." <br>";
 		echo "$DT.$seqno";
 		$conn->exec($sql);
 	}
@@ -151,11 +165,10 @@
 		  SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,case when r.discid is null then 0 else r.discid end ,
 		         case when d.reg_disc is null then 0 else d.reg_disc end,
 		         case when d.partpay_disc is null then 0 else d.partpay_disc end,
-		         disc_pay,reg_pay+nhi_partpay-disc_pay,'0'
+		         disc_pay,reg_pay+nhi_partpay-disc_pay,is_oweic
 		    FROM registration r left join disc_list d on r.discid=d.discsn
 		   where ddate like '$yy%'
 			 and seqno<>'000'
-			 and is_oweic !='1'
 		   order by ddate,seqno";
 		   echo $sql;
 	$conn->exec($sql);
