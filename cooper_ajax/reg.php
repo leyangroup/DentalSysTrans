@@ -212,21 +212,12 @@
 					break;
 			}
 		}
-		switch ($rxtype) {
-			case '1':  //cooper 1 是未開藥
-				$rxtype='2';
-				break;
-			case '2':  //cooper 2 是有開藥
-				if ($trcode=='00129C'){
-					$rxtype='1';
-				}else{
-					$rxtype='0';
-				}
-				break;
-			default:
-				$rxtype='2';
-				break;
+		if ($rxday==0){
+			$rxtype='2';
+		}else{
+			$rxtype='1';
 		}
+		
 		$sql="insert into registration(ddate,seqno,stdate,cusno,drno1,drno2,reg_time,discid,section,isnp,
 			trcode,nhi_status,category,rx_day,rx_type,is_out,hosp_from,ic_seqno,ic_type,
 			ic_datetime,reg_pay,nhi_partpay,disc_pay,nhi_tamt,nhi_damt,drugsv,trpay,
