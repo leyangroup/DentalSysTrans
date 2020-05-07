@@ -67,6 +67,12 @@
 				<td><button type='button' id="COOPER_disc">補.優待身份 資料轉換</button></td>
 				<td><input type='text' id='disc_on' style="color:blue" readonly value='請按鈕' size=30></td>
 			</tr>
+
+			<tr>
+				<td><button type='button' id="COOPER_status">潔宇.補資料轉換</button></td>
+				<td><input type='text' id='status_on' style="color:blue" readonly value='請按鈕' size=30></td>
+			</tr>
+
 		</table>
 	</form>
 </body>
@@ -132,6 +138,12 @@
  			window.open("cooper_ajax/cus_disc.php?path="+$("#path").val(),"補優待身份");
  			var d = new Date();
  			$("#disc_on").val('執行'+d);  
+ 		});
+ 		
+ 		$("#COOPER_status").on("click",function(){
+ 			window.open("cooper_ajax/treat_combin.php?path="+$("#path").val(),"補資料");
+ 			var d = new Date();
+ 			$("#status_on").val('執行'+d);  
  		});
  		
  	});

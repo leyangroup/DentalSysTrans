@@ -120,16 +120,68 @@
 						}else{
 							if (substr($icseq,3,2)=='IC'){
 								$ic_type='AC';
-								$nhistatus='009';
 							}else{
 								$ic_type='AB';   //診察碼=空白，但有卡號，就是AB
-								$nhistatus='009';
 							}
 						}
 					}else{
 						$trcode=$v2;
 						$ic_type='02';
-						$nhistatus='H10';
+					}
+					break;
+				case '部份負擔碼':
+					switch ($v2) {
+						case '1':
+							$nhisatus='H10';
+							break;
+						case '2':
+							$nhisatus='004';
+							break;
+						case '3':
+							$nhisatus='003';
+							break;
+						case '4':
+							$nhisatus='009';
+							break;
+						case '5':
+							$nhisatus='H13'; //殘障手冊
+							break;
+						case '6':
+							$nhisatus='001';
+							break;
+						case '7':
+							$nhisatus='006';//職災
+							break;
+						case '8':
+							$nhisatus='005';//結核病患
+							break;
+						case '9':
+							$nhisatus='009';//災民
+							break;
+						case '10':
+							$nhisatus='902';//三歲以下小孩
+							break;
+						case '11':
+							$nhisatus='007';//山地醫療
+							break;
+						case '12':
+							$nhisatus='901';//多氯聯本
+							break;
+						case '13':
+							$nhisatus='903';//新生兒依附
+							break;
+						case '14':
+							$nhisatus='906';//替代疫男
+							break;
+						case '15':
+							$nhisatus='007';//平地巡迴免部份負擔
+							break;
+						case '16':
+							$nhisatus='907';//原住民戒菸
+							break;
+						case '17':
+							$nhisatus='009';//百歲人瑞
+							break;
 					}
 					break;
 				case '診察費':
@@ -212,21 +264,12 @@
 					break;
 			}
 		}
-		switch ($rxtype) {
-			case '1':  //cooper 1 是未開藥
-				$rxtype='2';
-				break;
-			case '2':  //cooper 2 是有開藥
-				if ($trcode=='00129C'){
-					$rxtype='1';
-				}else{
-					$rxtype='0';
-				}
-				break;
-			default:
-				$rxtype='2';
-				break;
+		if ($rxday==0){
+			$rxtype='2';
+		}else{
+			$rxtype='1';
 		}
+		
 		$sql="insert into registration(ddate,seqno,stdate,cusno,drno1,drno2,reg_time,discid,section,isnp,
 			trcode,nhi_status,category,rx_day,rx_type,is_out,hosp_from,ic_seqno,ic_type,
 			ic_datetime,reg_pay,nhi_partpay,disc_pay,nhi_tamt,nhi_damt,drugsv,trpay,

@@ -68,7 +68,7 @@
              and t.trcode in ('01271C','01272C','01273','00315C','00316C','00317C')";
     $mariaConn->exec($sql); 
 
-    $sql="update treat_record set deldate='1911-01-01' where trcode in  ('01271C','01272C','01273C','00315C','00316C','00317C')";
+    $sql="update treat_record set deldate='1911-01-01' where trcode in  ('01271C','01272C','01273C','00315C','00316C','00317C','00315','00316','00317')";
     $mariaConn->exec($sql); 
 
     echo "<br> 9.修正轉入的treatment的一些屬性";

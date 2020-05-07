@@ -81,9 +81,7 @@
 					}
 					$fdi=$ans;
 					break;	
-				case '處置代號':
-					$trcode=trim($v2);
-					break;
+				
 				case '國際病碼':
 					$sickno=trim($v2);
 					break;
@@ -97,15 +95,10 @@
 					$v2=str_replace('/', " ", $v2);
 					$cc=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
-				case '健保數量1':
-					$qty=$v2;
-					break;
 				case '部位':
 					$part=str_replace("+","",trim($v2));
 					break;
-				case '健保單價1':
-					$price=$v2;
-					break;
+
 				case '國際病碼a1':
 					$icd10=trim($v2);
 					break;
@@ -115,15 +108,95 @@
 				case '手術代碼a2':
 					$pcs2=trim($v2);
 					break;
+						
+				case '健保代號1':
+					$trcode1=trim($v2);
+					break;
+
+				case '健保數量1':
+					$qty1=$v2;
+					break;
+
+				case '健保單價1':
+					$price1=$v2;
+					break;
+
+				case '健保代號2':
+					$trcode2=trim($v2);
+					break;
+
+				case '健保數量2':
+					$qty2=$v2;
+					break;
+
+				case '健保單價2':
+					$price2=$v2;
+					break;
+
+				case '健保代號3':
+					$trcode3=trim($v2);
+					break;
+
+				case '健保數量3':
+					$qty3=$v2;
+					break;
+
+				case '健保單價3':
+					$price3=$v2;
+					break;
+
+				case '健保代號4':
+					$trcode4=trim($v2);
+					break;
+
+				case '健保數量4':
+					$qty4=$v2;
+					break;
+
+				case '健保單價4':
+					$price4=$v2;
+					break;
 			}
 		}
-		$pamt=$price*$qty;
 
+		$pamt=$price1*$qty1;
 		$sql="insert into treat_record(regsn,uploadD,sickn,fdi,trcode,sickno,side,treat_memo,nums,punitfee,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,cc) values
-				(0,'$cusno','$cnt','$fdi','$trcode','$sickno','$part','$memo',$qty,$price,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
+				(0,'$cusno','$cnt','$fdi','$trcode1','$sickno','$part','$memo',$qty1,$price1,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
 		echo $cusno."-".$cnt." 。 ";
-		
 		$conn->exec($sql);
+
+		if ($trcode2!=''){
+			$pamt=$price2*$qty2;
+			$sql="insert into treat_record(regsn,uploadD,sickn,fdi,trcode,sickno,side,treat_memo,nums,punitfee,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,cc) values
+					(0,'$cusno','$cnt','$fdi','$trcode2','$sickno','$part','$memo',$qty2,$price2,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
+			echo $cusno."-".$cnt." 。 ";
+			$conn->exec($sql);
+			$trcode2='';
+			$qty2=0;
+			$price2=0;
+		}
+		
+		if ($trcode3!=''){
+			$pamt=$price3*$qty3;
+			$sql="insert into treat_record(regsn,uploadD,sickn,fdi,trcode,sickno,side,treat_memo,nums,punitfee,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,cc) values
+					(0,'$cusno','$cnt','$fdi','$trcode3','$sickno','$part','$memo',$qty3,$price3,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
+			echo $cusno."-".$cnt." 。 ";
+			$conn->exec($sql);
+			$trcode3='';
+			$qty3=0;
+			$price3=0;
+		}
+
+		if ($trcode4!=''){
+			$pamt=$price4*$qty4;
+			$sql="insert into treat_record(regsn,uploadD,sickn,fdi,trcode,sickno,side,treat_memo,nums,punitfee,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,cc) values
+					(0,'$cusno','$cnt','$fdi','$trcode4','$sickno','$part','$memo',$qty4,$price4,1,$pamt,'$icd10','$pcs1','$pcs2','$cc' )";
+			echo $cusno."-".$cnt." 。 ";
+			$conn->exec($sql);
+			$trcode4='';
+			$qty4=0;
+			$price4=0;
+		}
 	}
 	//資料關連 
 
@@ -135,7 +208,7 @@
 		      and r.stdate=t.SICKN";
 	$conn->exec($sql);
 
-	$sql=" update `treat_record` set deldate ='1911-01-01'  where trcode like '0127%' ";
+	$sql=" update `treat_record` set deldate ='1911-01-01'  where trcode in ('01271C','01272C','01273C','00315C',;00316C','00317C') ";
 	$conn->exec($sql);
 
 	$sql="update registration r,treat_record t  
