@@ -56,6 +56,7 @@
 			 		}
 					break;
 				case '住宅電話':
+					$v2=str_replace('-', '', $v2);
 					$custel=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 				case '地址':
@@ -63,6 +64,7 @@
 					$cusaddr=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 				case '行動電話':
+					$v2=str_replace('-','',$v2);
 					$cusmob=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 				case '初診日期':

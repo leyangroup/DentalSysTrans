@@ -144,7 +144,6 @@
 			on r.discid=d.discsn
 			where concat(ddate,reg_time)between '$FDT' and '$LDT'
 			and seqno<>'000'
-			and is_oweic !='1'
 			order by ddate,seqno";
 	$conn->exec($sql);
 	
