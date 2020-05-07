@@ -105,8 +105,10 @@
 
 			<div><label></label></div>
 			<div>
+
 				<button type='button' class="btn btn-info" id="FdiLen">『森源』 牙位過長處理</button>
 				<input type='text' id='FdiLen_on' style="color:blue" readonly value='請按鈕' size=50>
+
 			</div>
 		</table>
 	</form>
@@ -199,6 +201,7 @@
  			window.open("bestchoice_ajax/treat_FDI_len.php?IP="+$("#IP").val(),"資料整合");
  			$("#FdiLen_on").val('執行'+d); 
  		});
+
 
  	});
 
