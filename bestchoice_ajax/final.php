@@ -109,7 +109,7 @@
     $sql="delete from treatment where nhicode in ('01271C','01272C','01273C','00315C','00316C','00317C')";
     $mariaConn->exec($sql); 
     
-    $sql="update customer set cusmob=custel where cusmob='' ";
+    $sql="update customer set cusmob=custel where cusmob='' and custel !='' and custel is not null";
     $mariaConn->exec($sql); 
 
     $sql="update drug set dose='01' where dose='' ";

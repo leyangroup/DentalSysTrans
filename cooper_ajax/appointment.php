@@ -8,7 +8,8 @@
 	$sql="select sfsn,sfno from staff ";
 	$RS=$conn->query($sql);
 	foreach ($RS as $key => $col) {
-		$drArr[$col['sfno']]=$col['sfsn'];
+		$sfno=$col['sfno'];
+		$drArr[(string)$sfno]=$col['sfsn'];
 	}
 
 	$conn->exec("delete from registration where seqno='000' ");
@@ -33,7 +34,8 @@
 					$schlen=$v2;
 					break;
 				case '醫師代號';
-					$drsn=$drArr[$v2];
+					$drno=trim($v2);
+					$drsn=$drArr[(string)$drno];
 					break;
 				case '病歷編號';
 					$cusno=$v2;
@@ -42,33 +44,20 @@
 					$v2=str_replace("'","\'",$v2);
 					$memo=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
-				// case '結案別':
-				// 	$apstate='';
-				// 	$delDT=NULL;
-				// 	$kind=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
-				// 	if ($kind=='取消'){
-				// 		$apstate='4';
-				// 		$delDT='$trDT';
-				// 	}elseif($kind=='爽約'){
-				// 		$apstate='5';
-				// 		$delDT='$trDT';
-				// 	}
-				// 	break;
 				case '簡訊備註':
 					$v2=str_replace("'","\'",$v2);
 					$smsnote=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
 					break;
 			}
 		}
+		//用stdate暫存預約醫師代碼
 		if ($kind!='已到' && $schDT>=$trDT){
 			$sql="insert into registration(seqno,ddate,cusno,sch_time,sch_note,schlen,drno1,drno2,noticemomo,roomsn)values
 					('000','$schDT','$cusno','$schtime','$memo',$schlen,$drsn,$drsn,'$smsnote',1)";
-			// echo $cusno."-".$schDT.",";
-			echo $sql."<br>";
+			echo 'drno='.$drno.'drsn='.$drsn.'sql='.$sql."<br>";
 			$conn->exec($sql);
 		}
 	}
-	//預約電話與手機對應
 	$sql="update registration r,customer c set r.schtel=c.custel,r.schmobile=c.cusmob,r.cussn=c.cussn where r.cusno=c.cusno and r.seqno='000'";
 	$conn->exec($sql);
 

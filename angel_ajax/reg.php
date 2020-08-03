@@ -117,8 +117,14 @@
 	$sql="update registration set trcode='00129C' where ic_type='02' and rx_type ='1' ";
 	$conn->exec($sql);
 
+	$sql="update registration set trcode='00305C',trpay=355,amount=355+nhi_tamt,giaamt=355+nhi_tamt-nhi_partpay where ic_type='02' and rx_type in ('0','2') and ddate>='2020-04-01'  ";
+	$conn->exec($sql);
+
+	$sql="update registration set trcode='00306C',trpay=355,amount=355+nhi_tamt,giaamt=355+nhi_tamt-nhi_partpay where ic_type='02' and rx_type='1' and ddate>='2020-04-01' ";
+	$conn->exec($sql);
+
 	$sql="update registration set trpay=320,amount=320+nhi_tamt,giaamt=320+nhi_tamt-nhi_partpay 
-	       where trcode in ('00130C','00129C') and ddate >='2017-01-01' ";
+	       where trcode in ('00130C','00129C') and ddate between '2017-01-01' and '2020-03-31' ";
 	$conn->exec($sql);
 
 	$sql="update registration set trpay=313,amount=313+nhi_tamt,giaamt=313+nhi_tamt-nhi_partpa  

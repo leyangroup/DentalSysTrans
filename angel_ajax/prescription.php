@@ -40,6 +40,9 @@
 	$sql="update prescription p,drug_times t set p.qty=t.qty where p.times=t.timesno";
 	$conn->exec($sql);
 
+	$sql="update prescription set dose='01' where dose='' ";
+	$conn->exec($sql);
+	
 	echo "<br><br>處方箋 資料轉換完成!!";
 
 ?>

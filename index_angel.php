@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>系統轉換</title>
+	<title>系統轉換1.0.7</title>
 	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -26,6 +26,12 @@
 			<div><label></label></div>
 			<h2 style="color:red">一定要先產生申報才可以轉檔哦!!</h2>
 			<h4 style="color:blue">請依序按鈕執行</h4>
+			<div>
+				<button type='button' class="btn btn-info" id="idx">0.建立索引(若重複轉入，只需執行一次)</button>
+				<input type='text' id='idx_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+
 			<div>
 				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師、優待身份 資料轉換</button>
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
@@ -95,6 +101,11 @@
 <script type="text/javascript" src="include/jquery.min.js"></script>
 <script type="text/javascript">
  	$(document).ready(function(){
+ 		$("#idx").on("click",function(){
+ 			var d = new Date();
+ 			window.open("angel_ajax/create_Index.php?path="+$("#path").val(),"建立索引");
+ 			$("#idx_on").val('執行'+d); 
+ 		});
  		$("#Dr").on("click",function(){
  			var d = new Date();
  			window.open("angel_ajax/basicData.php?path="+$("#path").val(),"診所基本資料轉換");
