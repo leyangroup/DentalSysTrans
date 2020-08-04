@@ -102,6 +102,14 @@
 	$sql="delete from treatment where trcode like '0127%' ";
 	$conn->exec($sql);
 
+	$sql="update registration r
+		set nhi_tamt=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)
+		where nhi_tamt !=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)";
+	$conn->exec($sql);
+
+	$sqi="update registration set amount=trpay+nhi_tamt+nhi_damt,giaamt=trpay+nhi_tamt+nhi_damt-nhi_partpay";
+	$conn->exec($sql);
+
 	echo "處置 資料轉換完成";
 
 ?>
