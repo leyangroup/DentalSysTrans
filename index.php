@@ -50,6 +50,9 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="dentall" >牙醫通 Dentall</button></td>
 				</tr>
+				<tr>
+					<td><button class="btn btn-success" type='button' id="PT" >醫聖-全人物理治療所</button></td>
+				</tr>
 			</table>
 		</div>
 	</form>
@@ -76,6 +79,10 @@
 
  		$("#dentall").on("click",function(){
  			document.location.href="index_dentall.php?DT="+$("#DT").val(); 
+ 		});
+
+ 		$("#PT").on("click",function(){
+ 			document.location.href="index_PT.php?DT="+$("#DT").val(); 
  		});
  	});
 
