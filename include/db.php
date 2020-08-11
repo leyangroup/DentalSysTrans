@@ -1,7 +1,7 @@
 <?php
 function MariaDBConnect(){
     try {
-        $conn=new PDO('mysql:host=localhost:3306;dbname=eprodb','leyan','2016leyan0429',array(PDO::ATTR_PERSISTENT => true));
+        $conn=new PDO('mysql:host=localhost:3306;dbname=PTData','leyan','2016leyan0429',array(PDO::ATTR_PERSISTENT => true));
         $conn->query('set names utf8;');
         return $conn;
     } catch (PDOException $e) {

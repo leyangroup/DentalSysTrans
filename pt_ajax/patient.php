@@ -13,7 +13,6 @@
 	foreach ($RS as $key => $value) {
 		$drArr[$value['name']]=$value['id'];
 	}
-	var_dump($drArr);
 	//清除患者基本資料表
 	$conn->exec("truncate table customer");
 

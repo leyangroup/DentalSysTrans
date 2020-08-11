@@ -8,7 +8,14 @@
 	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
 	//醫師資料
-	
+	$RS=$conn->query("select no,id from leconfig.zhi_staff ");
+	$drArr=[];
+	foreach ($RS as $key => $value) {
+		$drArr[$value['no']]=$value['id'];
+	}
+	var_dump($drArr);
+
+
 	//清除患者基本資料表
 	$conn->exec("truncate table registration");
 
@@ -16,23 +23,24 @@
 	$sql = "SELECT * FROM register.dat";
 	$result=$db->query($sql);
 	foreach ($result as $key => $value) {
-		$drno=$value['serial'];
-		$drname=trim(mb_convert_encoding($value['name'],"UTF-8","BIG5"));
-		$id=$value['id'];
-		$sex=(substr($id,1,1)==1)?'1':'0';
-		$sql="insert into leconfig.zhi_staff
-					(no,name,identity,position,gender,drkind,is_ospro,is_endopro,is_peripro,is_pedopro,is_odpro,isowner,created_at,created_by) 
-			values('$drno','$drname','$id','D',$sex,'0',0,0,0,0,0,0,now(),0)";
-		echo "$sql<br>";
-		$conn->exec($sql);
+		$keyword=addslashes($value['keyword']).addslashes($value['timesno']);
 
+		$rdate=explode(".", $value['r_date']);
+		$receipt=($value['receipts']=='')?0:$value['receipts'];
+		$dt=($rdate[0]+1911)."-".$rdate[1]."-".$rdate[2];
+		$seqno=substr('000'.$value['serno'],-3);
+		if ($drArr[$value['doctor']]==null){
+			$drsn=0;
+		}else{
+			$drsn=$drArr[$value['doctor']];
+		}
 
-		$sql="insert into eprodb.staff
-					(sfno,sfname,sfid,position,drkind,is_ospro,is_endopro,is_peripro,is_pedopro,is_odpro,isowner) 
-			values('$drno','$drname','$id','D','0',0,0,0,0,0,0)";
+		//stdate用來存keyword,hospno用來存times
+		$sql="insert into registration(ddate,seqno,stdate,drno1,drno2,treat_pay) 
+				values('$dt','$seqno','$keyword',$drsn,$drsn,$receipt)";
 		echo "$sql<br>";
 		$conn->exec($sql);
 	}
-	echo "<h1>醫師資料 轉換完成</h1>";
+	echo "<h1>掛號資料 轉換完成</h1>";
 
 ?>

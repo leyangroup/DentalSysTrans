@@ -10,28 +10,18 @@
 	//醫師資料
 	
 	//清除患者基本資料表
-	$conn->exec("truncate table sick");
+	$conn->exec("truncate table icd10");
 
 	//患者基本資料
 	$sql = "SELECT * FROM diagnose.dat";
 	$result=$db->query($sql);
 	foreach ($result as $key => $value) {
-		$drno=$value['serial'];
-		$drname=trim(mb_convert_encoding($value['name'],"UTF-8","BIG5"));
-		$id=$value['id'];
-		$sex=(substr($id,1,1)==1)?'1':'0';
-		$sql="insert into leconfig.zhi_staff
-					(no,name,identity,position,gender,drkind,is_ospro,is_endopro,is_peripro,is_pedopro,is_odpro,isowner,created_at,created_by) 
-			values('$drno','$drname','$id','D',$sex,'0',0,0,0,0,0,0,now(),0)";
-		echo "$sql<br>";
+		$code=$value['A_code'];
+		$ename=$value['sick_name'];
+		$cname=$value['sick_name1'];
+		$sql="insert into icd10 values('$code','$ename','$cname')";
 		$conn->exec($sql);
-
-
-		$sql="insert into eprodb.staff
-					(sfno,sfname,sfid,position,drkind,is_ospro,is_endopro,is_peripro,is_pedopro,is_odpro,isowner) 
-			values('$drno','$drname','$id','D','0',0,0,0,0,0,0)";
-		echo "$sql<br>";
-		$conn->exec($sql);
+		
 	}
 	echo "<h1>醫師資料 轉換完成</h1>";
 

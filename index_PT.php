@@ -43,6 +43,27 @@
 				<button type='button' class="btn btn-info" id="patient">2.患者 資料轉換</button>
 				<input type='text' id='pt_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
+
+			<div>
+				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
+				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<div>
+				<button type='button' class="btn btn-info" id="cc">4.主訴 資料轉換</button>
+				<input type='text' id='cc_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<div>
+				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
+				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<div>
+				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
+				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
 			<div><label></label></div>
 
 		
@@ -56,7 +77,7 @@
  	$(document).ready(function(){
  		$("#idx").on("click",function(){
  			var d = new Date();
- 			window.open("pt_ajax/create_Index.php?path="+$("#path").val(),"建立索引");
+ 			window.open("pt_ajax/create_index.php?path="+$("#path").val(),"建立索引");
  			$("#idx_on").val('執行'+d); 
  		});
 
@@ -70,6 +91,19 @@
  			var d = new Date();
  			window.open("pt_ajax/patient.php?path="+$("#path").val(),"患者基本資料");
  			$("#pt_on").val('執行'+d); 
+ 		});
+
+ 		$("#register").on("click",function(){
+ 			var d = new Date();
+ 			window.open("pt_ajax/register.php?path="+$("#path").val(),"掛號 基本資料");
+ 			$("#reg_on").val('執行'+d); 
+ 		});
+
+
+ 		$("#cc").on("click",function(){
+ 			var d = new Date();
+ 			window.open("pt_ajax/cc.php?path="+$("#path").val(),"主訴 基本資料");
+ 			$("#cc_on").val('執行'+d); 
  		});
 
  	});
