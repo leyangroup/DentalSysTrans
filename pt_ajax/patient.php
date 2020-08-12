@@ -16,6 +16,12 @@
 	//清除患者基本資料表
 	$conn->exec("truncate table customer");
 
+
+	//建立對應檔 
+	$conn->exec("CREATE TABLE `trcusmap` (`keyword` varchar(10) NOT NULL,`cusno` varchar(10) NOT NULL) 
+				ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='轉檔cusmap'");
+	$conn->exec("ALTER TABLE `trcusmap` ADD PRIMARY KEY (`keyword`) ");
+
 	//患者基本資料
 	$sql = "SELECT * FROM user.dat";
 	$result=$db->query($sql);
@@ -23,7 +29,6 @@
 	echo "<br>";
 	foreach ($result as $key => $value) {
 		$keyword=addslashes( $value['keyword']);
-		
 		$cusno=trim(mb_convert_encoding($value['medical_no'],"UTF-8","BIG5"));
 		$name=trim(mb_convert_encoding($value['name'],"UTF-8","BIG5"));
 		$Doctor=trim(mb_convert_encoding($value['user_no'],"UTF-8","BIG5"));
@@ -63,15 +68,15 @@
 		}
 
 		//ctime 暫存keyword
-		$sql="insert into customer (ctime,cusno,cusname,cusbirthday,lastdate,cussex,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,cusmemo,cuszip)
-		 	values
-		 	('$keyword','$cusno','$name','$birth','$lastDT','$cussex','$cusid','$tel','$mobile','$address',$maindrno,$maindrno,'$memo','$zip')";
+		$sql="insert into customer (
+					cusno,cusname,cusbirthday,lastdate,cussex,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,cusmemo,cuszip)
+		 	  values
+		 	       ('$cusno','$name','$birth','$lastDT','$cussex','$cusid','$tel','$mobile','$address',$maindrno,$maindrno,'$memo','$zip')";
 		echo "$sql<br>";
-
 
 		$conn->exec($sql);
 
-		$conn->exec("insert into custemp (cusno,cusname) values('$cusno','$cusname')");
+		$conn->exec("insert into trcusmap (keyword,cusno) values('$keyword','$cusno')");
 	}
 	
 	echo "<h1>患者基本資料 轉換完成</h1>";

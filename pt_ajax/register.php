@@ -36,11 +36,17 @@
 		}
 
 		//stdate用來存keyword,hospno用來存times
-		$sql="insert into registration(ddate,seqno,stdate,drno1,drno2,treat_pay) 
-				values('$dt','$seqno','$keyword',$drsn,$drsn,$receipt)";
+		$sql="insert into registration(ddate,seqno,stdate,drno1,drno2,treat_pay,rx_type) 
+				values('$dt','$seqno','$keyword',$drsn,$drsn,$receipt,'2')";
 		echo "$sql<br>";
 		$conn->exec($sql);
 	}
+
+	$sql="update registration r, customer c ,trcusmap m
+			 set r.cussn=c.cussn,r.cusno=c.cusno 
+		   where left(stdate,4)=m.keyword
+		     and m.cusno=c.cusno";
+	$conn->exec($sql);
 	echo "<h1>掛號資料 轉換完成</h1>";
 
 ?>

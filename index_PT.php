@@ -38,35 +38,38 @@
 				<button type='button' class="btn btn-info" id="dr">1.醫師 資料轉換</button>
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
+			<div><label></label></div>
 
 			<div>
 				<button type='button' class="btn btn-info" id="patient">2.患者 資料轉換</button>
 				<input type='text' id='pt_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
+			<div><label></label></div>
 
 			<div>
 				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
 				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
+			<div><label></label></div>
 
 			<div>
 				<button type='button' class="btn btn-info" id="cc">4.主訴 資料轉換</button>
 				<input type='text' id='cc_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
-
-			<div>
-				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
-				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
-			</div>
-
-			<div>
-				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
-				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
-			</div>
-
 			<div><label></label></div>
 
-		
+			<div>
+				<button type='button' class="btn btn-info" id="tm">5.處置範本 資料轉換</button>
+				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+
+			<div>
+				<button type='button' class="btn btn-info" id="treat">6.處置明細 資料轉換</button>
+				<input type='text' id='treat_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+
 		</table>
 	</form>
 </body>
@@ -104,6 +107,19 @@
  			var d = new Date();
  			window.open("pt_ajax/cc.php?path="+$("#path").val(),"主訴 基本資料");
  			$("#cc_on").val('執行'+d); 
+ 		});
+
+ 		$("#tm").on("click",function(){
+ 			var d = new Date();
+ 			window.open("pt_ajax/treatment.php?path="+$("#path").val(),"處置範本 基本資料");
+ 			$("#tm_on").val('執行'+d); 
+ 		});
+
+
+ 		$("#treat").on("click",function(){
+ 			var d = new Date();
+ 			window.open("pt_ajax/treat.php?path="+$("#path").val(),"處置明細 基本資料");
+ 			$("#treat_on").val('執行'+d); 
  		});
 
  	});
