@@ -34,9 +34,10 @@
 
 	//掛號
 	$conn->exec("truncate table registration");
+	// $conn->exec("ALTER TABLE registration AUTO_INCREMENT=1000");
 	// $sql = "SELECT o.*,c.就醫類別 FROM operate o left join iccard c on  o.日期時間=c.日期時間 and o.病歷編號=c.病歷編號";
-	$sql="select * from operate";
-	$result=$db->query($sql);
+	$sqlcooper="select * from operate";
+	$result=$db->query($sqlcooper);
 	$DT='';
 	$seq=0;
 	$i=0;
@@ -278,9 +279,6 @@
 					'$nhistatus','$category',$rxday,'$rxtype',$isout,'$thosp','$icseq','$ic_type',
 					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt','$secsign')";
 		echo $dt.'.'.$cusno.'、';
-		// if ($dt>='2008-01-01' && $dt<='2008-01-31'){
-			// echo $sql."<br>";
-		// }
 		$conn->exec($sql);
 	}
 

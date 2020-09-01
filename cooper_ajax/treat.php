@@ -7,6 +7,7 @@
 
 	//處置
 	$conn->exec("truncate table treat_record");
+	// $conn->exec("ALTER TABLE treat_record AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM op_opasm";
 	$result=$db->query($sql);
 	$search = array('/','"');

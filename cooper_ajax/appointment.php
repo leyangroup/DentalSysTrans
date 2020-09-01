@@ -62,6 +62,7 @@
 	$conn->exec($sql);
 
 	$sql="truncate table delappom";
+	// -$conn->exec("ALTER TABLE delappom AUTO_INCREMENT=1000");
 	$conn->exec($sql);
 
 	$sql="insert into delappom(regsn,ddate,cussn,cusno,drno1,userid,sch_time,schlen,sch_note,schqty,muid,schtel,chgdate,chgtype,

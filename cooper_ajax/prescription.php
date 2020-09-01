@@ -7,6 +7,7 @@
 
 	//處方箋
 	$conn->exec("truncate table prescription");
+	// $conn->exec("ALTER TABLE prescription AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM op_drug";
 	$result=$db->query($sql);
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
