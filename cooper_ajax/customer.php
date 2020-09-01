@@ -13,6 +13,7 @@
 
 	//新增患者
 	$conn->exec("truncate table customer");
+	// $conn->exec("ALTER TABLE customer AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM patient.dbf";
 	$result=$db->query($sql);
 	$rs=$result->fetchAll(PDO::FETCH_ASSOC);

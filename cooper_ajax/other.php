@@ -10,6 +10,7 @@
 
 	//支付標準表
 	$conn->exec("truncate table treatment");
+	// $conn->exec("ALTER TABLE treatment AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM operasm";
 	$result=$db->query($sql);
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -132,6 +133,7 @@
 
 	echo "產生charge<br>";
 	$sql="truncate table charge";
+	// $conn->exec("ALTER TABLE charge AUTO_INCREMENT=1000");
 	$conn->exec($sql);
 	$FDT=$year.'-01-0100:00';
 	$LDT=$DT.'23:59';

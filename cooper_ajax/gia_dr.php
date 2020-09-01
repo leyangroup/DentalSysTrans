@@ -12,6 +12,7 @@
 	$conn->exec("Create table tmp_Dr(maindr varchar(10),giadr varchar(10))");
 
 	$conn->exec("truncate table staff");
+	// $conn->exec("ALTER TABLE staff AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM doctor.dbf";
 	$result=$db->query($sql);
 	$rs=$result->fetchAll(PDO::FETCH_ASSOC);

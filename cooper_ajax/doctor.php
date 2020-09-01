@@ -36,6 +36,7 @@
 	
 	//新增醫師
 	$conn->exec("truncate table staff");
+	// $conn->exec("ALTER TABLE staff AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM doctor.dbf";
 	$result=$db->query($sql);
 	$rs=$result->fetchAll(PDO::FETCH_ASSOC);
@@ -106,6 +107,7 @@
 
 	//優待身份
 	$conn->exec("truncate table disc_list");
+	// $conn->exec("ALTER TABLE disc_list AUTO_INCREMENT=1000");
 	$sql = "SELECT * FROM pattype.dbf";
 	$result=$db->query($sql);
 	$rs=$result->fetchAll(PDO::FETCH_ASSOC);

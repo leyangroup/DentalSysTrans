@@ -7,7 +7,7 @@
     ini_set("memory_limit", "1024M"); 
 	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 
-	$conn->exec("truncate table treatment");
+	//$conn->exec("truncate table treatment");
 	
 	//處置資料
 	$sql = "SELECT * FROM medical.dat";

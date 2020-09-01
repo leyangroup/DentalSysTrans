@@ -14,13 +14,16 @@
 		$drArr[$value['name']]=$value['id'];
 	}
 	//清除患者基本資料表
-	$conn->exec("truncate table customer");
+	//$conn->exec("truncate table customer");
 
 
 	//建立對應檔 
+
+	$conn->exec("drop table if exists trcusmap");
 	$conn->exec("CREATE TABLE `trcusmap` (`keyword` varchar(10) NOT NULL,`cusno` varchar(10) NOT NULL) 
-				ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='轉檔cusmap'");
-	$conn->exec("ALTER TABLE `trcusmap` ADD PRIMARY KEY (`keyword`) ");
+				ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='轉檔用cusmap'");
+	$conn->exec("ALTER TABLE `trcusmap` ADD PRIMARY KEY (`cusno`) ");
+	$conn->exec("ALTER TABLE `trcusmap` ADD INDEX(`keyword`)");
 
 	//患者基本資料
 	$sql = "SELECT * FROM user.dat";
@@ -67,11 +70,11 @@
 			$lastDT=($fdt[0]+1911).'-'.$fdt[1].'-'.$fdt[2];
 		}
 
-		//ctime 暫存keyword
+		
 		$sql="insert into customer (
 					cusno,cusname,cusbirthday,lastdate,cussex,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,cusmemo,cuszip)
 		 	  values
-		 	       ('$cusno','$name','$birth','$lastDT','$cussex','$cusid','$tel','$mobile','$address',$maindrno,$maindrno,'$memo','$zip')";
+		 	       ('$cusno','$name','$birth','$lastDT','$cussex','$id','$tel','$mobile','$address',$maindrno,$maindrno,'$memo','$zip')";
 		echo "$sql<br>";
 
 		$conn->exec($sql);

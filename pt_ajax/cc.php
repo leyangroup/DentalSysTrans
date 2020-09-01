@@ -41,8 +41,8 @@
     echo "$sql<br>";
 	$conn->exec($sql);
 	
-	$conn->exec("insert into soap_record(regsn,subjective) select regsn,maintell from registration r,trcc c where r.stdate=c.id");
-	// $conn->exec("update registration r,trcc c set r.cc=c.maintell WHERE r.stdate=c.id");
+	$conn->exec("insert into soap_records(regsn,subjective) select regsn,maintell from registration r,trcc c where r.stdate=c.id");
+	$conn->exec("update registration r,trcc c set r.cc=c.maintell WHERE r.stdate=c.id");
 
 	echo "<h1>主訴資料 轉換完成</h1>";
 ?>
