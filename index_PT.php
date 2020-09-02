@@ -19,10 +19,11 @@
 		<div class="col-md-2 column">
 		</div>
 		<div class="col-md-6 column">
-			<H2 style="text-align: center;">轉換醫聖資料</H2>
+			<h2 style="text-align: center;">轉換醫聖資料</h2>
 			<h2></h2>
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?>>(ex.2019-10-03)日期會與預約轉入的資料有關</h4>
 			<h4>程式路徑：<input type="text" id="path" value='c:\PTDat'></h4>
+			<h4>舊圖檔路徑：<input type="text" id="pathImg" value='c:\PTDat\Img' style="width: 500px;"></h4>
 			<div><label></label></div>
 			<h1>無需同步醫師資料至leconfig,程式已經直接將資料轉至樂易智</h1>
 
@@ -70,7 +71,13 @@
 			</div>
 			<div><label></label></div>
 
-		</table>
+			<div>
+				<button type='button' class="btn btn-info" id="image">7.病歷圖檔 資料轉換</button>
+				<input type='text' id='img_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<div><label></label></div>
+
+		</div>
 	</form>
 </body>
 </html>
@@ -120,6 +127,12 @@
  			var d = new Date();
  			window.open("pt_ajax/treat.php?path="+$("#path").val(),"處置明細 基本資料");
  			$("#treat_on").val('執行'+d); 
+ 		});
+
+ 		$("#image").on("click",function(){
+ 			var d = new Date();
+ 			window.open("pt_ajax/image_record.php?path="+$("#path").val()+"&imagePath="+$("#pathImg").val());
+ 			$("#img_on").val('執行'+d);
  		});
 
  	});
