@@ -3,39 +3,46 @@ include_once "../include/db.php";
 include_once "../include/DTFC.php";
 
 set_time_limit(0);
-ini_set("memory_limit", "1024M");
+ini_set("memory_limit", "3000M");
+
+$limit = $_GET['start'] - 1;
 
 $oldImgFolder = trim($_GET['imagePath'], '\\') . '\\';
 $customerFolder = 'C:\\xampp\\htdocs\\his\\public\\Ledocs\\customer\\';
-$newImgFolder = $customerFolder. '{cussn}\\';
+$newImgFolder = $customerFolder . '{cussn}\\';
 $newImgSubFolder = 'records\\';
 
 // 建立customer
 if (!is_dir($customerFolder)) {
-    mkdir($customerFolder,0777);
+    mkdir($customerFolder, 0777);
 }
 
 $leqingCon = MariaDBConnect();
-
 // dat connection
 //$oldCon = new PDO('mysql:host=localhost:3306;dbname=trans', 'root', '', [PDO::ATTR_PERSISTENT => true]);
 //$oldTable = 'img';
+//$oldCon->query('set names utf8;');
+//$oldCon->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
 $oldCon = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 $oldTable = 'img.dat';
 
-// $oldCon->query('set names utf8;');
-// $oldCon->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-
-$sql = "SELECT * FROM {$oldTable}";
+$sql = "SELECT * FROM {$oldTable} ORDER BY `filename` LIMIT {$limit}, 500";
 $sth = $oldCon->prepare($sql);
 $sth->execute();
 $result = $sth->fetchAll();
-// var_dump($result);
-// exit;
+
+// 獲取已複製的檔案(避免重複)
+$sql = "SELECT `id`, `path` FROM `image_records`";
+$ex = $leqingCon->prepare($sql);
+$ex->execute();
+$rImages = array_column($ex->fetchAll(), 'path');
 
 $execCount = 0;
 foreach ($result as $key => $value) {
+
+    if (array_search($value['filename'], $rImages) !== false) continue;
+
     $sql = '';
     $oldPath = '';
     $newFileName = strtolower($value['filename']);
@@ -47,7 +54,6 @@ foreach ($result as $key => $value) {
     $ex = $leqingCon->prepare($sql);
     $ex->execute();
     $registration = $ex->fetch();
-
 
     // 獲取old圖檔路徑 確定有檔案
     $oldPath = $oldImgFolder . substr($value['filename'], -8, 2) . '\\' . $value['filename'];
@@ -70,15 +76,15 @@ foreach ($result as $key => $value) {
             $leqingCon->exec($sql);
 
             if (!is_dir($newFolder)) {
-                mkdir($newFolder,0777);
+                mkdir($newFolder, 0777);
             }
 
             if (!is_dir($newFolder .= $newImgSubFolder)) {
-                mkdir($newFolder,0777);
+                mkdir($newFolder, 0777);
             }
 
             // copy image
-            copy($oldPath, $newFolder. $value['filename']);
+            copy($oldPath, $newFolder . $value['filename']);
             $execCount++;
             echo "$sql<br>";
         }

@@ -24,6 +24,7 @@
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?>>(ex.2019-10-03)日期會與預約轉入的資料有關</h4>
 			<h4>程式路徑：<input type="text" id="path" value='c:\PTDat'></h4>
 			<h4>舊圖檔路徑：<input type="text" id="pathImg" value='c:\PTDat\Img' style="width: 500px;"></h4>
+			<h4>圖檔從第幾筆開始轉：<input type="text" id="start" value='1'> (每次轉500筆)</h4>
 			<div><label></label></div>
 			<h1>無需同步醫師資料至leconfig,程式已經直接將資料轉至樂易智</h1>
 
@@ -131,7 +132,7 @@
 
  		$("#image").on("click",function(){
  			var d = new Date();
- 			window.open("pt_ajax/image_record.php?path="+$("#path").val()+"&imagePath="+$("#pathImg").val());
+ 			window.open("pt_ajax/image_record.php?path="+$("#path").val()+"&imagePath="+$("#pathImg").val()+"&start="+$("#start").val());
  			$("#img_on").val('執行'+d);
  		});
 
