@@ -4,11 +4,10 @@ include_once "../include/DTFC.php";
 
 set_time_limit(0);
 ini_set("memory_limit", "3000M");
-
 $limit = $_GET['start'] - 1;
 
 $oldImgFolder = trim($_GET['imagePath'], '\\') . '\\';
-$customerFolder = 'C:\\xampp\\htdocs\\his\\public\\Ledocs\\customer\\';
+$customerFolder = 'D:\\xampp\\htdocs\\his\\public\\Ledocs\\customer\\';
 $newImgFolder = $customerFolder . '{cussn}\\';
 $newImgSubFolder = 'records\\';
 
@@ -18,11 +17,6 @@ if (!is_dir($customerFolder)) {
 }
 
 $leqingCon = MariaDBConnect();
-// dat connection
-//$oldCon = new PDO('mysql:host=localhost:3306;dbname=trans', 'root', '', [PDO::ATTR_PERSISTENT => true]);
-//$oldTable = 'img';
-//$oldCon->query('set names utf8;');
-//$oldCon->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
 $oldCon = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 $oldTable = 'img.dat';
@@ -38,6 +32,7 @@ $sql = "SELECT `id`, `path` FROM `image_records`";
 $ex = $leqingCon->prepare($sql);
 $ex->execute();
 $rImages = array_column($ex->fetchAll(), 'path');
+
 
 $execCount = 0;
 foreach ($result as $key => $value) {
