@@ -6,7 +6,7 @@ set_time_limit(0);
 ini_set("memory_limit", "1024M");
 
 $oldImgFolder = trim($_GET['imagePath'], '\\') . '\\';
-$customerFolder = 'D:\\xampp\\htdocs\\his\\public\\Ledocs\\customer\\';
+$customerFolder = 'C:\\xampp\\htdocs\\his\\public\\Ledocs\\customer\\';
 $newImgFolder = $customerFolder. '{cussn}\\';
 $newImgSubFolder = 'records\\';
 
@@ -24,30 +24,33 @@ $leqingCon = MariaDBConnect();
 $oldCon = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 $oldTable = 'img.dat';
 
-$oldCon->query('set names utf8;');
-$oldCon->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+// $oldCon->query('set names utf8;');
+// $oldCon->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
 
-$sql = "SELECT `KEYWORDS`, `MEDICAL_NO`, `FILENAME` FROM {$oldTable}";
+$sql = "SELECT * FROM {$oldTable}";
 $sth = $oldCon->prepare($sql);
 $sth->execute();
 $result = $sth->fetchAll();
+// var_dump($result);
+// exit;
 
 $execCount = 0;
 foreach ($result as $key => $value) {
     $sql = '';
     $oldPath = '';
-    $newFileName = strtolower($value['FILENAME']);
+    $newFileName = strtolower($value['filename']);
     $newFolder = '';
 
     // 獲取registration pk
     // 獲取customer pk
-    $sql = "SELECT `regsn`, `cussn` FROM `registration` WHERE binary `stdate` = '{$value['KEYWORDS']}'";
+    $sql = "SELECT `regsn`, `cussn` FROM `registration` WHERE binary `stdate` = '{$value['keywords']}'";
     $ex = $leqingCon->prepare($sql);
     $ex->execute();
     $registration = $ex->fetch();
 
+
     // 獲取old圖檔路徑 確定有檔案
-    $oldPath = $oldImgFolder . substr($value['FILENAME'], -8, 2) . '\\' . $value['FILENAME'];
+    $oldPath = $oldImgFolder . substr($value['filename'], -8, 2) . '\\' . $value['filename'];
 
     if ($registration && file_exists($oldPath)) {
 
@@ -75,7 +78,7 @@ foreach ($result as $key => $value) {
             }
 
             // copy image
-            copy($oldPath, $newFolder. $value['FILENAME']);
+            copy($oldPath, $newFolder. $value['filename']);
             $execCount++;
             echo "$sql<br>";
         }
