@@ -27,10 +27,11 @@ $leqingCon = MariaDBConnect();
 $oldCon = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 $oldTable = 'img.dat';
 
-$sql = "SELECT * FROM {$oldTable} ORDER BY `filename` ";
+$sql = "SELECT * FROM {$oldTable} ORDER BY `filename`";
 $sth = $oldCon->prepare($sql);
 $sth->execute();
 $result = $sth->fetchAll();
+$result = array_slice($result, $limit, 501);
 
 // 獲取已複製的檔案(避免重複)
 $sql = "SELECT `id`, `path` FROM `image_records`";
