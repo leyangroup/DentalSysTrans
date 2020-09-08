@@ -27,7 +27,7 @@ $leqingCon = MariaDBConnect();
 $oldCon = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 $oldTable = 'img.dat';
 
-$sql = "SELECT * FROM {$oldTable} ORDER BY `filename` LIMIT {$limit}, 500";
+$sql = "SELECT * FROM {$oldTable} ORDER BY `filename` ";
 $sth = $oldCon->prepare($sql);
 $sth->execute();
 $result = $sth->fetchAll();

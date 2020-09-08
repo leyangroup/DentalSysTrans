@@ -9,12 +9,10 @@
 
 	$conn->exec("drop table if exists trcc");
 	$conn->exec("CREATE TABLE `trcc` (
-				  `id` varchar(6) NOT NULL,
+				  `id` varchar(6) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
 				  `maintell` text DEFAULT NULL
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='cc';
-			");
-	$conn->exec("ALTER TABLE trcc ADD PRIMARY KEY (`id`)");
-	
+				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='cc' ");
+	$conn->exec("ALTER TABLE `trcc` ADD PRIMARY KEY (`id`)");
 	//患者基本資料
 	$sql = "SELECT * FROM maintell.dat order by keywords";
 	$result=$db->query($sql);
