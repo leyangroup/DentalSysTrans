@@ -23,7 +23,7 @@
 		$tel=$value['tel'];
 		$zip=$value['zip1'];
 
-		$sql="update basicset set bsname='$cname',bstel='$tel',bsaddr='$addr',zip='$zip',owner='$owner',nhicode='$nhicode',bsfax='',volume='',opendate=''";
+		$sql="update basicset set bsname='$cname',bstel='$tel',bsaddr='$addr',zip='$zip',owner='$owner',nhicode='$nhicode',bsfax=''";
 		echo $sql;
 
 		$conn->exec($sql);

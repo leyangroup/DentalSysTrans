@@ -11,12 +11,15 @@
 	$yy=substr($today,0,4);
 	$dr2=[];
 	$dr1=[];
-	$sql="select a.sfsn,a.sfno,a.sfid,a.sfemail,b.*
-			from staff a,(select sfsn as sn,sfno as no,sfid as id from staff b where sfid=sfemail and sfid!='') b
-			where a.sfid=id";
+	//主治 有輸入身份證且主治就是申報 沒有輸入身份證的就不會在裡面
+
+	// $sql="select a.sfsn,a.sfno,a.sfid,a.sfemail,b.*
+	// 		from staff a,(select sfsn as sn,sfno as no,sfid as id from staff b where sfid=sfemail and sfid!='') b
+	// 		where a.sfid=id";
+	$sql="select sfsn,sfno from staff order by 1";
 	$result=$conn->query($sql);
 	foreach ($result as $key => $value) {
-		$dr1[$value['sfno']]=$value['sn'];
+		$dr1[$value['sfno']]=$value['sfsn'];
 	}
 			
 	$sql="select a.sfsn,a.sfno,a.sfid,a.sfemail,b.*
