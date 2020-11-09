@@ -5,9 +5,9 @@
     
 	//設定索引
 	$conn->exec("ALTER TABLE customer ADD INDEX(`cusno`)");
-	$conn->exec("ALTER TABLE `treat_record` ADD INDEX( `ddate`, `seqno`)");
 	$conn->exec("ALTER TABLE `registration` ADD INDEX( `ddate`, `seqno`)");
-
+	$conn->exec("ALTER TABLE `registration` ADD INDEX(`ic_datetime`)");
+	$conn->exec("ALTER TABLE `treat_record` ADD INDEX( `ddate`, `seqno`)");
 	$conn->exec("ALTER TABLE `pasystemdi` ADD UNIQUE( `sn`)");
 	$conn->exec("ALTER TABLE `pasystemdi` CHANGE `sn` `sn` INT(8) NOT NULL AUTO_INCREMENT COMMENT '  流水號  '");
 	
