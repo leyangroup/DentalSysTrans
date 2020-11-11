@@ -19,12 +19,16 @@
 		<div class="col-md-2 column">
 		</div>
 		<div class="col-md-6 column">
-			<H2 style="text-align: center;">轉換 林氏</H2>
+
+			<h2 style="text-align: center;">轉換 林氏</h2>
 			<h2></h2>
-			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?>>(ex.2019-10-03)日期會與預約轉入的資料有關</h4>
-			<h4>程式路徑：<input type="text" id="path" value='c:\angel2'></h4>
+			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?> > </h4>
+			<h4>程式路徑：<input type="text" id="path" value='c:\jinjin\data'></h4>
 			<div><label></label></div>
-			
+			<h1>無需同步醫師資料至leconfig,程式已經直接將資料轉至樂易智</h1>
+
+			<h4 style="color:blue">請依序按鈕執行</h4>
+
 			<div>
 				<button type='button' class="btn btn-info" id="idx">0.建立索引(若重複轉入，只需執行一次)</button>
 				<input type='text' id='idx_on' style="color:blue" readonly value='請按鈕' size=50>
@@ -32,36 +36,47 @@
 			<div><label></label></div>
 
 			<div>
+
 				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師 資料轉換</button>
+
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
 
 			<div>
+
 				<button type='button' class="btn btn-info" id="patient">2.患者基本 資料轉換</button>
+
 				<input type='text' id='pt_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
 
 			<div>
-				<button type='button' class="btn btn-info" id="reg">3.掛號 資料轉換</button>
+
+				<button type='button' class="btn btn-info" id="register">3.掛號 資料轉換</button>
+
 				<input type='text' id='reg_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
 
 			<div>
+
 				<button type='button' class="btn btn-info" id="treat">4.處置 資料轉換</button>
 				<input type='text' id='treat_on' style="color:blue" readonly value='請按鈕' size=50>
+
 			</div>
 			<div><label></label></div>
 
 			<div>
+
 				<button type='button' class="btn btn-info" id="pre">5.處方箋 資料轉換</button>
 				<input type='text' id='pre_on' style="color:blue" readonly value='請按鈕' size=50>
+
 			</div>
 			<div><label></label></div>
 
 			<div>
+
 				<button type='button' class="btn btn-info" id="drug">6.藥品 資料轉換</button>
 				<input type='text' id='drug_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
@@ -81,6 +96,7 @@
 			
 		
 		</table>
+
 	</form>
 </body>
 </html>
@@ -90,6 +106,7 @@
  	$(document).ready(function(){
  		$("#idx").on("click",function(){
  			var d = new Date();
+
  			window.open("angel_ajax/create_Index.php?path="+$("#path").val(),"建立索引");
  			$("#idx_on").val('執行'+d); 
  		});
@@ -141,6 +158,7 @@
  		});
  		
  		
+ 			
  	});
 
 </script>
