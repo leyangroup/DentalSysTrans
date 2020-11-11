@@ -65,13 +65,18 @@
 				break;
 		}
 		$position=(substr($no,0,1)=='D')?'D':'A';
+		$startjob='';
 		$endjob='';
-		if (strlen(trim($ldate))==7){
-			$yy=1911+substr($ldate,0,3);
-			$endjob=$yy.'-'.substr($ldate,3,2).'-'.substr($ldate,-2);
+		if (strlen(trim($value['wdate']))==7){
+			$yy=1911+substr($value['wdate'],0,3);
+			$startjob=$yy.'-'.substr($value['wdate'],3,2).'-'.substr($value['wdate'],-2);
 		}
-		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfendjob,position,sfemail,drkind)values
-					('$no','$name','$id','$BD','$sex','$endjob','$position','$aid','0') ";
+		if (strlen(trim($value['ldate']))==7){
+			$yy=1911+substr($value['ldate'],0,3);
+			$endjob=$yy.'-'.substr($value['ldate'],3,2).'-'.substr($value['ldate'],-2);
+		}
+		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfstartjob,sfendjob,position,sfemail,drkind)values
+					('$no','$name','$id','$BD','$sex','$startjob','$endjob','$position','$aid','0') ";
 		echo "新增醫師：".$sql."<br>";
 
 		$conn->exec($sql);
@@ -90,7 +95,7 @@
 		$sql="insert into disc_list(discid,disc_name,reg_disc,partpay_disc)values
 				('$discno','$discname',$discreg,$discpt)";
 		echo "新增優待身份.".$sql."<br>";
-		//$conn->exec($sql);
+		$conn->exec($sql);
 	}
 
 	echo "<h1>診所、醫師、優待身份 資料轉換完成</h1>";
