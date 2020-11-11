@@ -19,13 +19,12 @@
 		<div class="col-md-2 column">
 		</div>
 		<div class="col-md-6 column">
-			<H2 style="text-align: center;">轉換小天使資料</H2>
+			<H2 style="text-align: center;">轉換 林氏</H2>
 			<h2></h2>
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?>>(ex.2019-10-03)日期會與預約轉入的資料有關</h4>
 			<h4>程式路徑：<input type="text" id="path" value='c:\angel2'></h4>
 			<div><label></label></div>
-			<h2 style="color:red">一定要先產生申報才可以轉檔哦!!</h2>
-			<h4 style="color:blue">請依序按鈕執行</h4>
+			
 			<div>
 				<button type='button' class="btn btn-info" id="idx">0.建立索引(若重複轉入，只需執行一次)</button>
 				<input type='text' id='idx_on' style="color:blue" readonly value='請按鈕' size=50>
@@ -33,7 +32,7 @@
 			<div><label></label></div>
 
 			<div>
-				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師、優待身份 資料轉換</button>
+				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師 資料轉換</button>
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div><label></label></div>
@@ -79,19 +78,7 @@
 				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 
-			<div><label></label></div>
-			<div>
-				<button type='button' class="btn btn-info" id="allergic">9.過敏藥物、病史 資料轉換</button>
-				<input type='text' id='allergic_on' style="color:blue" readonly value='請按鈕' size=50>
-				<label>小天使的過敏藥物與系統疾病是放在同一個資料表的，所以allergic,systemdisease都會放</label>
-			</div>
-
-			<div><label></label></div>
-			<div>
-				<button type='button' class="btn btn-info" id="reTrans">10.陽安 重轉掛號與醫師 資料轉換</button>
-				<input type='text' id='reTrans' style="color:blue" readonly value='請按鈕' size=50>
-				<label></label>
-			</div>
+			
 		
 		</table>
 	</form>
@@ -153,17 +140,7 @@
  			$("#tm_on").val('執行'+d); 
  		});
  		
- 		$("#allergic").on("click",function(){
- 			var d = new Date();
- 			window.open("angel_ajax/allergic.php?path="+$("#path").val(),"過敏藥物、病史 資料");
- 			$("#allergic_on").val('執行'+d); 
- 		});
-
- 		$("#reTrans").on("click",function(){
- 			var d = new Date();
- 			window.open("angel_ajax/reTrans.php?path="+$("#path").val(),"重新轉陽安掛號 資料");
- 			$("#reTrans").val('執行'+d); 
- 		});
+ 		
  	});
 
 </script>
