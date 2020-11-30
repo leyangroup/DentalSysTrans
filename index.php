@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>系統轉換 1.0.9</title>
+	<title>系統轉換 1.1.0</title>
 	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -53,6 +53,9 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="PT" >醫聖-全人物理治療所</button></td>
 				</tr>
+				<tr>
+					<td><button class="btn btn-success" type='button' id="Lin" >林氏 wise</button></td>
+				</tr>
 			</table>
 		</div>
 	</form>
@@ -83,6 +86,10 @@
 
  		$("#PT").on("click",function(){
  			document.location.href="index_PT.php?DT="+$("#DT").val(); 
+ 		});
+
+ 		$("#Lin").on("click",function(){
+ 			document.location.href="index_04.php?DT="+$("#DT").val(); 
  		});
  	});
 
