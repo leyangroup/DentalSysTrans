@@ -19,10 +19,9 @@
 		$fdi=trim(mb_convert_encoding($value['fdi'],"UTF-8","BIG5"));
 		$nums=$value['nums'];
 		$cc=trim(mb_convert_encoding($value['cc'],"UTF-8","BIG5"));
-		$cc=str_replace("\\", "＼", $cc);
-		$cc=str_replace("'", "\'", $cc);
+		$cc=addslashes($cc);
 		$startdt=WestDT($value['stdate']);
-		$startno=str_replace("'", "\'",$value['tream_no']);
+		$startno=addslashes($value['tream_no']);
 		$sick='';
 		$icd10='';
 		if ($DT<='2015-12-31'){
@@ -31,19 +30,20 @@
 			$icd10=trim($value['sickn']);
 		}	
 		$side=trim(mb_convert_encoding($value['sideno'],"UTF-8","BIG5"));
-		$side=str_replace("\\", "＼", $side);
-		$side=str_replace("'", "\'", $side);
+		$side=addslashes($side);
 		$treatname=trim(mb_convert_encoding($value['pname'],"UTF-8","BIG5"));
-		$tname=str_replace("\\", "＼", $treatname);
-		$tname=str_replace("'", "\'", $tname);
+		$tname=addslashes($treatname);
 
 		$memo=trim(mb_convert_encoding($value['descm'],"UTF-8","BIG5"));
-		$memo=str_replace("\\", "＼", $memo);
-		$memo=str_replace("'", "\'", $memo);
-		$sql="insert into treat_record(regsn,ddate,seqno,trcode,fdi,side,nums,cc,start_date,start_icseq,sickno,icd10,treat_memo,treatname)
+		$memo=addslashes($memo);
+		$sql="insert into treat_record
+				(regsn,ddate,seqno,trcode,fdi,side,nums,cc,start_date,start_icseq,sickno,icd10,treat_memo,treatname)
 			  values(0,'$DT','$seqno','$trcode','$fdi','$side','$nums','$cc','$startdt','$startno','$sick','$icd10','$memo','$tname')";
-		echo "$DT.$seqno。";
-		$conn->exec($sql);
+		
+		$ok=$conn->exec($sql);
+		if ($ok==0){
+			echo "新增處置失敗：$sql<br>";
+		}
 	}
 	echo "資料處理<br>";
 	$sql="update registration set cussn=0 where cussn is null";
@@ -93,10 +93,18 @@
 	$conn->exec("update treat_record set start_date=null where start_date=''");
 	$conn->exec("update treat_record set start_icseq=null where start_icseq=''");
 	$conn->exec("update treat_record set deldate='1911-01-01' where trcode='' ");
-
 	$conn->exec("update registration r, treat_record t set r.cc=t.cc where r.regsn =t.regsn and t.cc is not null and t.cc !='' ");
 
-
+	//加成處理
+	$sql="UPDATE registration r,treat_record t ,customer c
+			set t.add_percent=1.3
+			WHERE r.regsn=t.regsn
+			and r.cussn=c.cussn
+			and r.ddate <=concat(left(date_add(cusbirthday,interval 48 month),8),'31')
+			and r.ic_type in ('02','AB')
+			and r.category!='16'";
+	$conn->exec($sql);
+	
 	echo "<br><br>掛號 資料轉換完成!!";
 
 ?>

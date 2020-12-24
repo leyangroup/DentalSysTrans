@@ -25,6 +25,8 @@
 	$sql = "SELECT * FROM patient.dbf";
 	$result=$db->query($sql);
 	$r=0;
+	echo "<h1>資料轉入中</h1>";
+
 	foreach ($result as $key => $value) {
 		$r++;
 		$cusno=trim(mb_convert_encoding($value['pat_no'],"UTF-8","BIG5"));
@@ -37,24 +39,25 @@
 		$sex=($value['sex'])?'1':'0';
 		$cardid=$value['cardid'];
 		$cusid=$value['id'];
-		$tel=trim(mb_convert_encoding($value['tel1'],"UTF-8","BIG5"));
-		$mobile=trim(mb_convert_encoding($value['cmt'],"UTF-8","BIG5"));
+		$tel=addslashes(trim(mb_convert_encoding($value['tel1'],"UTF-8","BIG5")));
+		$mobile=addslashes(trim(mb_convert_encoding($value['cmt'],"UTF-8","BIG5")));
 		$addr=trim(mb_convert_encoding($value['addr'],"UTF-8","BIG5"));
-		$addr=str_replace("\\", "＼", $addr);
-		$address=str_replace("'", "\'", $addr);
+		$addr=addslashes($addr);
 		$maindrno=($drA[trim($value['dr_no'])]=='')?0:$drA[trim($value['dr_no'])];
 		$areacode=$value['areacode'];
 		$memo=trim(mb_convert_encoding($value['patmemo'],"UTF-8","BIG5"));
-		$memo=str_replace("\\", "＼", $memo);
-		$cusmemo=str_replace("'", "\'", $memo);
+		$memo=addslashes($memo);		
 		$soproid=$value['soproid'];
 		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id)
 		 		values('$cusno','$cusname','$shortCode','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
 		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo',$soproid)";
-		echo "$r.$cusname($cusno)";
+		
 		 		// echo $sql;
-		echo "<br>";
-		$conn->exec($sql);
+		// echo "<br>";
+		$ok=$conn->exec($sql);
+		if ($ok==0){
+			echo "新增失敗：$sql <br>";
+		}
 	}
 	
 	$sql="update customer c,zip z  
