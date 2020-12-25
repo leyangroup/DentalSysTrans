@@ -12,7 +12,7 @@
 	$today=$_GET['dt'];
 	$yy=substr($today,0,4);
 	$dr2=[];
-	$dr1=[];
+	// $dr1=[];
 	//主治 有輸入身份證且主治就是申報 沒有輸入身份證的就不會在裡面
 
 	// $sql="select a.sfsn,a.sfno,a.sfid,a.sfemail,b.*
