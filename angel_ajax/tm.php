@@ -91,29 +91,36 @@
 	$conn->exec($sql);
 
 	//處置點值與加成 由申報醫令填入
-	$sql="update tmp_giadtl g,treat_record t 
+	$sql="update tmp_giadtl g,treat_record t ,registration r
 			set t.add_percent=g.addpercent,t.punitfee=price,pamt=round(g.addpercent*g.price*nums)
 			where g.dt=t.ddate
+			and t.regsn=r.regsn
 			and g.seq=t.seqno
 			and g.trcode=t.trcode
-			and g.fdi=t.fdi";
+			and g.fdi=t.fdi
+			and r.ic_type !='AC'";
 
-	//處置點值沒有
+	//處置點值=0
 	$sql="update treat_record t,treatment m 
 			set t.punitfee=m.nhi_fee,pamt=m.nhi_fee*nums
 			where t.trcode=m.trcode
 			and t.punitfee=0";
 	$conn->exec($sql);
 
+	$conn->exec("update treat_record 
+					set pamt=round(punitfee*nums*add_percent)
+				  where deldate is null");
+
 	$sql="delete from treatment where trcode like '0127%' ";
 	$conn->exec($sql);
 
 	$sql="update registration r
-		set nhi_tamt=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)
-		where nhi_tamt !=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)";
+			 set nhi_tamt=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)
+		   where nhi_tamt!=(select sum(pamt) from treat_record where regsn=r.regsn and deldate is null)";
 	$conn->exec($sql);
 
-	$sqi="update registration set amount=trpay+nhi_tamt+nhi_damt,giaamt=trpay+nhi_tamt+nhi_damt-nhi_partpay";
+	$sql="update registration r 
+			 set amount=trpay+nhi_tamt+nhi_damt+drugsv,giaamt=trpay+nhi_tamt+nhi_damt+drugsv-nhi_partpay-drug_partpay";
 	$conn->exec($sql);
 
 	echo "處置 資料轉換完成";

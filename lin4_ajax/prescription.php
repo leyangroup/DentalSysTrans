@@ -31,6 +31,15 @@
 			echo "新增處方失敗：".$sql."<br>";
 		}
 	}
+
+	$sql="update registration r,prescription p 
+			set p.ddate=r.ddate,p.seqno=r.seqno,p.regsn=r.regsn
+			where r.cussn=p.uploadd
+			and r.uploadd=p.icuploadd";
+	$conn->exec($sql);
+	
+	$conn->exec("update  `prescription` set part='PO'");
+	$conn->exec("update eprodb.prescription p,leconfig.zhi_drug d set nhidrugno=nhicode where p.drugno=d.drugno");	
 	echo "<h1>處方 資料轉換完成</h1>";
 
 ?>

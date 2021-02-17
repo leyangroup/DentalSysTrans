@@ -98,10 +98,14 @@
 		$discreg=$value['dis_path'];		
 		$discpt=$value['dis_pro'];
 
-		$sql="insert into disc_list(discid,disc_name,reg_disc,partpay_disc)values
+		$sql="insert into leconfig.zhi_disc_list(no,name,reg_disc,partpay_disc)values
 				('$discno','$discname',$discreg,$discpt)";
 		echo "新增優待身份.".$sql."<br>";
-		$conn->exec($sql);
+		$ok=$conn->exec($sql);
+		if ($ok==0){
+			echo "新增失敗 $sql<br>";
+
+		}
 	}
 
 	echo "<h1>診所、醫師、優待身份 資料轉換完成</h1>";

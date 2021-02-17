@@ -117,12 +117,16 @@
 						(DT varchar(10),
 						seq varchar(3),
 						icdatetime varchar(13),
-						trcode varchar(10) ,
+						trcode varchar(10),
 						trpay int,
 						tamt int,
+						damt int,
+						drugsv int,
+						rx_code varchar(10),
 						rx_type varchar(2),
 						icseqno varchar(7),
 						nhistatus varchar(3),
+						nhi_partpay int,
 						amount int,
 						giaamt int,
 						rocDTSeq varchar(10)
@@ -135,7 +139,7 @@
 						seq varchar(3),
 						rocDTSeq varchar(10),
 						trcode varchar(10),
-						nhicode varchar(10) ,
+						nhicode varchar(10),
 						fdi varchar(12),
 						addpercent float,
 						price float,
@@ -176,24 +180,37 @@
 		echo "$sql<br>";
 		$gia=$dbgia->query($sql);
 		foreach ($gia as $key => $value) {
-			$dt=(substr($value['ddate'],0,3)+1911)."-".substr($value['ddate'],3,2)."-".substr($value['ddate'],-2);
+			if ($value['ddate']==' '){
+				$dt='';
+			}else{
+				$dt=(substr($value['ddate'],0,3)+1911)."-".substr($value['ddate'],3,2)."-".substr($value['ddate'],-2);
+			}
 			$seq=$value['patseq'];
 			$rocDTSeq=$value['ddate'].$value['patseq'];
 			//$patno=trim(mb_convert_encoding(trim($value['pat_no']),"UTF-8","BIG5"));
 			$icdatetime=$value['tream_dt'];
 			$trcode=trim($value['tcode']);
 			$trpay=$value['tamt'];
-			$pamt=$value['pamt'];
+			$tamt=$value['pamt'];
+			$damt=$value['damt'];
+			$drugsv=$value['drugamt'];
+			$rx_code=trim($value['drugid']);
 			$rx_type=$value['isdrug'];
 			$icseqno=$value['cardyear'].$value['tream_no'];
 			$nhistatus=$value['inspct'];
+			if ($value['inspct']=='H10'){
+				$nhi_partpay=50;
+			}else{
+				$nhi_partpay=0;
+			}
 			$amount=$value['amt'];
 			$giaamt=$value['aamt'];
 			$insSQL="insert into tmp_giareg
-					  values('$dt','$seq','$icdatetime','$trcode',$trpay,$pamt,'$rx_type','$icseqno','$nhistatus',$amount,$giaamt,'$rocDTSeq')";
+					  values('$dt','$seq','$icdatetime','$trcode',$trpay,$tamt,$damt,$drugsv,'$rx_code','$rx_type',
+					  '$icseqno','$nhistatus',$nhi_partpay,$amount,$giaamt,'$rocDTSeq')";
 			$iok=$conn->exec($insSQL);
 			if ($iok==0){
-				echo "新增giareg失敗：".$sql."<br>";
+				echo "新增giareg失敗：".$insSQL."<br>";
 			}
 		}
 
@@ -202,8 +219,12 @@
 		echo "$sql<br>";
 		$giadtl=$dbgia->query($sql);
 		foreach ($giadtl as $key => $value) {
-			$dtseq=$value['dateseq'];;
-			$dt=(substr($dtseq,0,3)+1911)."-".substr($dtseq,3,2)."-".substr($dtseq,5,2);
+			$dtseq=$value['dateseq'];
+			if ($dtseq==' '){
+				$dt='';
+			}else{
+				$dt=(substr($dtseq,0,3)+1911)."-".substr($dtseq,3,2)."-".substr($dtseq,5,2);
+			}
 			$seq=substr($dtseq,-3);
 			$rocDTSeq=$dtseq;
 			$trcode=$value['pcode'];
@@ -218,7 +239,7 @@
 					  values('$dt','$seq','$rocDTSeq','$trcode','$nhicode','$fdi',$addpercent,$price,$nums,$pamt,'$sideno')";
 			$iok=$conn->exec($insSQL);
 			if ($iok==0){
-				echo "新增giadtl失敗：".$sql."<br>";
+				echo "新增giadtl失敗：".$insSQL."<br>";
 			}		  
 		}
 	}
@@ -229,19 +250,24 @@
 		   where r.cusno=c.cusno";
 	$conn->exec($sql);
 
-	//異動診察碼，診察費 
+	//異動診察碼，診察費 其它的不行，因為會有合併的問題 所以只改02的
 	$sql="update registration a,tmp_giareg b 
-			 set a.trcode=b.trcode,a.trpay=b.trpay
+			 set a.trcode= b.trcode,a.trpay=b.trpay
 		   where a.ic_datetime=b.icdatetime 
-			 and ic_type='02'
-			 and b.trcode !=''";
+		     and a.ic_type in ('02','06') ";
 	$conn->exec($sql);
 
-	$sql="update registration set amount=trpay+nhi_tamt,giaamt=trpay+nhi_tamt-nhi_partpay where ddate like '2015%' and ic_type='02'";
-	$conn->exec($sql);
+	$conn->exec("update registration a,tmp_giareg b 
+			 set a.rx_code=b.rx_code,a.drugsv=b.drugsv,a.rx_type=b.rx_type
+		   where a.ic_datetime=b.icdatetime ");
 
-	$sql="update registration set amount=nhi_tamt,giaamt=nhi_tamt where ic_type in ('AB','AC') ";
-	$conn->exec($sql);
+	// $sql="update registration set amount=trpay+nhi_tamt+nhi_damt+drugsv,giaamt=trpay+nhi_tamt+nhi_damt+drugsv-nhi_partpay 
+	// 	   where ddate like '2015%' 
+	// 	     and ic_type='02'";
+	// $conn->exec($sql);
+
+	// $sql="update registration set amount=nhi_tamt,giaamt=nhi_tamt where ic_type in ('AB','AC') ";
+	// $conn->exec($sql);
 
 	// $sql="update registration set trcode='00130C' where ic_type='02' and rx_type in ('0','2') and trcode is null ";
 	// $conn->exec($sql);
@@ -249,54 +275,48 @@
 	// $sql="update registration set trcode='00129C' where ic_type='02' and rx_type ='1' and trcode is null  ";
 	// $conn->exec($sql);
 
-	$sql="update registration set trcode='00305C',trpay=355,amount=355+nhi_tamt,giaamt=355+nhi_tamt-nhi_partpay where ic_type='02' and rx_type in ('0','2') and ddate>='2020-04-01' and trcode is null   ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trcode='00305C',trpay=355 where ic_type in ('02','06') and rx_type='1' and ddate>='2020-04-01' and trcode is null");
 
-	$sql="update registration set trcode='00306C',trpay=355,amount=355+nhi_tamt,giaamt=355+nhi_tamt-nhi_partpay where ic_type='02' and rx_type='1' and ddate>='2020-04-01' and trcode is null  ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trcode='00306C',trpay=355 where ic_type in ('02','06') and rx_type in ('0','2') and ddate>='2020-04-01' and trcode is null");
 
-	$sql="update registration set trpay=320,amount=320+nhi_tamt,giaamt=320+nhi_tamt-nhi_partpay 
-	       where trcode in ('00130C','00129C') and ddate between '2017-01-01' and '2020-03-31' and trcode is null  ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trpay=320 where trcode in ('00130C','00129C') and ddate between '2017-01-01' and '2020-03-31' and trpay=0");
 
-	$sql="update registration set trpay=313,amount=313+nhi_tamt,giaamt=313+nhi_tamt-nhi_partpa  
-		   where trcode in ('00130C','00129C') and ddate between '2015-01-01' and '2016-12-31' and trcode is null  ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trpay=313 
+		   where trcode in ('00130C','00129C') and ddate between '2015-01-01' and '2016-12-31' and trpay=0");
 
-	$sql="update registration set trpay=285,amount=285+nhi_tamt,giaamt=285+nhi_tamt-nhi_partpa  
-		   where trcode in ('00130C','00129C') and ddate between '2014-02-01' and '2014-12-31' and trcode is null  ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trpay=285
+		   where trcode in ('00130C','00129C') and ddate between '2014-02-01' and '2014-12-31' and trpay=0");
 
-	$sql="update registration set trpay=260,amount=260+nhi_tamt,giaamt=260+nhi_tamt-nhi_partpa  
-		   where trcode in ('00130C','00129C') and ddate < '2014-02-01' and trcode is null  ";
-	$conn->exec($sql);
+	$conn->exec("update registration set trpay=260 
+		   where trcode in ('00130C','00129C') and ddate < '2014-02-01' and trpay=0");
 
-	$sql="update registration set nhi_status='009',nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
-		   where ic_type='AB' and nhi_status!='009'";
-	$conn->exec($sql);
+	$conn->exec("update registration set nhi_status='009',nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
+		   where ic_type='AB' and nhi_status!='009'");
 
-	$sql="update registration set nhi_status='009',nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
-		   where ic_type='AC' and nhi_status!='009' and category='A3' ";
-	$conn->exec($sql);
+	$conn->exec("update registration set nhi_status='009',nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
+		   where ic_type='AC' and nhi_status!='009' and category='A3'");
 
-	$sql="update registration 
-			set nhi_partpay=50,giaamt=trpay+nhi_tamt+nhi_damt-50
+
+	$conn->exec("update registration 
+			set nhi_partpay=50
 			where ic_type !=''
 			and nhi_status='H10' 
-			and nhi_partpay=0";
-	$conn->exec($sql);
+			and nhi_partpay=0");
 			   
-	$sql="update registration set nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
-		   where ic_type='02' and nhi_status!='H10' ";
-	$conn->exec($sql);
+	$conn->exec("update registration set nhi_partpay=0
+		   where ic_type='02' and nhi_status!='H10' ");
 
-	$sql="update registration set nhi_partpay=0,amount=nhi_tamt+nhi_damt,giaamt=nhi_tamt+nhi_damt 
-		   where ic_type!='' and nhi_status='009' ";
-	$conn->exec($sql);
+	$conn->exec("update registration set nhi_partpay=0
+		   where ic_type!='' and nhi_status='009' ");
 
-	$sql="update registration set nhi_partpay=50,amount=trpay+nhi_tamt+nhi_damt,giaamt=trpay+nhi_tamt+nhi_damt-50-drug_partpay
-		   where ic_type='02' and nhi_status='H10' ";
-	$conn->exec($sql);
+	$conn->exec("update registration set nhi_partpay=50
+		   where ic_type='02' and nhi_status='H10' ");
+
+	$conn->exec("update registration r, drugppsmk s set drug_partpay=s.pay where r.nhi_damt between s.minval and s.maxval and category='B7'");
+
+	$conn->exec("update registration 
+			 set amount=trpay+nhi_tamt+nhi_damt+drugsv,
+			     giaamt=trpay+nhi_tamt+nhi_damt+drugsv-nhi_partpay-drug_partpay");
 
 	echo "<br>產生charge";
 	

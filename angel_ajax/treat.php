@@ -57,18 +57,21 @@
 
 	$sql="update registration r,treat_record t 
 			 set r.trcode=case when length(trim(t.trcode))=5 then concat(trim(t.trcode),'C') else t.trcode end,
-			 r.check_finding=t.treat_memo,trpay=600,amount=600+nhi_tamt+nhi_damt,giaamt=600+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
+			 r.check_finding=t.treat_memo,trpay=punitfee,amount=punitfee+nhi_tamt+nhi_damt,giaamt=punitfee+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
 		   where r.regsn=t.regsn
-		     and t.trcode in ('01271','01272','01273','01271C','01272C','01273C')";
+		     and t.trcode in ('01271','01272','01273','01271C','01272C','01273C') ";
+
 	$conn->exec($sql);
 	  	     
 	$sql="update registration r,treat_record t 
 			 set r.trcode=case when length(trim(t.trcode))=5 then concat(trim(t.trcode),'C') else t.trcode end,
-			 r.check_finding=t.treat_memo,trpay=400,amount=400+nhi_tamt+nhi_damt,giaamt=400+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
+			 	r.check_finding=t.treat_memo,trpay=punitfee,
+			 	amount=punitfee+nhi_tamt+nhi_damt+drugsv,giaamt=punitfee+nhi_tamt+nhi_damt+drugsv-nhi_partpay-drug_partpay
 		   where r.regsn=t.regsn
 		     and t.trcode in ('00127','00127C') ";
 	$conn->exec($sql);
 
+	
 	$sql="update registration r
 			set trcode='00315C', trpay=635,amount=635+nhi_tamt+nhi_damt,giaamt=635+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
 		   where r.ddate >='2020-04-01'
@@ -104,6 +107,18 @@
 			and r.ic_type in ('02','AB')
 			and r.category!='16'";
 	$conn->exec($sql);
+
+	$sql="UPDATE treat_record t, tmp_giadtl d
+			set t.add_percent=d.addpercent,t.punitfee=d.price,t.nums=d.nums,t.pamt=d.pamt
+			where t.ddate=d.DT
+			and t.seqno=d.seq
+			and t.fdi=d.fdi
+			and t.trcode=d.trcode";
+	$conn->exec($sql);
+
+	$conn->exec("UPDATE registration r where r.nhi_tamt=(select sum(pamt) from treat_record where regsn=r.regsn");
+	$conn->exec("UPDATE registration r where r.nhi_tamt=(select sum(pamt) from treat_record where regsn=r.regsn");
+
 	
 	echo "<br><br>掛號 資料轉換完成!!";
 

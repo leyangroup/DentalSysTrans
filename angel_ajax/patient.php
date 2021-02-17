@@ -42,15 +42,16 @@
 		$tel=addslashes(trim(mb_convert_encoding($value['tel1'],"UTF-8","BIG5")));
 		$mobile=addslashes(trim(mb_convert_encoding($value['cmt'],"UTF-8","BIG5")));
 		$addr=trim(mb_convert_encoding($value['addr'],"UTF-8","BIG5"));
-		$addr=addslashes($addr);
+		$address=addslashes($addr);
 		$maindrno=($drA[trim($value['dr_no'])]=='')?0:$drA[trim($value['dr_no'])];
 		$areacode=$value['areacode'];
 		$memo=trim(mb_convert_encoding($value['patmemo'],"UTF-8","BIG5"));
 		$memo=addslashes($memo);		
 		$soproid=$value['soproid'];
-		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id)
+		$zip=$value['zip'];
+		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id,zip)
 		 		values('$cusno','$cusname','$shortCode','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
-		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo',$soproid)";
+		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo',$soproid,'$zip')";
 		
 		 		// echo $sql;
 		// echo "<br>";

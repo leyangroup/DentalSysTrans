@@ -40,7 +40,7 @@
 	foreach ($result as $key => $value) {
 		if ($dt!=trim($value['date'])){
 			$cnt=1;
-			$dt=$value['date'];
+			$dt=trim($value['date']);
 		}else{
 			$cnt++;
 		}
@@ -68,7 +68,7 @@
 		if ($value['class']=='A3' || $value['class']=='B7'){
 			$type='AC';
 		}else{
-			if ($value['Sorder']!=' '){
+			if ($value['sorder']!=' '){
 				$type='AB';
 			}else{
 				$type='02';
@@ -76,7 +76,6 @@
 		}
 		$sorder=trim($value['sorder']);
 		$sdate=$value['sdate'];
-
 
 		$sql="insert into registration(ddate,uploadd,seqno,cussn,cusno,drno1,drno2,is_sop,ic_seqno,ic_datetime,nhi_status,category,rx_day,rx_type,trpay,nhi_tamt,amount,nhi_partpay,giaamt,reg_pay)
 				values('$DT','$stdate','$seqno',$csn,'$cno',$dr,$dr,$issop,'$icseqno','$icdatetime','$nhistatus','$category',$rxdays,'$rxtype',$trpay,$tamt,$amount,$partpay,$giaamt,$regpay)";
@@ -94,6 +93,27 @@
 		}
 
 	}
+
+	$conn->exec("update registration set ic_type='02',case_history='4' where category in ('11','19','15') and nhi_status in ('001','003','004','902','H10')");
+	$conn->exec("update registration set ic_type='AB',case_history='4' where category in ('11','19') and nhi_status='009' ");
+	$conn->exec("update registration set ic_type='AC',case_history='4' where category in ('A3','B7') ") ;
+
+	$conn->exec("update examfee e,registration r  
+					set r.trcode=code
+					where fee=trpay
+					and rx_type ='1'
+					and kind=1
+					and rx=1");
+
+	$conn->exec("update examfee e,registration r  
+					set trcode=code
+					where fee=trpay
+					and rx_type in ('0','2')
+					and kind=1
+					and rx=0");
+
+
+
 	echo "<h1>掛號 資料轉換完成</h1>";
 
 ?>

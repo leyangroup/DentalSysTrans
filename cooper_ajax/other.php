@@ -81,7 +81,7 @@
 			set t.category=n.category,t.is_oper=n.is_oper,t.is_endo=n.is_endo,t.is_peri=n.is_peri,t.is_oral=n.is_oral,
 			t.is_xray=n.is_xray,t.is_pedo=n.is_pedo,
 			t.tr_od=n.tr_od,t.tr_endo=n.tr_endo,t.tr_peri=n.tr_peri,t.tr_os=n.tr_os,t.tr_ospath=n.tr_ospath,
-			t.tr_pedo=n.tr_pedo,t.fee_unit=n.feeunit
+			t.tr_pedo=n.tr_pedo,t.fee_unit=n.feeunit,t.nhi_fee=n.fee
 			where t.nhicode=n.nhicode";
 	$conn->exec($sql);
 

@@ -25,14 +25,41 @@
 		$pamt=$value['price'];
 		$opcode1=$value['opcode1'];
 		$opcode2=$value['opcode2'];
-		$icd10=$value['upcode10'];		
-		$sql="insert into treat_record(regsn,cussn,uploadd,fdi,trcode,side,punitfee,nums,add_percent,pamt,icd10,icd10pcs1,icd10pcs2)
-				values(0,$csn,'$order','$fdi','$trcode','$face',$price,$qty,$addps,$pamt,'$icd10','$icd10pcs1','$icd10pcs2')";
+		$icd10=$value['upcode10'];	
+		$sickno=$value['tcode'];	
+		$sql="insert into treat_record(regsn,cussn,uploadd,fdi,trcode,side,punitfee,nums,add_percent,pamt,icd10,icd10pcs1,icd10pcs2,sickno)
+				values(0,$csn,'$order','$fdi','$trcode','$face',$price,$qty,$addps,$pamt,'$icd10','$icd10pcs1','$icd10pcs2','$sickno')";
 		$iok=$conn->exec($sql);
 		if ($iok==0){
 			echo "新增處置失敗：".$sql."<br>";
 		}
 	}
+
+	$conn->exec("update registration r,treat_record t 
+					set t.regsn=r.regsn
+					where r.cussn=t.cussn
+					and r.uploadd=t.uploadd");
+
+	$conn->exec("update registration r,treat_record t 
+					set r.trcode=t.trcode
+					where r.regsn=t.regsn
+					and t.trcode in ('00127C','01271C','01272C','00315C','00316C')");
+
+	$conn->exec("update `registration` 
+					set trcode='00130C'
+					where  ic_type ='02'
+					and rx_type in ('0','2')
+					and trcode is null");
+
+	$conn->exec("update `registration` 
+					set trcode='00129C'
+					where  ic_type ='02'
+					and rx_type='1'
+					and trcode is null");
+
+	$conn->exec("update treat_record set deldate ='1911-01-01' where trcode in ('00127C','01271C','01272C','01273C','00315C','00316C','00317C')");
+
+
 	echo "<h1>處置 資料轉換完成</h1>";
 
 ?>
