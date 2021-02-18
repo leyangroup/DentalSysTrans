@@ -22,7 +22,8 @@
 			<H2 style="text-align: center;">轉換小天使資料</H2>
 			<h2></h2>
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?>>(ex.2019-10-03)日期會與預約轉入的資料有關</h4>
-			<h4>程式路徑：<input type="text" id="path" value='c:\angel2'></h4>
+			<h4>最後申報月份：<input type="text" id="giamon" value=<?php echo substr($dt,0,7);  ?>>(ex.2020-10 與捉申報資料有關，一定要注意</h4>
+			<h4>程式路徑：<input type="text" id="path" value='d:\angel2'></h4>
 			<div><label></label></div>
 			<h2 style="color:red">一定要先產生申報才可以轉檔哦!!</h2>
 			<h4 style="color:blue">請依序按鈕執行</h4>
@@ -122,7 +123,7 @@
 
  		$("#reg").on("click",function(){
  			var d = new Date();
- 			window.open("angel_ajax/reg.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"掛號資料");
+ 			window.open("angel_ajax/reg.php?path="+$("#path").val()+"&dt="+$("#DT").val()+"&giamon="+$("#giamon").val(),"掛號資料");
  			$("#reg_on").val('執行'+d); 
  		});
 

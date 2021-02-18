@@ -78,17 +78,17 @@
 		     and trcode in ('01271','01271C')";
 	$conn->exec($sql);
 	
-	$sql="update registration r
-			set trcode='00316C', trpay=635,amount=635+nhi_tamt+nhi_damt,giaamt=635+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
-		   where r.ddate >='2020-04-01'
-		     and trcode in ('01272','01272C')";
-	$conn->exec($sql);
+	// $sql="update registration r
+	// 		set trcode='00316C', trpay=635,amount=635+nhi_tamt+nhi_damt,giaamt=635+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
+	// 	   where r.ddate >='2020-04-01'
+	// 	     and trcode in ('01272','01272C')";
+	// $conn->exec($sql);
 
-	$sql="update registration r
-			set trcode='00317C',trpay=635,amount=635+nhi_tamt+nhi_damt,giaamt=635+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
-		   where r.ddate >='2020-04-01'
-		     and trcode in ('01273','01273C')";
-	$conn->exec($sql);
+	// $sql="update registration r
+	// 		set trcode='00317C',trpay=635,amount=635+nhi_tamt+nhi_damt,giaamt=635+nhi_tamt+nhi_damt-nhi_partpay-drug_partpay
+	// 	   where r.ddate >='2020-04-01'
+	// 	     and trcode in ('01273','01273C')";
+	// $conn->exec($sql);
 
 	$sql="update treat_record set deldate='1911-01-01' where trcode in ('00127','00127C','01271','01272','01273','01271C','01272C','01273C','00315C','00316C','00317C','00315','00316','00317')";
 	$conn->exec($sql);

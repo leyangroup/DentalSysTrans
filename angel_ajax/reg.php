@@ -11,6 +11,11 @@
 
 	$today=$_GET['dt'];
 	$yy=substr($today,0,4);
+	$FD=substr(ROCdate($today),0,5).'01';
+
+	$lastgiamon=explode('-', $_GET['giamon']);
+	$Lastgia=($lastgiamon[0]-1911).$lastgiamon[1];
+
 	$dr2=[];
 	// $dr1=[];
 	//主治 有輸入身份證且主治就是申報 沒有輸入身份證的就不會在裡面
@@ -108,7 +113,6 @@
 		if ($iok==0){
 			echo "新增掛號失敗：".$sql."<br>";
 		}
-
 	}
 
 	//從申報檔中轉入資料 診察碼，診察費， 健保身份，
@@ -116,6 +120,7 @@
 	$conn->exec("create table tmp_giareg 
 						(DT varchar(10),
 						seq varchar(3),
+						patno varchar(10),
 						icdatetime varchar(13),
 						trcode varchar(10),
 						trpay int,
@@ -131,7 +136,7 @@
 						giaamt int,
 						rocDTSeq varchar(10)
 					)ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='小天使申報檔-轉檔產生的'");
-	$conn->Exec("ALTER TABLE `tmp_giareg` ADD INDEX( `DT`,`seq`,`icseqno`)");
+	$conn->Exec("ALTER TABLE `tmp_giareg` ADD INDEX( `patno`,`icseqno`)");
 	$conn->Exec("ALTER TABLE `tmp_giareg` ADD INDEX(`icdatetime`)");
 
 	$conn->exec("create table tmp_giadtl
@@ -322,7 +327,7 @@
 	
 	//產生charge
 	$conn->exec("truncate table charge");
-	
+
 	$sql="insert into charge (ddate,chargetime,cussn,regpay,partpay,`add`,discsn,discreg,discpart,minus,balance ,is_oweic)
 		  SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,case when r.discid is null then 0 else r.discid end ,
 		         case when d.reg_disc is null then 0 else d.reg_disc end,
@@ -330,7 +335,7 @@
 		         disc_pay,reg_pay+nhi_partpay-disc_pay,is_oweic
 		    FROM registration r left join disc_list d on r.discid=d.discsn
 		   order by ddate,seqno";
-		   echo $sql;
+	echo $sql;
 	$conn->exec($sql);
 
 	$sql="update registration r,charge c
