@@ -107,7 +107,7 @@
  			$("#pt_on").val('執行'+d); 
  		});
 
- 		$("#reg").on("click",function(){
+ 		$("#register").on("click",function(){
  			var d = new Date();
  			window.open("lin4_ajax/reg.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"掛號資料");
  			$("#reg_on").val('執行'+d); 

@@ -24,13 +24,15 @@
 		$zip=$value['zip1'];
 
 		$sql="update basicset set bsname='$cname',bstel='$tel',bsaddr='$addr',zip='$zip',owner='$owner',nhicode='$nhicode',bsfax=''";
-		echo $sql;
-
+		$conn->exec($sql);
+		
+		$sql="update leconfig.zhi_basicset set bsname='$cname',bstel='$tel',bsaddr='$addr',zip='$zip',nhicode='$nhicode',bsfax=''";
 		$conn->exec($sql);
 	}
 	
 	//新增醫師
 	$conn->exec("truncate table staff");
+	$conn->exec("truncate table leconfig.zhi_staff");
 
 	//sftitle 暫存申報醫師身份證
 	$sql = "SELECT * FROM user.dbf";
@@ -78,7 +80,11 @@
 		$sql="insert into staff(sfno,sfname,sfid,sfbirthday,sfsex,sfstartjob,sfendjob,position,sfemail,drkind)values
 					('$no','$name','$id','$BD','$sex','$startjob','$endjob','$position','$aid','0') ";
 		echo "新增醫師：".$sql."<br>";
+		$conn->exec($sql);
 
+		$sql="insert into leconfig.zhi_staff(no,name,identity,birthday,gender,startjob,endjob,position,drkind,dept,is_ospro,is_endopro,is_peripro,is_pedopro,is_odpro,isowner,created_at,created_by)
+					values('$no','$name','$id','$BD','$sex','$startjob','$endjob','$position','0','1',0,0,0,0,0,0,now(),0)";
+		echo "新增zhi醫師：".$sql."<br>";
 		$conn->exec($sql);
 	}
 
@@ -92,10 +98,14 @@
 		$discreg=$value['dis_path'];		
 		$discpt=$value['dis_pro'];
 
-		$sql="insert into disc_list(discid,disc_name,reg_disc,partpay_disc)values
+		$sql="insert into leconfig.zhi_disc_list(no,name,reg_disc,partpay_disc)values
 				('$discno','$discname',$discreg,$discpt)";
 		echo "新增優待身份.".$sql."<br>";
-		$conn->exec($sql);
+		$ok=$conn->exec($sql);
+		if ($ok==0){
+			echo "新增失敗 $sql<br>";
+
+		}
 	}
 
 	echo "<h1>診所、醫師、優待身份 資料轉換完成</h1>";

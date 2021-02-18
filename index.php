@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>系統轉換 1.1.0</title>
+	<title>系統轉換 1.1.1</title>
 	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -56,6 +56,9 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="Lin" >林氏 wise</button></td>
 				</tr>
+				<tr>
+					<td><button class="btn btn-success" type='button' id="zdent" >牙谷 zdent</button></td>
+				</tr>
 			</table>
 		</div>
 	</form>
@@ -90,6 +93,10 @@
 
  		$("#Lin").on("click",function(){
  			document.location.href="index_04.php?DT="+$("#DT").val(); 
+ 		});
+
+ 		$("#zdent").on("click",function(){
+ 			document.location.href="index_zdent.php?DT="+$("#DT").val(); 
  		});
  	});
 

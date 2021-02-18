@@ -17,11 +17,11 @@
 
     $mariaConn->exec("ALTER TABLE `treat_record` ADD INDEX(`uploadD`)");
 
-    $mariaConn->exec(ALTER TABLE `registration` ADD INDEX( `icuploadD`, `uploadD`));  
+    $mariaConn->exec("ALTER TABLE `registration` ADD INDEX( `icuploadD`, `uploadD`)");  
 
     $mariaConn->exec("ALTER TABLE `registration` ADD INDEX(`uploadD`)");
 
-    $mariaConn->exec(ALTER TABLE `prescription` ADD INDEX( `uploadD`, `icuploadd`));  
+    $mariaConn->exec("ALTER TABLE `prescription` ADD INDEX( `uploadD`, `icuploadd`)");  
 
     $mariaConn->exec("ALTER TABLE `customer` ADD INDEX(`cusno`)"); 
 
