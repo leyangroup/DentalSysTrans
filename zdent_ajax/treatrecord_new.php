@@ -13,7 +13,7 @@
 	    $utf8_str = chr(bindec($ord_1)) . chr(bindec($ord_2)) . chr(bindec($ord_3));
 	    return $utf8_str;
 	}
-   $conn=MariaDBConnect();
+   	$conn=MariaDBConnect();
 	$conn->exec("DROP TABLE IF EXISTS `zhis4`");
 	$conn->exec("CREATE TABLE `zhis4` (
 				  `ukey` varchar(10) DEFAULT NULL,
@@ -32,9 +32,9 @@
 				  `icseqno` varchar(7) DEFAULT NULL
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='zhis_type4'");
 	
-	// $conn->exec("ALTER TABLE `zhis4`
-	// 				  ADD KEY `regsn` (`regsn`),
-	// 				  ADD KEY `upatno` (`upatno`,`date`,`icseqno`)");
+	$conn->exec("ALTER TABLE `zhis4`
+					  ADD KEY `regsn` (`regsn`),
+					  ADD KEY `upatno` (`upatno`,`date`,`icseqno`)");
 
    $path=$_GET['path'];
 
@@ -53,8 +53,8 @@
 	//處置
 	echo "<br> 處置 資料轉換 ......";
 
-	//$sql = "SELECT * FROM z_history.dbf where type in ('1','4') and ukey == 'TCUJ1913' ";
-	$sql = "SELECT * FROM z_history.dbf where type in ('1','4')";
+	$sql = "SELECT * FROM z_history.dbf where type in ('1','4') and ukey == '63IF1731' ";
+	// $sql = "SELECT * FROM z_history.dbf where type in ('1','4')";
 	$result=$db->query($sql);
 	
 	foreach ($result as $key => $value) {
@@ -69,11 +69,11 @@
 		$patch=$value['patch'];
 		$fdi=fdiConvert(utf8_encode(trim($value['dstr1'])));
 
-// echo '<br>';
-// 		echo '1. ' .$value['dstr1'].'<br>';
-// 		echo '2. ' .$fdi.'<br>';
+echo '<br>';
+		echo '1. ' .$value['dstr1'].'<br>';
+		echo '2. ' .$fdi.'<br>';
 
-// 		exit;
+		exit;
 
 
 		// if ($code!=''){
@@ -112,25 +112,25 @@
 		}
 	}
 
-	echo "<br> 牙位 資料轉換 ......";
-	$sql = "SELECT * FROM z_ICTREAT.dbf ";
-	$result=$db->query($sql);
-	foreach ($result as $key => $value) {
-		$ztransukey=$value['ukey'];
-		$a9=$value['a9'];
-		$code=$value['code'];
-		$posi=$value['posi'];
-		$qnt=$value['qnt'];
-		$drugday=(is_numeric($value['drugday']))?$value['drugday']:0;
-		$total=$value['total'];
-		$sql="insert into ztreat(ztransukey,a9,code,posi,qnt,drugday,total)
-				values
-				('$ztransukey','$a9','$code','$posi','$qnt',$drugday,$total)";
-		$ok=$conn->exec($sql);
-		if ($ok==0){
-			echo "處置新增失敗：$sql <br>";	
-		}			
-	}
+	// echo "<br> 牙位 資料轉換 ......";
+	// $sql = "SELECT * FROM z_ICTREAT.dbf ";
+	// $result=$db->query($sql);
+	// foreach ($result as $key => $value) {
+	// 	$ztransukey=$value['ukey'];
+	// 	$a9=$value['a9'];
+	// 	$code=$value['code'];
+	// 	$posi=$value['posi'];
+	// 	$qnt=$value['qnt'];
+	// 	$drugday=(is_numeric($value['drugday']))?$value['drugday']:0;
+	// 	$total=$value['total'];
+	// 	$sql="insert into ztreat(ztransukey,a9,code,posi,qnt,drugday,total)
+	// 			values
+	// 			('$ztransukey','$a9','$code','$posi','$qnt',$drugday,$total)";
+	// 	$ok=$conn->exec($sql);
+	// 	if ($ok==0){
+	// 		echo "處置新增失敗：$sql <br>";	
+	// 	}			
+	// }
 
 	echo "<br> 處置與牙位 資料轉換完畢!!";
 
