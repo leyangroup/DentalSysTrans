@@ -97,20 +97,20 @@
 				  `icseqno` varchar(7) DEFAULT NULL
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='zhis_type88'");
 
-	$conn->exec("DROP TABLE IF EXISTS `znupload`");
-	$conn->exec("CREATE TABLE `znupload` (
-				  `ukey` varchar(8) DEFAULT NULL,
-				  `ubkey` varchar(8) DEFAULT NULL,
-				  `upatno` varchar(8) DEFAULT NULL,
-				  `name` varchar(20) DEFAULT NULL,
-				  `id` varchar(10) DEFAULT NULL,
-				  `dr` varchar(10) DEFAULT NULL,
-				  `drid` varchar(10) DEFAULT NULL,
-				  `icd9` varchar(10) DEFAULT NULL,
-				  `icdate` varchar(13) DEFAULT NULL,
-				  `selfare` int(5) NOT NULL DEFAULT 0,
-				  `totalfare` int(9) NOT NULL DEFAULT 0
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='NUPload'");
+	// $conn->exec("DROP TABLE IF EXISTS `znupload`");
+	// $conn->exec("CREATE TABLE `znupload` (
+	// 			  `ukey` varchar(8) DEFAULT NULL,
+	// 			  `ubkey` varchar(8) DEFAULT NULL,
+	// 			  `upatno` varchar(8) DEFAULT NULL,
+	// 			  `name` varchar(20) DEFAULT NULL,
+	// 			  `id` varchar(10) DEFAULT NULL,
+	// 			  `dr` varchar(10) DEFAULT NULL,
+	// 			  `drid` varchar(10) DEFAULT NULL,
+	// 			  `icd9` varchar(10) DEFAULT NULL,
+	// 			  `icdate` varchar(13) DEFAULT NULL,
+	// 			  `selfare` int(5) NOT NULL DEFAULT 0,
+	// 			  `totalfare` int(9) NOT NULL DEFAULT 0
+	// 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='NUPload'");
 
 	$conn->exec("DROP TABLE IF EXISTS `ztreat`");
 	$conn->exec("CREATE TABLE `ztreat` (
@@ -124,25 +124,6 @@
 				  `note` int(10) NOT NULL DEFAULT 0,
 				  `regsn` int(11) NOT NULL DEFAULT 0
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='z處置牙位'");
-
-	$conn->exec("DROP TABLE IF EXISTS znupload");
-	$conn->exec("CREATE TABLE `znupload` (
-				  `ukey` varchar(8) DEFAULT NULL,
-				  `ubkey` varchar(8) DEFAULT NULL,
-				  `upatno` varchar(8) DEFAULT NULL,
-				  `name` varchar(20) DEFAULT NULL,
-				  `id` varchar(10) DEFAULT NULL,
-				  `dr` varchar(10) DEFAULT NULL,
-				  `drid` varchar(10) DEFAULT NULL,
-				  `icd9` varchar(10) DEFAULT NULL,
-				  `icdate` varchar(13) DEFAULT NULL,
-				  `selfare` int(5) NOT NULL DEFAULT 0,
-				  `totalfare` int(9) NOT NULL DEFAULT 0
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='NUPload' ");
-
-	$conn->exec("ALTER TABLE `znupload`
-					ADD KEY `ubkey` (`ubkey`),
-					ADD KEY `icdate` (`icdate`)");
 
 	$conn->exec("ALTER TABLE `zhis1`
 					  ADD KEY `regsn` (`regsn`),
@@ -165,9 +146,9 @@
 					  ADD KEY `regsn` (`regsn`),
 					  ADD KEY `upatno` (`upatno`,`date`,`icseqno`)");
 
-	$conn->exec("ALTER TABLE `znupload`
-					  ADD KEY `ubkey` (`ubkey`),
-					  ADD KEY `icdate` (`icdate`)");
+	// $conn->exec("ALTER TABLE `znupload`
+	// 				  ADD KEY `ubkey` (`ubkey`),
+	// 				  ADD KEY `icdate` (`icdate`)");
 	
 	$conn->exec("ALTER TABLE `ztreat`
 					  ADD KEY `ztransukey` (`ztransukey`),
@@ -210,6 +191,7 @@
 		$dstr2=trim(addslashes(mb_convert_encoding($dstr2,"UTF-8","BIG5")));
 		$patch=$value['patch'];
 		$categoryname=$dstr1;
+		$barid='';
 		switch ($type) {
 			case '1':
 				$rsn++;
@@ -384,7 +366,7 @@
 				}
 				$Data=$dstr1.$code.$dstr2;
 				$inf=explode(';',$Data ) ;
-				if (count($inf)==13){
+				if (count($inf)>=12){
 					$cusname=$inf[0];
 					$cusno=$inf[1];
 					$cusid=$inf[2];
@@ -411,27 +393,27 @@
 	}
 
 	//丟nupload 
-	$sql = "SELECT * FROM z_nupload.dbf";
-	$result=$db->query($sql);
-	foreach ($result as $key => $value) {
-		$ukey=$value['ukey'];
-		$ubkey=$value['ubkey'];
-		$upatno=$value['upatno'];
-		$name=trim(addslashes(mb_convert_encoding($value['name'],"UTF-8","BIG5")));
-		$id=$value['id'];
-		$dr=trim(addslashes(mb_convert_encoding($value['doc'],"UTF-8","BIG5")));
-		$drid=$value['docid'];
-		$icd9=$value['icd9'];
-		$icdate=$value['date'];
-		$selfare=$value['selfare'];
-		$totalfare=$value['totalfare'];
-		$sql="insert into znupload 
-				values('$ukey','$ubkey','$upatno','$name','$id','$dr','$drid','$icd9','$icdate',$selfare,$totalfare)";
-		$ok=$conn->exec($sql);
-		if ($ok==0){
-			echo "nupload-失敗：$sql<br>";
-		}
-	}
+	// $sql = "SELECT * FROM z_nupload.dbf";
+	// $result=$db->query($sql);
+	// foreach ($result as $key => $value) {
+	// 	$ukey=$value['ukey'];
+	// 	$ubkey=$value['ubkey'];
+	// 	$upatno=$value['upatno'];
+	// 	$name=trim(addslashes(mb_convert_encoding($value['name'],"UTF-8","BIG5")));
+	// 	$id=$value['id'];
+	// 	$dr=trim(addslashes(mb_convert_encoding($value['doc'],"UTF-8","BIG5")));
+	// 	$drid=$value['docid'];
+	// 	$icd9=$value['icd9'];
+	// 	$icdate=$value['date'];
+	// 	$selfare=$value['selfare'];
+	// 	$totalfare=$value['totalfare'];
+	// 	$sql="insert into znupload 
+	// 			values('$ukey','$ubkey','$upatno','$name','$id','$dr','$drid','$icd9','$icdate',$selfare,$totalfare)";
+	// 	$ok=$conn->exec($sql);
+	// 	if ($ok==0){
+	// 		echo "nupload-失敗：$sql<br>";
+	// 	}
+	// }
 
 
 
