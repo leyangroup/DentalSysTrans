@@ -75,6 +75,7 @@ function fdiMapping () {
         '00faB' => '16',
         '00faA' => '17',
         '00fa@' => '18',
+        '00fa{' => '19',
 
         '00faH' => '21',
         '00faI' => '22',
@@ -84,6 +85,7 @@ function fdiMapping () {
         '00faM' => '26',
         '00faN' => '27',
         '00faO' => '28',
+        '00fa|' => '29',
 
         '00faW' => '31',
         '00faV' => '32',
@@ -93,15 +95,17 @@ function fdiMapping () {
         '00faR' => '36',
         '00faQ' => '37',
         '00faP' => '38',
+        '00fa}' => '39',
 
         '00faX' => '41',
         '00faY' => '42',
         '00faZ' => '43',
         '00fa[' => '44',
-        "00fa\\" => '45',
+        "00fa\\\\" => '45',
         '00fa]' => '46',
         '00fa^' => '47',
         '00fa_' => '48',
+        '00fa~' => '49',
 
         '00fad' => '51',
         '00fac' => '52',
@@ -143,31 +147,31 @@ function fdiConvert($string) {
     $string = trim($string);
     $unicodeString = json_encode($string);
 
-switch (json_last_error()) {
-        case JSON_ERROR_NONE:
-            echo ' - No errors';
-        break;
-        case JSON_ERROR_DEPTH:
-            echo ' - Maximum stack depth exceeded';
-        break;
-        case JSON_ERROR_STATE_MISMATCH:
-            echo ' - Underflow or the modes mismatch';
-        break;
-        case JSON_ERROR_CTRL_CHAR:
-            echo ' - Unexpected control character found';
-        break;
-        case JSON_ERROR_SYNTAX:
-            echo ' - Syntax error, malformed JSON';
-        break;
-        case JSON_ERROR_UTF8:
-            echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
-        break;
-        default:
-            echo ' - Unknown error';
-        break;
-    }
+    // switch (json_last_error()) {
+    //     case JSON_ERROR_NONE:
+    //         echo ' - No errors';
+    //     break;
+    //     case JSON_ERROR_DEPTH:
+    //         echo ' - Maximum stack depth exceeded';
+    //     break;
+    //     case JSON_ERROR_STATE_MISMATCH:
+    //         echo ' - Underflow or the modes mismatch';
+    //     break;
+    //     case JSON_ERROR_CTRL_CHAR:
+    //         echo ' - Unexpected control character found';
+    //     break;
+    //     case JSON_ERROR_SYNTAX:
+    //         echo ' - Syntax error, malformed JSON';
+    //     break;
+    //     case JSON_ERROR_UTF8:
+    //         echo ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+    //     break;
+    //     default:
+    //         echo ' - Unknown error';
+    //     break;
+    // }
 
-    var_dump($unicodeString);
+    // var_dump($unicodeString);
 
     $replacedString = str_replace('"', '', $unicodeString);
     $fdiUnicodes = explode('\\u', $replacedString);

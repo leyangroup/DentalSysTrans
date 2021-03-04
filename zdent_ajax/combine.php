@@ -109,8 +109,27 @@
 	//處理療程
 	$conn->exec("update treat_record t , zhis10 z
 					set start_date=z.startdate,start_icseq=z.starticseq
-					where t.regsn=z.regsn
+				  where t.regsn=z.regsn
 					and startdate!=''");
+
+	$conn->exec("update registration r, treat_record t 
+					set ic_type='AB',ic_seqno=left(ic_seqno,3),r.trcode=''
+				  where r.regsn=t.regsn
+					and r.ic_type='02'
+					and t.start_date is not null 
+					and t.start_date !=''
+					and r.trpay=0");
+
+	//處理身障
+	$conn->exec("update `registration` 
+					set barid=left(treatno,2)
+				  WHERE treatno REGEXP 'FC|FD|FE|FF|FG|FH|FI|FJ|FK|FL|FM|FN|FV|FX|FU|FZ|L1|L5|L6|L7|L8|L9|LA|LF|LG|LH'");
+
+	$conn->exec("update registration r,treat_record t 
+					set baraddps=add_percent
+				  WHERE barid REGEXP 'FC|FD|FE|FF|FG|FH|FI|FJ|FK|FL|FM|FN|FV|FX|FU|FZ|L1|L5|L6|L7|L8|L9|LA|LF|LG|LH'
+					and r.regsn=t.regsn
+					and t.add_percent!=1");
 
 	//填入最後就診醫師
 
