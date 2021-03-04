@@ -99,6 +99,19 @@
 
 			<div><label></label></div>
 			<div>
+				<button type='button' class="btn btn-info" id="cate">12.自費項目</button>
+				<input type='text' id='cate_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+
+			<div><label></label></div>
+			<div>
+				<button type='button' class="btn btn-info" id="oe">13.自費治療單與收款</button>
+				<input type='text' id='oe_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+
+			<!-- <div><label></label></div>
+			<div>
 				<button type='button' class="btn btn-info" id="drugdeal">『森源』 藥品處理</button>
 				<input type='text' id='drugdeal_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
@@ -109,7 +122,7 @@
 				<button type='button' class="btn btn-info" id="FdiLen">『森源』 牙位過長處理</button>
 				<input type='text' id='FdiLen_on' style="color:blue" readonly value='請按鈕' size=50>
 
-			</div>
+			</div> -->
 		</table>
 	</form>
 </body>
@@ -200,6 +213,18 @@
  			var d = new Date();
  			window.open("bestchoice_ajax/treat_FDI_len.php?IP="+$("#IP").val(),"資料整合");
  			$("#FdiLen_on").val('執行'+d); 
+ 		});
+
+ 		$("#cate").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/oeCategory.php?IP="+$("#IP").val(),"自費項目");
+ 			$("#cate_on").val('執行'+d); 
+ 		});
+
+ 		$("#oe").on("click",function(){
+ 			var d = new Date();
+ 			window.open("bestchoice_ajax/oe.php?IP="+$("#IP").val(),"oe");
+ 			$("#oe_on").val('執行'+d); 
  		});
 
 

@@ -30,7 +30,8 @@
 			echo "新增藥品失敗：".$sql."<br>";
 		}
 	}
-	$sql="insert into leconfig.zhi_drug_times (code,created_at,created_by) select distinct times,now(),0 from eprodb.prescription");
+	$sql="insert into leconfig.zhi_drug_times (code,created_at,created_by) 
+			select distinct times,now(),0 from eprodb.prescription";
 	//要再進去填資料，找看看有沒有這個資料表
 	$conn->exec($sql);
 	
