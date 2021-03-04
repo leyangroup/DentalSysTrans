@@ -71,13 +71,13 @@
 			</div>
 			<div><label></label></div>
 
-			<div>
+			<!-- <div>
 				<button type='button' class="btn btn-info" id="appointment">7.預約 資料轉換</button>
 				<input type='text' id='app_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			
 			<div><label></label></div>
-			<div>
+			<div> -->
 				<button type='button' class="btn btn-info" id="tm">8.支付標準、其它支出項目 資料轉換</button>
 				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>

@@ -15,7 +15,6 @@
 	foreach ($rs as $key => $value) {
 		$drArray[$value['no']]=$value['id'];
 	}
-	var_dump($drArray);
 
 	//建立資料表來儲存療程的資料
 	$conn->exec("drop table if exists tmpab");
@@ -46,7 +45,7 @@
 		}
 		$seqno=substr('000'.$cnt,-3);
 		$csn=$value['sno'];
-		$cno=trim($value['sinno']);
+		$cno=trim(mb_convert_encoding(addslashes($value['sinno']),"UTF-8","BIG5"));
 		$DT=WestDT(trim($value['date']));
 		$stdate=trim($value['order']);  //患者第幾次看診
 		$drno=trim($value['docter']);

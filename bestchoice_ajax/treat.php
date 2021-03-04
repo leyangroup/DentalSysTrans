@@ -32,13 +32,13 @@
                 $fdi=$row['fdi'];
                 $side=$row['face'];
                 $nums=$row['nums'];
-                $pamt=$punitfee*$nums;
                 // $desc=$row['descs'];
                 $desc=str_replace('>','＞',$row['descs']);
                 $desc=str_replace('<','＜',$desc);
                 $desc=str_replace("'",'’',$desc);
                 $sickno=$row['sickno'];
                 $addp=round($row['muliter']/100,2);
+                $pamt=round($punitfee*$nums*$addp,0);
                 $icd10=$row['sick10no'];
                 $icuploadd=$row['RegNo'];
                 $uploadd=$row['TreatNo'];

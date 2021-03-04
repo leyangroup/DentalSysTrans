@@ -28,11 +28,6 @@
 					<td>
 						<button class="btn btn-info" type='button' id="BestChoice">優勢 BestChoice</button>
 						
-						<button type='button' id="BestChoice_OD">補雙鄰接面OD資料(1080730)</button>
-						
-						<button type='button' id="BestChoice_AC">補預防保健類掛號(1080802)</button>
-						
-						<button type='button' id="BestChoice_cus">補 患者(1080802)</button>
 					</td>
 				</tr>	
 			
