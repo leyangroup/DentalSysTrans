@@ -28,7 +28,7 @@
 		}
 	}
 
-	$sql="update treatment t,nhicode n 
+	$sql="UPDATE treatment t,nhicode n 
 			set t.category=n.category,t.is_oper=n.is_oper,t.is_endo=n.is_endo,t.is_peri=n.is_peri,t.is_oral=n.is_oral,
 			t.is_xray=n.is_xray,t.is_pedo=n.is_pedo,
 			t.tr_od=n.tr_od,t.tr_endo=n.tr_endo,t.tr_peri=n.tr_peri,t.tr_os=n.tr_os,t.tr_ospath=n.tr_ospath,
@@ -36,6 +36,16 @@
 			where t.nhicode=n.nhicode";
 	$conn->exec($sql);
 
-	$conn->exec("update `treatment` set category='19' where category is null");
+	$sql="UPDATE treatment t,nhicode n 
+			set t.icd10cm=n.icd10cm
+			where t.nhicode=n.nhicode and (t.icd10cm is null or t.icd10cm='')";
+	$conn->exec($sql);
+
+	$sql="UPDATE treatment t,nhicode n 
+			set t.icd10pcs=n.icd10pcs
+			where t.nhicode=n.nhicode and (t.icd10pcs is null or t.icd10pcs='')";
+	$conn->exec($sql);
+
+	
 	echo "<br>處置資料轉換完畢!!";
 	

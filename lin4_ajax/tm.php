@@ -78,28 +78,20 @@
 		}
 	}
 
-	// $conn->exec("insert into treatment(trcode,nhicode,treatname,nhi_fee,treatno,sickno,memo)
-	// 			select aa.no,aa.no,aa.name,price,spec,icd9,note
-	// 			  from (SELECT a.no,b.gpcode,b.gpn1,a.name,price,spec,icd9 
-	// 					  FROM wprice a 
-	// 					  left join wthgrp b on a.no=b.gpn1
-	// 			       )aa left join wgnote cc 
-	// 			             on aa.gpcode=cc.gpcode
-	// 			             where cc.note!=''");
-
-	$conn->exec("insert into treatment(trcode,nhicode,treatname,nhi_fee,treatno,sickno)
-				 SELECT a.no,a.no,a.name,price,spec,icd9 
+	$conn->exec("insert into treatment(trcode,nhicode,treatname,nhi_fee,treatno,sickno,memo)
+				 SELECT a.no,a.no,a.name,price,spec,icd9 ,'Tx.'
 				   FROM wprice a 
 				   left join wthgrp b on a.no=b.gpn1");
 
-
 	$conn->exec("update treat_record t,treatment m  set t.treatname=m.treatname where t.trcode=m.trcode");
 
-	$conn->exec("update treatment set category='A3' where nhicode between '8A' and '8P' ");
-	$conn->exec("update treatment set category='A3' where nhicode in ('81','87','88','89') ");
-	$conn->exec("update treatment set category='B7' where nhicode like 'E10%' ");
-	$conn->exec("update treatment set category='19' where category is null ");
-
+	$sql="UPDATE treatment t,nhicode n 
+			set t.category=n.category,t.is_oper=n.is_oper,t.is_endo=n.is_endo,t.is_peri=n.is_peri,t.is_oral=n.is_oral,
+			t.is_xray=n.is_xray,t.is_pedo=n.is_pedo,
+			t.tr_od=n.tr_od,t.tr_endo=n.tr_endo,t.tr_peri=n.tr_peri,t.tr_os=n.tr_os,t.tr_ospath=n.tr_ospath,
+			t.tr_pedo=n.tr_pedo,t.fee_unit=n.feeunit,t.nhi_fee=n.fee, t.icd10cm=n.icd10cm,t.icd10pcs=n.icd10pcs
+			where t.nhicode=n.nhicode";
+	$conn->exec($sql);
 
 	echo "<h1>處置 資料轉換完成</h1>";
 

@@ -32,7 +32,6 @@
             on r.discid=d.discsn
             where concat(ddate,reg_time)between '$Start' and '$End'
             and seqno<>'000'
-            and is_oweic !='1'
             order by ddate,seqno";
     echo $sql;
     $mariaConn->exec($sql); 
