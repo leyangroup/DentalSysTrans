@@ -36,7 +36,7 @@
 	}
 
 	$conn->exec("update registration r,treat_record t 
-					set t.regsn=r.regsn
+					set t.regsn=r.regsn,t.ddate=r.ddate,t.seqno=r.seqno
 					where r.cussn=t.cussn
 					and r.uploadd=t.uploadd");
 
@@ -59,7 +59,16 @@
 
 	$conn->exec("update treat_record set deldate ='1911-01-01' where trcode in ('00127C','01271C','01272C','01273C','00315C','00316C','00317C')");
 
+	//處理療程
+	$conn->exec("UPDATE registration r,treat_record t 
+					set t.start_icseq=r.ic_seqno
+				  where r.regsn=t.regsn
+					and ic_type='AB'
+					and length(ic_seqno)=7");
 
+	$conn->exec("UPDATE tmpab a,treat_record t set t.start_date=edate where a.csn=t.cussn and a.stdate=t.uploadd");
+
+	$conn->exec("UPDATE `registration` set ic_seqno=left(ic_seqno,3) where ic_type='AB' and substr(ic_seqno,4,1)='0' ");
 	echo "<h1>處置 資料轉換完成</h1>";
 
 ?>

@@ -23,8 +23,8 @@
 		if ($no1==0 || ($value['sno']>=$no1 && $value['sno']<=$no2)){
 			$csn=$value['sno'];
 			$cno=trim($value['sinno']);
-			$name=trim(mb_convert_encoding($value['name'],"UTF-8","BIG5"));
-			$id=trim($value['idno']);
+			$name=trim(mb_convert_encoding(addslashes($value['name']),"UTF-8","BIG5"));
+			$id=addslashes(trim($value['idno']));
 			$csex=($value['sex']=='2')?'0':'1';
 			$birth=WestDT(trim($value['birthd']));
 			$tel=trim(mb_convert_encoding(addslashes($value['telno']),"UTF-8","BIG5"));

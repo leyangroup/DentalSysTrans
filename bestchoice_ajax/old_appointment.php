@@ -2,7 +2,7 @@
     include_once "../include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
-    $ip=$_GET['IP'];
+    $ip='192.168.10.210';
     $serverName=$ip."\bestchoice";
     $connectionInfo=array("Database"=>"Doctor","UID"=>'bestchoice',"PWD"=>"0937093374","CharacterSet"=>"UTF-8");
     $msConn=sqlsrv_connect($serverName,$connectionInfo);
@@ -10,12 +10,7 @@
         die(print_r(sqlsrv_errors(),true));
     }
     $mariaConn=MariaDBConnect();
-    $DT=$_GET['dt'];
-
-    //清除新患者資料表
-     $mariaConn->exec("TRUNCATE table newpatient");
-
-    //轉換完後要帶入患者電話與手機
+    
 
     echo "轉入預約資料 order<br>";
         $staff=[];
@@ -24,8 +19,6 @@
         foreach ($result as $key => $value) {
             $staff[$value['sfno']]=$value['sfsn'];
         }
-        $sql="delete from registration where seqno='000' ";
-        $mariaConn->exec($sql);
         $StartDT=$DT." 00:00:00";
         $sql="SELECT OrderNo,PatNo,patName,DoctorNo,
                      convert(char(16),StartDate,120)StartDate,
@@ -33,10 +26,10 @@
                      convert(char(10),StartDate,120)sd,
                      convert(char(10),EndDate,120)ed,Notes 
                 from [Order]
-               where StartDate>='$StartDT'
+               where StartDate<'2021-03-08'
                  and Enable='1'
                  and IsCancel='0' 
-                 and OrderStatus='1' ";
+                 and OrderStatus!='4' ";
                echo $sql;
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
         while ($row=sqlsrv_fetch_array($result)) {

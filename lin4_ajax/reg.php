@@ -27,7 +27,7 @@
 					  `parentdate` varchar(10) DEFAULT NULL
 					) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='林氏-ab資料';
 				");
-	$conn->exec("ALTER TABLE `tmpAB` ADD KEY `cns` (`cns`,`stdate`)");
+	$conn->exec("ALTER TABLE `tmpAB` ADD KEY `csn` (`csn`,`stdate`)");
 
 	//掛號表
 	$conn->exec("truncate table registration");
@@ -74,7 +74,7 @@
 			}
 		}
 		$sorder=trim($value['sorder']);
-		$sdate=$value['sdate'];
+		$sdate=(substr($value['sdate'],0,3)+1911).'-'.substr($value['sdate'],4,2).'-'.substr($values['sdate'],7,2));
 
 		$sql="insert into registration(ddate,uploadd,seqno,cussn,cusno,drno1,drno2,is_sop,ic_seqno,ic_datetime,nhi_status,category,rx_day,rx_type,trpay,nhi_tamt,amount,nhi_partpay,giaamt,reg_pay)
 				values('$DT','$stdate','$seqno',$csn,'$cno',$dr,$dr,$issop,'$icseqno','$icdatetime','$nhistatus','$category',$rxdays,'$rxtype',$trpay,$tamt,$amount,$partpay,$giaamt,$regpay)";
@@ -110,7 +110,25 @@
 					and rx_type in ('0','2')
 					and kind=1
 					and rx=0");
+	//產生掛號時間
+	$conn->exec("update `registration` 
+					set reg_time=concat(substr(ic_datetime,8,2),':',substr(ic_datetime,10,2))
+				  where length(ic_datetime)=13");
 
+	//產生charge
+	$conn->exec("insert into charge (ddate,chargetime,cussn,regpay,partpay,`add`,discsn,discreg,discpart,
+									minus,balance ,is_oweic)
+				SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,
+			            case when r.discid is null then 0 else r.discid end ,
+			            case when d.reg_disc is null then 0 else d.reg_disc end,
+			            case when d.partpay_disc is null then 0 else d.partpay_disc end,
+			            disc_pay,reg_pay+nhi_partpay-disc_pay,'0'
+			      FROM registration r 
+			      left join disc_list d
+		            on r.discid=d.discsn
+		         where concat(ddate,reg_time) between '2021-01-0100:00' and '2021-03-1012:00'
+		           and seqno<>'000'
+		      order by ddate,seqno");
 
 
 	echo "<h1>掛號 資料轉換完成</h1>";

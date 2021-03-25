@@ -12,6 +12,15 @@
     $mariaConn=MariaDBConnect();
     $DT=$_GET['DT'];
 
+    //讀取醫師資料
+    $dr=$mariaConn->query("SELECT identity,min(id) id from leconfig.zhi_staff WHERE identity!='' group by 1 order by 1 ");
+    $drArr=[];
+    foreach ($dr as $key => $value) {
+        $staffid=$value["identity"];
+        $drArr[$staffid]=$value['id'];
+    }
+    var_dump($drArr);
+
     //清空oemaster,oedetail,oepayment,oepayment_detail
     $mariaConn->exec("truncate table oemaster");
     $mariaConn->exec("truncate table oedetail");
@@ -21,32 +30,11 @@
     $mariaConn->exec("truncate table oereceipt");
     $mariaConn->exec("truncate table oesoap");
 
-    //讀取醫師資料
-    $dr=$mariaConn->query("select identity,id from leconfig.zhi_staff ");
-    $drArr=[];
-    foreach ($dr as $key => $value) {
-        $staffid=$value["identity"];
-        $drArr[$staffid]=$value['id'];
-    }
-    
-    // //讀取優勢第二層的自費項目
-    // $sql="select * from SecondType";   
-    // $BC_cate2=[];     
-    // $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
-    // while ($row=sqlsrv_fetch_array($result)){
-    //     if ($row['Enable']=='1'){
-    //         $original_id=$row['StID'];
-    //         $parent_id=$row['StSort'];
-    //         $name=$row['StName'];
-    //         $sort=$row['StSort'];
-    //         $BC_cate2[$original_id]=$name;
-    //     }
-    // }
 
     //讀取優勢第三層的自費項目
     $sql="select * from DealData";  
     $BC_cate3=[];     
-    $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
+    $result=sqlsrv_query($msConn,$sql) or die("1.sql error:".sqlsrv_errors());
     while ($row=sqlsrv_fetch_array($result)){
         if ($row['Enable']=='1'){
             $no=$row['DealNo'];
@@ -80,7 +68,8 @@
 
 	//自費資料
     echo "<br>轉入自費<br>";
-    $sql="select a.ProID,a.ProName,a.Description,a.PatNo,a.ProType1,a.ProType2,MainDoctor,a.TotaMoney,                 a.NotrMoney,a.DiscMoney,
+    $sql="SELECT a.ProID,a.ProName,a.Description,a.PatNo,a.ProType1,a.ProType2,MainDoctor,a.TotaMoney,
+                  a.NotrMoney,a.DiscMoney,a.LastMoney,
                  b.PdID,b.fdi,b.place,b.DcID,b.TheCharges,
                  b.Nums,b.DealAmt,b.PayType,b.ReallyTC,
                  convert(char(10),b.ActDate,120) ActDate,
@@ -92,7 +81,7 @@
              and b.Enable=1
              order by a.ProID,b.PdID";
 
-    $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
+    $result=sqlsrv_query($msConn,$sql) or die("2.sql error:".sqlsrv_errors());
     $sn=0;  //oemaster的sn
     $dsn=1; //oedetail的sn
     $psn=1;  //oepayment的sn
@@ -135,10 +124,10 @@
         if ($maindr==null){
             $maindr=0;
         }
-        $amount=$row['TotaMoney'];  //總應收
+        $amount=$row['LastMoney'];  //總應收
         $discount=$row['DiscMoney']; //優待金額
         $discamt=$amount-$discount;  //優待後應收
-        $paid=$row['TotaMoney']-$row['NotrMoney']; //已付
+        $paid=$row['NotrMoney']; //已收
         if ($paid==$discamt){
             $status='F';
         }elseif ($paid<$discamt){
@@ -157,11 +146,11 @@
         }
         $ActDate=$row['ActDate'];
         $PdID=$row['PdID'];
-        $payamt=$row['ReallyTC'];
+        $payamt=$row['TheCharges'];
         if ($saveMaster){
             //save oemaster
             //用電子簽名的欄位來暫存患者編號
-            $insertSQL="insert into oemaster(ose,oeno,date,cussn,sign,tmplan,amount,discamt,total,discount,maindr,status,paid,tax,dcsn,rtamt,tyl,tyr,creator)
+            $insertSQL="INSERT into oemaster(ose,oeno,date,cussn,sign,tmplan,amount,discamt,total,discount,maindr,status,paid,tax,dcsn,rtamt,tyl,tyr,creator)
                         values($sn,'$ProID','$DT',0,'$cusno','$tmplan',$amount,$discamt,$discamt,$discount,
                         $maindr,'$status',$paid,0,0,0,'','',0)";
             $isok=$mariaConn->exec($insertSQL);
@@ -171,7 +160,7 @@
             $saveMaster=false;
 
             //save oedetail
-            $insertSQL="insert into oedetail(dsn,osn,stage,tmdr,fdi,cate1,cate2,cate3,qty,ogprice,price,amt,discamt) 
+            $insertSQL="INSERT into oedetail(dsn,osn,stage,tmdr,fdi,cate1,cate2,cate3,qty,ogprice,price,amt,discamt) 
                             values($dsn,$sn,1,$maindr,'$fdi',$c1id,$c2id,$c3id,1,$amount,$amount,$amount,$discamt)";
             $isok=$mariaConn->exec($insertSQL);
             if ($isok==0){
@@ -181,7 +170,7 @@
         }
 
         //save oepayment 
-        $insertSQL="insert into oepayment(psn,osn,payno,paydate,kind,payway,payamt,memo)
+        $insertSQL="INSERT into oepayment(psn,osn,payno,paydate,kind,payway,payamt,memo)
                         values($psn,$sn,'$PdID','$ActDate','I','$pw',$payamt,'$DealName') ";
         $isok=$mariaConn->exec($insertSQL);
         if ($isok==0){
@@ -189,7 +178,7 @@
         }
 
         //save oepayment_detail
-        $insertSQL="insert into oepayment_detail(osn,psn,dsn,month,stage,drsn,cate3,type,pay,created_at,created_by)
+        $insertSQL="INSERT into oepayment_detail(osn,psn,dsn,month,stage,drsn,cate3,type,pay,created_at,created_by)
                         values($sn,$psn,$dsn,'$month','1',$maindr,$c3id,1,$payamt,now(),0) ";
         $isok=$mariaConn->exec($insertSQL);
         if ($isok==0){
@@ -198,7 +187,16 @@
         $psn++;
     }
 
-    $mariaConn->exec("update oemaster o,customer c set o.cussn=c.cussn where c.cusno=o.sign");
+    //對應患者代碼
+    $mariaConn->exec("UPDATE oemaster o,customer c set o.cussn=c.cussn where c.cusno=o.sign");
+
+    //因為已收款在優勢的系統找不到，所以自己算
+    $mariaConn->exec("UPDATE oemaster m
+                        set paid=(select sum(payamt) from oepayment where osn=m.ose)
+                      where paid!=(select sum(payamt) from oepayment where osn=m.ose)");
+
+    $mariaConn->exec("UPDATE oemaster set status='C' where discamt!=paid ");
+    
     echo "<h1>自費 資料 轉入完畢</h1>";
     sqlsrv_close($msConn);
 ?>
