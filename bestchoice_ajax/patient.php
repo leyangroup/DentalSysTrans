@@ -28,6 +28,7 @@
         $sql="SELECT *,convert(varchar(1000),notes)as Note,convert(varchar(1000),notesEX)as NEX,convert(varchar(1000),othernote)as ONote,
                 convert(varchar,Birth,120) birthday,convert(varchar,FirstDate,120) FD,convert(varchar,LastDate,120) LD,Matter,VIP
             from Patients 
+            where Enable='1'
             order by PatNo";
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
     //display

@@ -81,7 +81,7 @@
 		}else{
 			$section='3';
 		}
-		if (strlen($ic_seqno)==7){
+		if (strlen(trim($ic_seqno)==7)){
 			$case_history='4';
 		}else{
 			$case_history='3';
@@ -100,7 +100,7 @@
 		}
 		
 		$memo=trim(mb_convert_encoding($value['path_memo'],"UTF-8","BIG5")).'  '.trim(mb_convert_encoding($value['zhu_yan'],"UTF-8","BIG5"));
-		$memo=addslashes($memo);
+		$memo=trim(addslashes($memo));
 		
 		$sql="insert into registration(ddate,seqno,cusno,reg_time,end_time,drno1,drno2,category,ic_type,ic_datetime,ic_seqno,
 					nhi_status,nhi_partpay,rx_type,isnp,reg_pay,nhi_tamt,nhi_damt,memo,rx_day,section,icuploadd,case_history,
@@ -120,7 +120,6 @@
 	$conn->exec("create table tmp_giareg 
 						(DT varchar(10),
 						seq varchar(3),
-						patno varchar(10),
 						icdatetime varchar(13),
 						trcode varchar(10),
 						trpay int,
