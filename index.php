@@ -54,11 +54,14 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="zdent" >牙谷 zdent</button></td>
 				</tr>
-
+				<tr>
+					<td><button class="btn btn-success" type='button' id="beauty" >醫美 </button></td>
 				</tr>
 				<tr>
-					<td><button class="btn btn-success" type='button' id="beauty" >膚適美 excel轉入</button></td>
+					<td><button class="btn btn-success" type='button' id="ym" >東區耀美 </button></td>
 				</tr>
+
+
 			</table>
 		</div>
 	</form>
@@ -101,6 +104,10 @@
 
  		$("#beauty").on("click",function(){
  			document.location.href="index_beauty.php"; 
+ 		});
+
+    $("#ym").on("click",function(){
+ 			document.location.href="index_ym.php"; 
  		});
  	});
 
