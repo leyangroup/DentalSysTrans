@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>系統轉換 1.1.3</title>
+	<title>系統轉換 1.1.4</title>
 	<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -54,6 +54,15 @@
 				<tr>
 					<td><button class="btn btn-success" type='button' id="zdent" >牙谷 zdent</button></td>
 				</tr>
+
+				<tr>
+					<td><button class="btn btn-success" type='button' id="beauty" >醫美 </button></td>
+				</tr>
+
+				<tr>
+					<td><button class="btn btn-success" type='button' id="ym" >東區耀美 </button></td>
+				</tr>
+
 			</table>
 		</div>
 	</form>
@@ -92,6 +101,14 @@
 
  		$("#zdent").on("click",function(){
  			document.location.href="index_zdent.php?DT="+$("#DT").val(); 
+ 		});
+
+ 		$("#beauty").on("click",function(){
+ 			document.location.href="index_beauty.php"; 
+ 		});
+
+ 		$("#ym").on("click",function(){
+ 			document.location.href="index_ym.php"; 
  		});
  	});
 
