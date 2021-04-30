@@ -23,7 +23,7 @@
 			<h2 style="text-align: center;">轉換 陳氏</h2>
 			<h2></h2>
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?> > </h4>
-			<h4>程式路徑：<input type="text" id="path" value='c:\dent01'></h4>
+			<h4>資料路徑：<input type="text" id="path" value='c:\dent01'>最後不要留\</h4>
 			<div><label></label></div>
 			<h1>無需同步醫師資料至leconfig,程式已經直接將資料轉至樂易智</h1>
 			<h4 style="color:blue">請依序按鈕執行</h4>
@@ -36,14 +36,10 @@
 				<button type='button' class="btn btn-info" id="Dr">1.診所、醫師 資料轉換</button>
 				<input type='text' id='dr_on' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
-			<!-- <div><label></label></div>
+			<div><label></label></div>
 			<div>
 				<button type='button' class="btn btn-info" id="patient">2.患者基本 資料轉換</button>
-
 				<input type='text' id='pt_on' style="color:blue" readonly value='請按鈕' size=50>
-				開始流水號<input type='text' id='pt_1' style="color:blue" value='0' size=5>
-				結束流水號<input type='text' id='pt_2' style="color:blue" value='0' size=5>
-				<label>開始流水號=0表示全部轉入</label>
 			</div>
 			<div><label></label></div>
 
@@ -80,7 +76,7 @@
 			<div>
 				<button type='button' class="btn btn-info" id="tm">8.支付標準、其它支出項目 資料轉換</button>
 				<input type='text' id='tm_on' style="color:blue" readonly value='請按鈕' size=50>
-			</div> -->
+			</div> 
 		</table>
 
 	</form>
@@ -102,11 +98,11 @@
  			$("#dr_on").val('執行'+d); 
  		});
 
- 		// $("#patient").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/patient.php?path="+$("#path").val()+"&no1="+$("#pt_1").val()+"&no2="+$("#pt_2").val(),"患者基本資料");
- 		// 	$("#pt_on").val('執行'+d); 
- 		// });
+ 		$("#patient").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/patient.php?path="+$("#path").val(),"患者基本資料");
+ 			$("#pt_on").val('執行'+d); 
+ 		});
 
  		// $("#register").on("click",function(){
  		// 	var d = new Date();

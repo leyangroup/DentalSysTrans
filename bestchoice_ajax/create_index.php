@@ -32,6 +32,8 @@
     $mariaConn->exec("ALTER TABLE `nhicode` ADD INDEX(`nhicode`)");
 
     $mariaConn->exec("ALTER TABLE `treat_record` CHANGE `side` `side` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '牙面'");
+    
+    $mariaConn->exec("ALTER TABLE `treat_record` CHANGE `sickno` `sickno` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '處置傷病因'");
 
     echo "<h1>索引建立完畢</h1>";
 ?>
