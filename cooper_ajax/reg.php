@@ -14,9 +14,10 @@
 	$sql="select sfsn,sfno from staff ";
 	$RS=$conn->query($sql);
 	foreach ($RS as $key => $col) {
-		$drArr[$col['sfno']]=$col['sfsn'];
+		$dr=trim(mb_convert_encoding($col['sfno'],"UTF-8","BIG5"));
+		$drArr[$dr]=$col['sfsn'];
 	}
-
+	//var_dump($drArr);
 	$sql="SELECT a.sfsn as drsn1,a.sfno drno,a.sfname,a.sfsname giano,b.sfsn as drsn2
 			FROM staff a left join staff b  
 			  on a.sfsname=b.sfno  
@@ -31,16 +32,19 @@
 			$giaDr[$col['drno']]=$col['drsn2'];
 		}
 	}
-
+	//var_dump($mainDr);
+	//var_dump($giaDr);
+	//exit;
+	
 	//掛號
+	echo "<h3>資料轉入中，若有失敗，會顯示語法</h3>";
 	$conn->exec("truncate table registration");
-	// $conn->exec("ALTER TABLE registration AUTO_INCREMENT=1000");
-	// $sql = "SELECT o.*,c.就醫類別 FROM operate o left join iccard c on  o.日期時間=c.日期時間 and o.病歷編號=c.病歷編號";
-	$sqlcooper="select * from operate";
+	$sqlcooper="select * from operate ";
 	$result=$db->query($sqlcooper);
 	$DT='';
 	$seq=0;
 	$i=0;
+	//foreach ($result as $key => $value){
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 		$i++;
 		foreach ($row as $k2=> $v2) {
@@ -60,6 +64,7 @@
 					}else{
 						$seq++;
 					}
+					
 					break;
 				case '療程序號':
 					$is_oweic='0';
@@ -104,13 +109,15 @@
 					if ($v2=='') $rxday=0;
 					break;
 				case '醫師代號':
-				 	
-					$drsn1=$mainDr[trim($v2)];
-					$drsn2=$giaDr[trim($v2)];
+					$drno=mb_convert_encoding(trim($v2),"UTF-8","BIG5");
+					$drsn1=$mainDr[$drno];
+					$drsn2=$giaDr[$drno];
 					//$drsn=$drArr[$v2];
 					if ($drsn1==null || $drsn1==''){
 						$drsn1=0;
 						$drsn2=0;
+						//echo "drno=0 的 trim($v2) <br>";
+						//exit;
 					}
 					break;
 				case '健保診察碼':
@@ -133,55 +140,55 @@
 				case '部份負擔碼':
 					switch ($v2) {
 						case '1':
-							$nhisatus='H10';
+							$nhistatus='H10';
 							break;
 						case '2':
-							$nhisatus='004';
+							$nhistatus='004';
 							break;
 						case '3':
-							$nhisatus='003';
+							$nhistatus='003';
 							break;
 						case '4':
-							$nhisatus='009';
+							$nhistatus='009';
 							break;
 						case '5':
-							$nhisatus='H13'; //殘障手冊
+							$nhistatus='H13'; //殘障手冊
 							break;
 						case '6':
-							$nhisatus='001';
+							$nhistatus='001';
 							break;
 						case '7':
-							$nhisatus='006';//職災
+							$nhistatus='006';//職災
 							break;
 						case '8':
-							$nhisatus='005';//結核病患
+							$nhistatus='005';//結核病患
 							break;
 						case '9':
-							$nhisatus='009';//災民
+							$nhistatus='009';//災民
 							break;
 						case '10':
-							$nhisatus='902';//三歲以下小孩
+							$nhistatus='902';//三歲以下小孩
 							break;
 						case '11':
-							$nhisatus='007';//山地醫療
+							$nhistatus='007';//山地醫療
 							break;
 						case '12':
-							$nhisatus='901';//多氯聯本
+							$nhistatus='901';//多氯聯本
 							break;
 						case '13':
-							$nhisatus='903';//新生兒依附
+							$nhistatus='903';//新生兒依附
 							break;
 						case '14':
-							$nhisatus='906';//替代疫男
+							$nhistatus='906';//替代疫男
 							break;
 						case '15':
-							$nhisatus='007';//平地巡迴免部份負擔
+							$nhistatus='007';//平地巡迴免部份負擔
 							break;
 						case '16':
-							$nhisatus='907';//原住民戒菸
+							$nhistatus='907';//原住民戒菸
 							break;
 						case '17':
-							$nhisatus='009';//百歲人瑞
+							$nhistatus='009';//百歲人瑞
 							break;
 					}
 					break;
@@ -271,15 +278,19 @@
 			$rxtype='1';
 		}
 		
+		//醫師代碼暫存在dr_memo
 		$sql="insert into registration(ddate,seqno,stdate,cusno,drno1,drno2,reg_time,discid,section,isnp,
 			trcode,nhi_status,category,rx_day,rx_type,is_out,hosp_from,ic_seqno,ic_type,
 			ic_datetime,reg_pay,nhi_partpay,disc_pay,nhi_tamt,nhi_damt,drugsv,trpay,
-			amount,giaamt,drug_partpay,memo,roomsn,end_time,card_ID,case_history,is_oweic,icuploadd,sec_sign)
+			amount,giaamt,drug_partpay,memo,roomsn,end_time,card_ID,case_history,is_oweic,icuploadd,sec_sign,dr_memo)
 			values('$dt','$seqno','$cnt','$cusno',$drsn1,$drsn2,'$regtime',$disc,'$section',$isnp,'$trcode',
 					'$nhistatus','$category',$rxday,'$rxtype',$isout,'$thosp','$icseq','$ic_type',
-					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt','$secsign')";
-		echo $dt.'.'.$cusno.'、';
+					'$icdt',$regpay,$partpay,$discpay,$tamt,$damt,$drugsv,$trpay,$amount,$giaamt,$drugpt,
+					'$memo',1,'$endtime','$cardid','$casehistory','$is_oweic','$dt','$secsign','$drno')";
+
+		echo "$i-";
 		$conn->exec($sql);
+		
 	}
 
 	// 填入registration.cussn

@@ -45,12 +45,11 @@
         while ($row=sqlsrv_fetch_array($result)) {
             $dt=$row['regdate'];
             $seqno=substr($row['RNO'],-3);
-            echo $row['RNO'].'-'.$cusno.' ';
             $regno=$row['RNO'];
             $treatno=$row['TreatNo'];
             $ddate=$row['regdate'];
             $regtime=$row['RegTime'];
-            $cusno=$row['PNO'];
+            $cusno=addslashes($row['PNO']);
             $icseq=substr($regno,0,3).$row['CardNo'];
             $nhistatus=substr($row['BurdenNo'],0,3);
             $partpay=$row['BurdenAmt'];
@@ -59,6 +58,9 @@
             $hospfrom=$row['ClinicFrom'];
             $isout=($row['isOut']=='')?0:$row['isOut'];
             $dr=$staff[$row['ApplyDoctor']];
+            if ($dr=='' or $dr==null){
+                $dr=0;
+            }
             $cate=isset($row['cate'])?$row['cate']:'';
             $trcode=isset($row['LookCode'])?trim($row['LookCode']):'';
             $trpay=isset($row['LookAmt'])?$row['LookAmt']:0;
@@ -71,21 +73,26 @@
             $amount=isset($row['DealTotalAmt'])?$row['DealTotalAmt']:0;
             $giaamt=$amount-$partpay;
             $reg_pay=$row['RegAmt'];
-            if ($row['RebateReason']!=''){
+
+            if ($row['RebateReason']!='' || $row['RebateReason']!=null){
                 $discid=$disc[$row['RebateReason']];
+                if ($discid==null || $discid==''){
+                    $discid=0;
+                }
             }else{
                 $discid=0;
             }
-            $disc_pay=$row['Rebate'];
+            $disc_pay=isset($row['Rebate'])?$row['Rebate']:0;
             $cc=isset($row['cc'])?$row['cc']:'';
             $cc=str_replace("'", "’", $cc);
             $insertSQL="INSERT into registration (ddate,seqno,cusno,reg_time,drno1,drno2,ic_seqno,ic_type,category,
                         trcode,trpay,rx_type,rx_code,drugsv,nhi_status,nhi_partpay,barid,hosp_from,is_out,
                         nhi_damt,nhi_tamt,amount,giaamt,cc,icuploadd,uploadd,case_history,reg_pay,disc_pay,discid,roomsn)
                         values('$ddate','$seqno','$cusno','$regtime','$dr','$dr','$icseq','$ictype','$cate','$trcode',$trpay,'$rxtype','$rxcode',$drugsv,'$nhistatus',$partpay,'$barid','$hospfrom',$isout,$damt,$tamt,$amount,$giaamt,'$cc','$regno','$treatno','4',$reg_pay,$disc_pay,$discid,1)";
-            echo "<br>".$insertSQL;
-            echo $ddate."-".$seqno.", ";
-            $mariaConn->exec($insertSQL);
+            $isok=$mariaConn->exec($insertSQL);
+            if ($isok==0){
+                echo "<br>插入資料失敗：".$insertSQL;
+            }
         }
 
         $mariaConn->exec("update registration set amount=trpay+nhi_tamt+nhi_damt+drugsv,giaamt=trpay+nhi_tamt+nhi_damt+drugsv-nhi_partpay-drug_partpay");
