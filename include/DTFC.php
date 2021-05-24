@@ -26,7 +26,7 @@
         }
         return $DT;
     }
-
+    //西元年轉民國年
     function ROCdateWithSlash($edate){
         if (strlen($edate)==7){
             $rocDT=substr($edate,0,3).'/'.substr($edate,3,2).'/'.substr($edate,-2);

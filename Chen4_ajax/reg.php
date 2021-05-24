@@ -1,5 +1,6 @@
 <?php
 	include_once "../include/db.php";
+	include_once "../include/DTFC.php";
 
     $conn=MariaDBConnect();
 
@@ -9,52 +10,108 @@
  	set_time_limit (0); 
     ini_set("memory_limit", "1024M"); 
 	$db = new PDO("odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=".$path);
-	$sql = "SELECT * FROM ththick";
-	$result = $db->query($sql);
+
 	$conn->exec("truncate table registration");
-	$conn->exec("truncate table treat_record");
 	$dr=$conn->query("select id,no from leconfig.zhi_staff");
 	$drArray=[];
-	foreach ($dr as $key => $value) {
-		$no=$value['no'];
-		$drArray[$no]=$value['id'];
+	foreach ($dr as $key => $doctor) {
+		$no=$doctor['no'];
+		$drArray[$no]=$doctor['id'];
 	}
-
-	foreach ($result as $key => $value) {
-		$cusid=$value['idno'];
-		if (strlen($value['date'])<7){
+	//原系統key  idno+date+ser  轉檔程式存在 uploadno,ddate,icuploadd
+	$sql = "SELECT * FROM THTHICK order by `DATE`,KEP";
+	$result = $db->query($sql);
+	$r=0;
+	$DT='';
+	foreach ($result as $key=> $value) {
+		if ($DT!=$value['DATE']){
+			$r=1;
+			$DT=$value['DATE'];
+		}else{
+			$r++;
+			$DT=$value['DATE'];
+		}
+		$cusid=$value['IDNO'];  // 暫存在uploadno中
+		$seqno=substr('000'.$r,-3);
+		if (strlen(trim($value['DATE'])<7)){
 			$regDT='';
 		}else{
-			$yy=substr($value['date'],0,3);
-			$WestYY=$yy+1911;
-			$mm=substr($value['date'],3,2);
-			$dd=substr($value['date'],-2);
-			$retDT=$yy.'-'.$mm.'-'.$dd;
+			$regDT=WestDT($value['DATE']);
+			$yy=substr($value['DATE'],0,3);
 		}
-		if(strlen($value['ser'])==8){
-			$ic_type=substr($value['ser'],2,2);
-			$icseqno=$yy.substr($value['ser'],4,4);
-		}else{
+		$ser=$value['SER'];  // 原系統key 
+		if(strlen($ser)==8){
+			$ic_type=substr($ser,2,2);
+			$icseqno=$yy.substr($ser,4,4);
+		}elseif (strlen($ser)==2){
 			$ic_type='02';
-			$icseqno=$yy.$value['ser'];
+			$icseqno=$yy.$ser;
+		}else{
+			$ic_type='';
+			$icseqno=$yy;
 		}
-		$nhi_status=$value['part'];
-		$category=$value['spec1'];
-		if ($value['code1']!=''){
-			
+		$nhi_status=$value['PART'];
+		if ($nhi_status=='H10'){
+			$nhi_partpay=50;
+		}else{
+			$nhi_partpay=0;
 		}
+		$category=trim($value['SPEC1']);
 
-		$cusno=addslashes(mb_convert_encoding($value['sino'],"UTF-8","BIG5"));
-		
-		$reg_sql="insert into registration()
-				value()";
+		//以下六項先存在保留欄位中
+		$code1=$value['CODE1'];
+		$code2=$value['CODE2'];
+		$code3=$value['CODE3'];
+		$icd9_1=$value['ICD9_1'];
+		$icd9_2=$value['ICD9_2'];
+		$icd9_3=$value['ICD9_3'];
 
-		$ok=$conn->exec($reg_sql);
+		$item=[];
+		$item=$value['ITEM_1'];
+		$treatno=$value['ITEM_1'].$values['ITEM_2'].$value['ITEM_3'];
+
+		$trcode=substr($value['SERNO'],4,6);
+		$dr1=$drArray[$value['DOCT']];
+		$dr2=$drArray[$value['DOCT2']];
+		$trpay=$value['F1'];
+		$nhi_tamt=$value['F3'];
+		if ($value['KEP']==''){
+			$icdatetime='';
+		}else{
+			$icdatetime=$value['DATE'].$value['KEP'];
+		}
+		$regtime=substr($icdatetime,0,2).":".substr($icdatetime,2,2);
+		//療程開始日 
+		if ($ic_type=='AB'){
+			$ABdate=WestDT($value['DATE2']);
+		}else{
+			$ABdate='';			
+		}
+		$baraddps=round($value['F1_PER']/100,2);
+		if ($category=='16'){
+			$barid=$value['ITEM_1'];
+		}else{
+			$barid='';
+		}
+		$amount=$trpay+$nhi_tamt;
+		$giaamt=$trpay+$nhi_tamt-$nhi_partpay;
+		$insertSQL="insert into registration(ddate,stdate,drno1,drno2,uploadno,treatno,category,ic_type,ic_seqno,
+								nhi_status,nhi_partpay,trcode,trpay,nhi_tamt,amount,giaamt,sickn,sickn2,sickn3,
+								illname,illname2,illname3,barid,baraddps,ic_datetime,icuploadd,reg_time,seqno,cussn)
+					values('$regDT','$ABdate',$dr1,$dr2,'$cusid','$treatno','$category','$ic_type','$icseqno',
+							'$nhi_status',$nhi_partpay,'$trcode',$trpay,$nhi_tamt,$amount,$giaamt,'$code1','$codr2',
+							'$code3','$icd9_1','$icd9_2','$icd9_3','$barid',$baraddps,'$icdatetime','$ser','$regtime',
+							'$seqno',0)";
+
+		$ok=$conn->exec($insertSQL);
 		if ($ok==0){
-			echo "新增掛號資料失敗 $sql";
+			echo "新增掛號資料失敗 $insertSQL<br>";
 		}
 	}
-	echo "<h1>新增掛號-處置結束</h1>";
+	echo "<h2>配對掛號表與患者<h2/>";
+
+	$conn->exec("update registration r,customer c set r.cussn=c.cussn,r.cusno=c.cusno where uploadno=cusid");
+	echo "<h1>新增掛號-結束</h1>";
 	
 ?>
 

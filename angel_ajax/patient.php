@@ -49,7 +49,7 @@
 		$memo=addslashes($memo);		
 		$soproid=$value['soproid'];
 		$zip=$value['zip'];
-		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id,zip)
+		$sql="insert into customer (cusno,cusname,cussname,cusbirthday,firstdate,lastdate,cussex,iccardid,cusid,custel,cusmob,cusaddr,maindrno,lastdrno,areacode,cusmemo,sopro_id,cuszip)
 		 		values('$cusno','$cusname','$shortCode','$cusbirth','$firstDT','$lastDT','$sex','$cardid','$cusid','$tel','$mobile',
 		 		'$address',$maindrno,$maindrno,'$areacode','$cusmemo',$soproid,'$zip')";
 		

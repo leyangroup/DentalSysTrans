@@ -53,7 +53,8 @@
 		$cusmob=addslashes(mb_convert_encoding($value['mobile'],"UTF-8","BIG5"));
 		$cusaddr=addslashes(mb_convert_encoding($value['address'],"UTF-8","BIG5"));
 		$memo=$remark.' '.$disease.' '.$other;
-
+		$cusmob=($cusmob=='')?'0':$cusmob;
+		
 		$sql="insert into customer(cusno,cusname,cusid,cusbirthday,custel,cusmob,firstdate,lastdate,cusmemo,cusintro,cusemail)
 				value('$cusno','$cusname','$cusid','$cusbirthday','$custel','$cusmob','$firstdate','$lastdate','$memo','$cusintro','$email')";
 

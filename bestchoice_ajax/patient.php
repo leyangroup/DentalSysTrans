@@ -2,6 +2,8 @@
 	include_once "../include/db.php";
 
     header("content-Type:text/html;charset=utf-8");
+    set_time_limit (0);
+    ini_set("memory_limit", "1024M");
     $ip=$_GET['IP'];
     $serverName=$ip."\bestchoice";
     $connectionInfo=array("Database"=>"Doctor","UID"=>'bestchoice',"PWD"=>"0937093374","CharacterSet"=>"UTF-8");

@@ -25,7 +25,7 @@
 			<h4>當天日期：<input type="text" id="DT" value=<?php echo $dt;  ?> > </h4>
 			<h4>資料路徑：<input type="text" id="path" value='c:\dent01'>最後不要留\</h4>
 			<div><label></label></div>
-			<h1>無需同步醫師資料至leconfig,程式已經直接將資料轉至樂易智</h1>
+			<h1>無需同步 資料已經寫至leconfig樂易智</h1>
 			<h4 style="color:blue">請依序按鈕執行</h4>
 			<div>
 				<button type='button' class="btn btn-info" id="idx">0.建立索引(若重複轉入，只需執行一次)</button>
@@ -104,41 +104,41 @@
  			$("#pt_on").val('執行'+d); 
  		});
 
- 		// $("#register").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/reg.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"掛號資料");
- 		// 	$("#reg_on").val('執行'+d); 
- 		// });
+ 		$("#register").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/reg.php?path="+$("#path").val(),"掛號資料");
+ 			$("#reg_on").val('執行'+d); 
+ 		});
 
- 		// $("#treat").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/treat.php?path="+$("#path").val(),"處置資料");
- 		// 	$("#treat_on").val('執行'+d); 
- 		// });
+ 		$("#treat").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/treat.php?path="+$("#path").val(),"處置資料");
+ 			$("#treat_on").val('執行'+d); 
+ 		});
 
- 		// $("#pre").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/prescription.php?path="+$("#path").val(),"處方箋資料");
- 		// 	$("#pre_on").val('執行'+d); 
- 		// });
+ 		$("#pre").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/prescription.php?path="+$("#path").val(),"處方箋資料");
+ 			$("#pre_on").val('執行'+d); 
+ 		});
 
- 		// $("#drug").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/drug.php?path="+$("#path").val(),"藥品 資料");
- 		// 	$("#drug_on").val('執行'+d); 
- 		// });
+ 		$("#drug").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/drug.php?path="+$("#path").val(),"藥品 資料");
+ 			$("#drug_on").val('執行'+d); 
+ 		});
 
- 		// $("#appointment").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/appointment.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"預約 資料");
- 		// 	$("#app_on").val('執行'+d); 
- 		// });
+ 		$("#appointment").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/appointment.php?path="+$("#path").val()+"&dt="+$("#DT").val(),"預約 資料");
+ 			$("#app_on").val('執行'+d); 
+ 		});
 
- 		// $("#tm").on("click",function(){
- 		// 	var d = new Date();
- 		// 	window.open("Chen4_ajax/tm.php?path="+$("#path").val(),"支付標準 資料");
- 		// 	$("#tm_on").val('執行'+d); 
- 		// });
+ 		$("#tm").on("click",function(){
+ 			var d = new Date();
+ 			window.open("Chen4_ajax/tm.php?path="+$("#path").val(),"支付標準 資料");
+ 			$("#tm_on").val('執行'+d); 
+ 		});
  		
  		
  			
