@@ -97,11 +97,11 @@
 		$giaamt=$trpay+$nhi_tamt-$nhi_partpay;
 		$insertSQL="insert into registration(ddate,stdate,drno1,drno2,uploadno,treatno,category,ic_type,ic_seqno,
 								nhi_status,nhi_partpay,trcode,trpay,nhi_tamt,amount,giaamt,sickn,sickn2,sickn3,
-								illname,illname2,illname3,barid,baraddps,ic_datetime,icuploadd,reg_time,seqno,cussn)
+								illname,illname2,illname3,barid,baraddps,ic_datetime,icuploadd,reg_time,seqno,cussn,rx_type)
 					values('$regDT','$ABdate',$dr1,$dr2,'$cusid','$treatno','$category','$ic_type','$icseqno',
 							'$nhi_status',$nhi_partpay,'$trcode',$trpay,$nhi_tamt,$amount,$giaamt,'$code1','$codr2',
 							'$code3','$icd9_1','$icd9_2','$icd9_3','$barid',$baraddps,'$icdatetime','$ser','$regtime',
-							'$seqno',0)";
+							'$seqno',0,'2')";
 
 		$ok=$conn->exec($insertSQL);
 		if ($ok==0){
