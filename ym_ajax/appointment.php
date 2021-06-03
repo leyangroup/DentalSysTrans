@@ -18,25 +18,27 @@
 			");
 
 	$row = 1;
-	$handle = fopen("C:\ym\ocsv\appointment-2.csv","r");
+	$handle = fopen("C:\ym\appointment.csv","r");
 	while ($data = fgetcsv($handle)) {
 
 	    $num = count($data);
 	    $row++;
-	    $DT=str_replace('/', '-', $data[0]);
-	    $patno=trim(mb_convert_encoding($data[1],"UTF-8","BIG5"));
-	    $tel=addslashes( mb_convert_encoding($data[2],"UTF-8","BIG5"));
-	    $mobile=addslashes( mb_convert_encoding($data[3],"UTF-8","BIG5"));
-	    $regtime=mb_convert_encoding($data[4],"UTF-8","BIG5");
-	    $startTime=mb_convert_encoding($data[5],"UTF-8","BIG5");
-	    $endTime=mb_convert_encoding($data[6],"UTF-8","BIG5");
-	    $doctor=mb_convert_encoding($data[7],"UTF-8","BIG5");
-	    $note=addslashes(mb_convert_encoding($data[8],"UTF-8","BIG5"));
+	    $DT=str_replace('/', '-', str_replace('"', '',  $data[0]));
+	    $patno=trim(mb_convert_encoding(str_replace('"', '',  $data[1]),"UTF-8","BIG5"));
+	    $tel=addslashes( mb_convert_encoding(str_replace('"', '',  $data[2]),"UTF-8","BIG5"));
+	    $mobile=addslashes( mb_convert_encoding(str_replace('"', '',  $data[3]),"UTF-8","BIG5"));
+	    $regtime=mb_convert_encoding(str_replace('"', '',  $data[4]),"UTF-8","BIG5");
+	    $startTime=mb_convert_encoding(str_replace('"', '',  $data[5]),"UTF-8","BIG5");
+	    $endTime=mb_convert_encoding(str_replace('"', '',  $data[6]),"UTF-8","BIG5");
+	    $doctor=mb_convert_encoding(str_replace('"', '',  $data[7]),"UTF-8","BIG5");
+	    $note=addslashes(mb_convert_encoding(str_replace('"', '',  $data[8]),"UTF-8","BIG5"));
 	    //預約開始時間
 	    $number = substr_count($startTime,'上午');
 	    if ($number>=1){
 	    	//上午
 	    	$Time1=str_replace('上午', '', $startTime);
+	    	$trTime=$Time1." AM";
+	    	$Time1 = date("H:i", strtotime($trTime));
 	    }else{
 	    	//下午
 	    	$Time1=str_replace('下午', '', $startTime);
@@ -48,7 +50,8 @@
 	    if ($number>=1){
 	    	//上午
 	    	$Time2=str_replace('上午', '', $endTime);
-
+	    	$trTime=$Time2." AM";
+	    	$Time2 = date("H:i", strtotime($trTime));
 	    }else{
 	    	//下午
 	    	$Time2=str_replace('下午', '', $endTime);
@@ -64,7 +67,19 @@
 	    	echo "預約轉人失敗 $sql <br>";
 	    }
 	}
-	echo "<h1>預約資料傳送完成</h1>";
+
+	echo "<h2>將預約資料放入</h2>";
+    $conn->exec("delete from registration where seqno='000' ");
+
+    $sql="insert into registration (ddate,seqno,cussn,cusno,schmobile,schtel,sch_time,schlen,drno1,sch_note)
+			select a.DT,'000',(select cussn from customer where cusno=a.PatNo),PatNo,tel,mobile,schtime,
+					schlen,(select id from leconfig.zhi_staff where name=a.dr and endjob=''),memo
+    		from eprodb.z_appointment a";
+    $conn->exec($sql);
+
+    $conn->exec("update registration set drno2=drno1 where seqno='000'");
+
+	echo "<h1>預約資料轉換完成</h1>";
 	fclose($handle);
 
 ?>

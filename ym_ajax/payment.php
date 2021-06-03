@@ -7,7 +7,7 @@
 	$conn->exec("drop table if exists z_oe");
 	$sql="CREATE TABLE `z_oe` (
 			  `id` int(10) NOT NULL,
-			  `patno` varchar(10) DEFAULT NULL,
+			  `patno` varchar(12) DEFAULT NULL,
 			  `dr` varchar(15) DEFAULT NULL,
 			  `DT` varchar(10) DEFAULT NULL,
 			  `tname` varchar(50) DEFAULT NULL,
@@ -37,7 +37,7 @@
 	$conn->exec("ALTER TABLE `z_payment` ADD PRIMARY KEY (`id`)");
 	$conn->exec("ALTER TABLE `z_payment` MODIFY `id` int(10) NOT NULL AUTO_INCREMENT");
 
-	$file = fopen("C:\ym\ocsv\oepayment-1.csv","r");
+	$file = fopen("C:\ym\oepayment.csv","r");
 	$row=0;
 	$l1=0;$l2=0;$l3=0;$l4=0;$l5=0;$l6=0;
 	while ($data = fgetcsv($file)) {
@@ -46,20 +46,21 @@
 			$num = count($data);
 		    
 		    $p=0;
-		    $patno=trim($data[0]);
-		    $dr=mb_convert_encoding(addslashes($data[1]),"UTF-8","BIG5");
-		    $ODT=explode('/', $data[2]);
+		    $patno=mb_convert_encoding(addslashes(str_replace('"', '',  $data[0])),"UTF-8","BIG5");
+		    $dr=mb_convert_encoding(addslashes(str_replace('"', '',  $data[1])),"UTF-8","BIG5");
+		    $DT=str_replace('"','',$data[2]);
+		    $ODT=explode('/', $DT);
 		    $Oyy=$ODT[0];
 		    $Omm=substr('0'.$ODT[1],-2);
 		    $Odd=substr('0'.$ODT[2],-2);
 		    $oeDT=$Oyy.'-'.$Omm.'-'.$Odd;
-		    $Tname=mb_convert_encoding(addslashes($data[3]),"UTF-8","BIG5");
-		    $total=mb_convert_encoding(addslashes($data[4]),"UTF-8","BIG5");
-		    $paid=mb_convert_encoding(addslashes($data[5]),"UTF-8","BIG5");
-		    $shouldpay=mb_convert_encoding(addslashes($data[6]),"UTF-8","BIG5");
-		    $mattotal=mb_convert_encoding(addslashes($data[7]),"UTF-8","BIG5");
-		    $matpaid=mb_convert_encoding(addslashes($data[8]),"UTF-8","BIG5");
-		    $matshouldpay=mb_convert_encoding(addslashes($data[9]),"UTF-8","BIG5");
+		    $Tname=mb_convert_encoding(addslashes(str_replace('"', '',  $data[3])),"UTF-8","BIG5");
+		    $total=mb_convert_encoding(addslashes(str_replace('"', '',  $data[4])),"UTF-8","BIG5");
+		    $paid=mb_convert_encoding(addslashes(str_replace('"', '',  $data[5])),"UTF-8","BIG5");
+		    $shouldpay=mb_convert_encoding(addslashes(str_replace('"', '',  $data[6])),"UTF-8","BIG5");
+		    $mattotal=mb_convert_encoding(addslashes(str_replace('"', '',  $data[7])),"UTF-8","BIG5");
+		    $matpaid=mb_convert_encoding(addslashes(str_replace('"', '',  $data[8])),"UTF-8","BIG5");
+		    $matshouldpay=mb_convert_encoding(addslashes(str_replace('"', '',  $data[9])),"UTF-8","BIG5");
 		    // echo "$patno-$dr-$Tname<br>";
 		    $cycle=($num-10)/6;
 		    //儲存 oe 
@@ -82,17 +83,18 @@
 		    	if ($data[$l1]!=''){
 			    	// echo $l1.'-'.$l2.'-'.$l3.'-'.$l4.'-'.$l5.'-'.$l6.'。。';
 			    	// echo $data[$l1];
-			    	$DT=explode('/',  $data[$l1]);
+
+			    	$DT=explode('/',  str_replace('"', '',  $data[$l1]));
 			    	$yy=$DT[0];
 			    	$mm=substr('0'.$DT[1],-2);
 			    	$dd=substr('0'.$DT[2],-2);
 			    	// echo "日期：$data[$l1] ";
 			    	$paydt= $yy.'-'.$mm.'-'.$dd;
-			    	$payway=mb_convert_encoding(addslashes($data[$l2]),"UTF-8","BIG5");
-			    	$pay=mb_convert_encoding(addslashes($data[$l3]),"UTF-8","BIG5");
-			    	$paymemo=mb_convert_encoding(addslashes($data[$l4]),"UTF-8","BIG5");
-			    	$matpay=mb_convert_encoding(addslashes($data[$l5]),"UTF-8","BIG5");
-			    	$matmemo=mb_convert_encoding(addslashes($data[$l6]),"UTF-8","BIG5");
+			    	$payway=mb_convert_encoding(addslashes(str_replace('"', '',  $data[$l2])),"UTF-8","BIG5");
+			    	$pay=mb_convert_encoding(addslashes(str_replace('"', '',  $data[$l3])),"UTF-8","BIG5");
+			    	$paymemo=mb_convert_encoding(addslashes(str_replace('"', '', (str_replace('"', '',  $data[$l4])))),"UTF-8","BIG5");
+			    	$matpay=mb_convert_encoding(addslashes(str_replace('"', '',  $data[$l5])),"UTF-8","BIG5");
+			    	$matmemo=mb_convert_encoding(addslashes(str_replace('"', '',  $data[$l6])),"UTF-8","BIG5");
 		    		//儲存付款
 			    	$sql="INSERT into z_payment(oeid,payDT,payway,pay,memo,matpay,matmemo)
 			    			values($row,'$paydt','$payway',$pay,'$paymemo',$matpay,'$matmemo')";

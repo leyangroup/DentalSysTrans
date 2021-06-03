@@ -138,7 +138,7 @@
 					}
 					break;
 				case '部份負擔碼':
-					switch ($v2) {
+					switch (trim($v2)) {
 						case '1':
 							$nhistatus='H10';
 							break;

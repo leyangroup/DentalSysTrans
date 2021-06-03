@@ -21,10 +21,11 @@
 		foreach ($value as $k2=> $v2) {
 			switch (mb_convert_encoding($k2,"UTF-8","BIG5")) {
 				case '病歷編號':
-					$cusno=trim($v2);
+					$cusno=trim(addslashes($v2));
 					break;
 				case '病患姓名':
-					$cusname=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+					$v2=str_replace("'", "", trim($v2));
+					$cusname=mb_convert_encoding($v2,"UTF-8","BIG5");
 					break;
 				// case '性別':
 				// 	if (trim($v2)=='女'){
@@ -42,7 +43,7 @@
 					}
 					break;
 				case '身份證號':
-			 		$cusid=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+			 		$cusid=trim(mb_convert_encoding(addslashes($v2),"UTF-8","BIG5"));
 			 		$sex=substr($cusid,1,1);
 			 		switch ($sex) {
 			 			case '1':
@@ -58,15 +59,15 @@
 					break;
 				case '住宅電話':
 					$v2=str_replace('-', '', $v2);
-					$custel=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+					$custel=trim(mb_convert_encoding(addslashes($v2),"UTF-8","BIG5"));
 					break;
 				case '地址':
 					$v2=str_replace("'", "", $v2);
-					$cusaddr=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+					$cusaddr=trim(mb_convert_encoding(addslashes($v2),"UTF-8","BIG5"));
 					break;
 				case '行動電話':
 					$v2=str_replace('-','',$v2);
-					$cusmob=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+					$cusmob=trim(mb_convert_encoding(addslashes($v2),"UTF-8","BIG5"));
 					break;
 				case '初診日期':
 					if (trim($v2)==''){
@@ -84,14 +85,17 @@
 					break;
 				case '病患memo':
 					$v2=str_replace("'", "", $v2);
-					$cusmemo=trim(mb_convert_encoding($v2,"UTF-8","BIG5"));
+					$cusmemo=trim(mb_convert_encoding(addslashes($v2),"UTF-8","BIG5"));
 					break;
 			}
 		}
 		$sql="insert into customer (cusno,cusname,cussex,cusbirthday,cusid,custel,cusaddr,cusmob,firstdate,maindrno,lastdrno,cusmemo)
 		values('$cusno','$cusname','$cussex','$cusbirthday','$cusid','$custel','$cusaddr','$cusmob','$fdt',$maindrsn,$maindrsn,'$cusmemo')";
-		echo $sql."<br>";
-		$conn->exec($sql);
+		// echo $sql."<br>";
+		$ok=$conn->exec($sql);
+		if ($ok==0){
+			echo "新增失敗..$sql<br>";
+		}
   
   }
 
