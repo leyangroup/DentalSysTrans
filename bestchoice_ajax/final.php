@@ -117,6 +117,8 @@
 
  //轉換親友，看資料是依地址來歸親友，所以目前將地址一樣的先用同一個群組
     echo "<br>13.轉換親友，看資料是依地址來歸親友，所以目前將地址一樣的先用同一個群組";
+
+    $mariaConn->exec("drop table tmpfamily");
     $sql="CREATE TABLE `tmpfamily` (
             `sn` int(11) NOT NULL,
             `addr` varchar(100) NOT NULL
@@ -129,9 +131,12 @@
     $sql="ALTER TABLE `tmpfamily` CHANGE `sn` `sn` INT(11) NOT NULL AUTO_INCREMENT";
     $mariaConn->exec($sql); 
 
+    $mariaconn->exec("ALTER TABLE `tmpfamily` ADD INDEX( `addr`)");
+
     $sql="insert into tmpfamily(addr) select cusaddr from customer where cusaddr !='' group by cusaddr having count(*)>=2";
     $mariaConn->exec($sql); 
 
+    $mariaConn->exec("truncate table family_groups");
     $sql="insert into family_groups(id,created_at,updated_at) select sn,now(),now() from tmpfamily";
     $mariaConn->exec($sql); 
 

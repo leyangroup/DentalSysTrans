@@ -11,6 +11,7 @@
 	//支付標準表
 	$conn->exec("truncate table treatment");
 	// $conn->exec("ALTER TABLE treatment AUTO_INCREMENT=1000");
+	//存trcode
 	$sql = "SELECT * FROM operasm";
 	$result=$db->query($sql);
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {

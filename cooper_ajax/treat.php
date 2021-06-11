@@ -209,7 +209,7 @@
 		      and r.stdate=t.SICKN";
 	$conn->exec($sql);
 
-	$sql=" update `treat_record` set deldate ='1911-01-01'  where trcode in ('01271C','01272C','01273C','00315C',;00316C','00317C') ";
+	$sql=" update `treat_record` set deldate ='1911-01-01'  where trcode like '0127%' ";
 	$conn->exec($sql);
 
 	$sql="update registration r,treat_record t  

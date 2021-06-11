@@ -89,13 +89,18 @@
 
 			<div><label></label></div>
 			<div>
+				<button type='button' class="btn btn-info" id="picture">10.印象大師圖檔 資料轉換</button>
+				<input type='text' id='picture_on' style="color:blue" readonly value='請按鈕' size=50>
+			</div>
+			<!-- <div><label></label></div>
+			<div>
 				<button type='button' class="btn btn-info" id="reTrans">10.陽安 重轉掛號與醫師 資料轉換</button>
 				<input type='text' id='reTrans' style="color:blue" readonly value='請按鈕' size=50>
 			</div>
 			<div>
 				<button type='button' class="btn btn-info" id="btn11">11.登美 重轉患者地址與優待 資料轉換</button>
 				<input type='text' id='btn11' style="color:blue" readonly value='請按鈕' size=50>
-			</div>
+			</div> -->
 		
 		</table>
 	</form>
@@ -163,17 +168,23 @@
  			$("#allergic_on").val('執行'+d); 
  		});
 
- 		$("#reTrans").on("click",function(){
+ 		$("#picture").on("click",function(){
  			var d = new Date();
- 			window.open("angel_ajax/reTrans.php?path="+$("#path").val(),"重新轉陽安掛號 資料");
- 			$("#reTrans").val('執行'+d); 
+ 			window.open("angel_ajax/picture.php?path="+$("#path").val(),"印象大師圖檔 資料");
+ 			$("#picture_on").val('執行'+d); 
  		});
 
- 		$("#btn11").on("click",function(){
- 			var d = new Date();
- 			window.open("angel_ajax/pa_address.php?path="+$("#path").val(),"重新轉登美患者地址與優待身份 資料");
- 			$("#btn11").val('執行'+d); 
- 		});
+ 		// $("#reTrans").on("click",function(){
+ 		// 	var d = new Date();
+ 		// 	window.open("angel_ajax/reTrans.php?path="+$("#path").val(),"重新轉陽安掛號 資料");
+ 		// 	$("#reTrans").val('執行'+d); 
+ 		// });
+
+ 		// $("#btn11").on("click",function(){
+ 		// 	var d = new Date();
+ 		// 	window.open("angel_ajax/pa_address.php?path="+$("#path").val(),"重新轉登美患者地址與優待身份 資料");
+ 		// 	$("#btn11").val('執行'+d); 
+ 		// });
  	});
 
 </script>

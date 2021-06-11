@@ -44,7 +44,7 @@
 		foreach ($value as $key2=> $value2) {
 			switch (mb_convert_encoding($key2,"UTF-8","BIG5")) {
 				case '醫師代號':
-					$drno=trim(mb_convert_encoding($value2),"UTF-8","BIG5"));
+					$drno=trim(mb_convert_encoding($value2,"UTF-8","BIG5"));
 					break;
 				case '醫師姓名':
 					$drname=trim(mb_convert_encoding($value2,"UTF-8","BIG5"));

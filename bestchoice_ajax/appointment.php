@@ -35,9 +35,7 @@
                 from [Order]
                where StartDate>='$StartDT'
                  and Enable='1'
-                 and IsCancel='0' 
-                 and OrderStatus='1' ";
-               echo $sql;
+                 and IsCancel='0' ";
         $result=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
         while ($row=sqlsrv_fetch_array($result)) {
             if (substr($row['sd'],0,10)>=$DT){
@@ -49,9 +47,11 @@
                 $note=str_replace("'","’",$row['Notes']);
                 $insertSQL="insert into registration(ddate,seqno,cusno,sch_time,schlen,sch_note,drno1,drno2)
                             values('$appdt','000','$cusno','$schtime',$min,'$note',$dr,$dr)";
-                echo $cusno,'--'.$appdt." ";
             }
-            $mariaConn->exec($insertSQL);            
+            $ok=$mariaConn->exec($insertSQL);    
+            if ($ok==0){
+                echo "新增預約失敗：$sql<br>";
+            }        
         } 
 
         //處理newpatient
