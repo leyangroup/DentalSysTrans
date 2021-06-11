@@ -45,7 +45,7 @@
 
 	$sql="update lein.trans_cuspics a,eprodb.customer b
 			set a.cussn=b.cussn
-	       where a.cusno=b.cusno";		
+	       where a.patno=b.cusno";		
 	$conn->exec($sql);
 
 	echo "圖檔資料 轉換完成";
