@@ -27,7 +27,7 @@
         $sql="truncate table customer ";
         $mariaConn->exec($sql);
 
-        $sql="SELECT *,convert(varchar(1000),notes)as Note,convert(varchar(1000),notesEX)as NEX,convert(varchar(1000),othernote)as ONote,
+        $sql="SELECT *,convert(varchar(5000),notes)as Note,convert(varchar(1000),notesEX)as NEX,convert(varchar(1000),othernote)as ONote,
                 convert(varchar,Birth,120) birthday,convert(varchar,FirstDate,120) FD,convert(varchar,LastDate,120) LD,Matter,VIP
             from Patients 
             where Enable='1'
@@ -55,7 +55,7 @@
             $addr=str_replace("'","’",$row['Addr1']);
             $job=$row['Job'];
             $intro=str_replace("'","’",$row['Introducer']);
-            $lv=$row['Vip'];
+            //$lv=$row['Vip'];
             if ($row['FD']==null or $row['FD']=''){
                 $firstdate='';
             }else{
@@ -92,7 +92,7 @@
 
             $sp=$row['sp'];
         
-            echo "患者：".$row['PatNo']."--".$row['PatName'].' ';
+            // echo "患者：".$row['PatNo']."--".$row['PatName'].' ';
 
             $memo='';
             if ($row['DrugAllergy']!=''){
@@ -102,18 +102,18 @@
                 $memo=$memo.'系統疾病：'.$row['Question']." ";
             }
             if ($row['Note']!=''){
-                $memo=$memo.str_replace("'", "’", $row['Note'])." 。 ";
+                $memo=$memo.addslashes($row['Note'])." 。 ";
             }
         
             if ($row['NEX']!=''){
-                $memo=$memo.str_replace("'", "’", $row['NEX'])." 。 ";
+                $memo=$memo.addslashes($row['NEX'])." 。 ";
             }
         
             if ($row['ONote']!=''){
-                $memo=$memo.str_replace("'", "’", $row['ONote'])." 。 ";
+                $memo=$memo.addslashes($row['ONote'])." 。 ";
             }
             if ($row['Matter']!=''){
-                $memo=$memo.str_replace("'", "’", $row['Matter'])." 。 ";
+                $memo=$memo.addslashes($row['Matter'])." 。 ";
             }
             $disc_code=$row['VIP'];
             if ($row['VIP']==null){
@@ -121,13 +121,14 @@
             }else{
                 $isdisc=1;
             }
+            $blacklist=$row['BlackList'];
             $insertSQL="INSERT into customer (cusno,cusname,cusid,cussex,cusbirthday,custel,cusmob,cusemail,cuszip,cusaddr,cusjob,cusintro,cuslv,firstdate,lastdate,maindrno,lastdrno,barrier,cusmemo,is_disc,disc_code)
             values('$cusno','$cusname','$id','$sex','$birth','$tel','$mobile','$email','$zip','$addr','$job',
-            '$intro','$lv','$firstdate','$lastdate',$fdr,$ldr,'$sp','$memo',$isdisc,'$disc_code')";
-            echo $insertSQL;
-            //echo "$cusno-$cusname";
-            $mariaConn->exec($insertSQL);
-
+            '$intro','$blacklist','$firstdate','$lastdate',$fdr,$ldr,'$sp','$memo',$isdisc,'$disc_code')";
+            $ok=$mariaConn->exec($insertSQL);
+            if ($ok==0){
+                echo "insert 失敗：$insertSQL<br>";
+            }
         }
     sqlsrv_close($msConn);
     echo "<h3>患者資料轉完 </h3>";

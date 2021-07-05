@@ -87,6 +87,16 @@
 		            and t.icuploadd=m.ser
 		            and t.drno=m.sets ");
 
+	echo "處理AB療程卡號";
+	$conn->exec("update registration r,treat_record t set start_icseq=ic_seqno where r.regsn=t.regsn and r.ic_type='AB'");
+
+	$conn->exec("update registration r,treat_record t 
+					set start_date=r.ddate
+				  where r.ic_seqno=t.start_icseq
+					and r.cussn=t.cussn
+					and ic_type='02'");
+	$conn->exec("update registration set card_id=ic_seqno,ic_seqno='' where ic_type='AB'");
+
 	echo "<h1>新增處置-結束</h1>";
 	
 ?>

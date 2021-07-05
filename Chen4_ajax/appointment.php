@@ -28,6 +28,11 @@
 			echo "新增預約資料失敗 $sql";
 		}
 	}
+
+	$conn->exec("update registration r,customer c 
+					set r.cussn=c.cussn,r.cusno=c.cusno
+				  where seqno='000'
+					and r.uploadno=cusid");
 	echo "<h1>新增預約資料完成</h1>";
 ?>
 

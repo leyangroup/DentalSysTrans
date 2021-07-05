@@ -91,6 +91,7 @@
 			<div>
 				<button type='button' class="btn btn-info" id="picture">10.印象大師圖檔 資料轉換</button>
 				<input type='text' id='picture_on' style="color:blue" readonly value='請按鈕' size=50>
+				<label>不會清空樂易秀圖資leyan_cuspics</label>
 			</div>
 			<!-- <div><label></label></div>
 			<div>

@@ -64,5 +64,19 @@
         }
     echo "<h1>基本資料 轉入完畢</h1>";
 
+    echo "<h3>cus level 患者分類</h3>";
+    $mariaConn->exec("truncate table level");
+    $sql="SELECT Value1,Value2 FROM Code where CodeID='057' and No!='0' ";
+    $code=sqlsrv_query($msConn,$sql) or die("sql error:".sqlsrv_errors());
+    while ($row=sqlsrv_fetch_array($code)){
+        $no=$row['Value1'];
+        $name=$row['Value2'];
+        $insertSQL="insert into level(lvno,lvname)
+                        values('$no','$name')";
+        echo "$insertSQL<br>";
+        $mariaConn->exec($insertSQL);
+    }
+    echo "<h1>cus level 患者分類 轉入完畢</h1>";
+
     sqlsrv_close($msConn);
 ?>

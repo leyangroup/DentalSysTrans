@@ -8,7 +8,7 @@
 	$db = new PDO("odbc:Driver={Microsoft Visual FoxPro Driver};SourceType=DBF;SourceDB=".$_GET['path']);
 	
 	//
-	$conn->exec("truncate table lein.leyan_cuspics");
+	//$conn->exec("truncate table lein.leyan_cuspics");
 	$conn->exec("truncate table lein.trans_cuspics");
 
 	$sql="SELECT p.Ddate,p.pat_no,p.vol,p.Fname,c.id from pathpict as p left join patient as c on p.pat_no=c.pat_no";

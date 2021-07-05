@@ -1,9 +1,9 @@
 <?php
 	require_once '../include/db.php';
     $conn=MariaDBConnect();
-    $conn->exec("drop table if exists z_appointment");
+    $conn->exec("drop table if exists testym.z_appointment");
 
-	$conn->exec("CREATE TABLE `z_appointment` (
+	$conn->exec("CREATE TABLE testym.z_appointment (
 				  `DT` varchar(10) DEFAULT NULL,
 				  `PatNo` varchar(15) DEFAULT NULL,
 				  `tel` varchar(20) DEFAULT NULL,
@@ -60,7 +60,7 @@
 	    }
 		$schlen=(strtotime($Time2) - strtotime($Time1) ) / 60;
 
-	    $sql="insert into z_appointment 
+	    $sql="insert into testym.z_appointment 
 	    		values('$DT','$patno','$tel','$mobile','','$Time1','$Time2','$doctor','$note',$schlen) ";
 	    $ok=$conn->exec($sql);
 	    if ($ok==0){
@@ -68,16 +68,16 @@
 	    }
 	}
 
-	echo "<h2>將預約資料放入</h2>";
-    $conn->exec("delete from registration where seqno='000' ");
+	// echo "<h2>將預約資料放入</h2>";
+ //    $conn->exec("delete from registration where seqno='000' ");
 
-    $sql="insert into registration (ddate,seqno,cussn,cusno,schmobile,schtel,sch_time,schlen,drno1,sch_note)
-			select a.DT,'000',(select cussn from customer where cusno=a.PatNo),PatNo,tel,mobile,schtime,
-					schlen,(select id from leconfig.zhi_staff where name=a.dr and endjob=''),memo
-    		from eprodb.z_appointment a";
-    $conn->exec($sql);
+ //    $sql="insert into registration (ddate,seqno,cussn,cusno,schmobile,schtel,sch_time,schlen,drno1,sch_note)
+	// 		select a.DT,'000',(select cussn from customer where cusno=a.PatNo),PatNo,tel,mobile,schtime,
+	// 				schlen,(select id from leconfig.zhi_staff where name=a.dr and endjob=''),memo
+ //    		from eprodb.z_appointment a";
+ //    $conn->exec($sql);
 
-    $conn->exec("update registration set drno2=drno1 where seqno='000'");
+ //    $conn->exec("update registration set drno2=drno1 where seqno='000'");
 
 	echo "<h1>預約資料轉換完成</h1>";
 	fclose($handle);

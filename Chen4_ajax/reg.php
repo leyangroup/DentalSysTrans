@@ -111,6 +111,34 @@
 	echo "<h2>配對掛號表與患者<h2/>";
 
 	$conn->exec("update registration r,customer c set r.cussn=c.cussn,r.cusno=c.cusno where uploadno=cusid");
+
+	echo "產生charge<br>";
+	$sql="truncate table charge";
+	$conn->exec($sql);
+	$FDT=$year.'-01-0100:00';
+	$LDT=$DT.'23:59';
+	$sql="insert into charge (ddate,chargetime,cussn,regpay,partpay,`add`,discsn,discreg,discpart,minus,balance ,is_oweic)
+			SELECT ddate,reg_time,cussn,reg_pay,nhi_partpay,reg_pay+nhi_partpay,case when r.discid is null then 0 else r.discid end ,
+			case when d.reg_disc is null then 0 else d.reg_disc end,
+			case when d.partpay_disc is null then 0 else d.partpay_disc end,
+			disc_pay,reg_pay+nhi_partpay-disc_pay,'0'
+			FROM registration r left join disc_list d
+			on r.discid=d.discsn
+			where concat(ddate,reg_time)between '$FDT' and '$LDT'
+			and seqno<>'000'
+			order by ddate,seqno";
+	$conn->exec($sql);
+	
+	$FD=$year.'-01-01';
+	$LD=$DT;
+	$sql="update registration r,charge c
+			 set r.chargesn=c.sn
+		   where r.ddate=c.ddate
+			 and r.reg_time=c.chargetime
+			 and r.cussn=c.cussn
+			 and r.chargesn=0
+			 and r.ddate between '$FD' and '$LD' ";
+	$conn->exec($sql);
 	echo "<h1>新增掛號-結束</h1>";
 	
 ?>
